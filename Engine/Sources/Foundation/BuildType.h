@@ -1,0 +1,19 @@
+#pragma once
+
+#define SCARLETT_BUILD_UNKNOWN			"unknown"
+#define SCARLETT_BUILD_DEBUG			"debug"
+#define SCARLETT_BUILD_RELEASE			"release"
+
+#if defined(SDEBUG)
+#define BUILD_TYPE	SCARLETT_BUILD_DEBUG
+#define SCARLETT_DEBUG
+#elif defined(SRELEASE)
+#define BUILD_TYPE	SCARLETT_BUILD_RELEASE
+#define SCARLETT_RELEASE
+#else
+#define BUILD_TYPE	SCARLETT_BUILD_UNKNOWN
+#define SCARLETT_UNKNOWN
+#endif
+
+
+
