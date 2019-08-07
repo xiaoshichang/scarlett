@@ -8,7 +8,8 @@
 #define SCARLETT_ASSERT_IMPL(EXPR)		_ASSERTE(EXPR)
 
 #elif defined(SCARLETT_MACOS)
-#define SCARLETT_ASSERT_IMPL(EXPR)
+#include <assert.h>
+#define SCARLETT_ASSERT_IMPL(EXPR)      assert(EXPR)
 #else
 
 #endif
