@@ -5,6 +5,8 @@ Project(Scarlett)
 include_directories("${PROJECT_SOURCE_DIR}/Cmake")
 include_directories("${PROJECT_SOURCE_DIR}/Engine/Sources")
 
+include_directories("${PROJECT_SOURCE_DIR}/Engine/External")
+
 include(${PROJECT_SOURCE_DIR}/Cmake/TargetArchDetect.cmake)
 target_architecture(TARGET_ARCH)
 
@@ -25,4 +27,6 @@ ELSEIF(${UNIX})
 ENDIF(${WIN32})
 
 add_subdirectory(Engine)
+
+include (CTest)
 add_subdirectory(Tests)
