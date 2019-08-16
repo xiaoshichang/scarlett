@@ -1,0 +1,3 @@
+[submodule "Engine/External"]
+	path = Engine/External
+	url = https://gitee.com/xiaoshichang_admin/scarlett_external.git
