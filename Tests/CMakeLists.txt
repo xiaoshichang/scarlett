@@ -8,4 +8,5 @@ add_test(NAME Test_Math COMMAND Test_Math)
 
 add_executable(Test_Guid Test_Guid.cpp)
 target_link_libraries(Test_Guid ${XG_LIBRARY})
+__add_xg_platform_dependencies(Test_Guid)
 add_test(NAME Test_Guid COMMAND Test_Guid)
