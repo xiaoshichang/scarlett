@@ -1,7 +1,9 @@
 #pragma once
 
+#include "Assert.h"
+
 namespace scarlett {
-	
+
 	class IModule {
 	public:
 		virtual int Initialize() noexcept = 0;

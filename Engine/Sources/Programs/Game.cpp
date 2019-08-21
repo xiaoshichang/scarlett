@@ -4,6 +4,7 @@
 #include "Foundation/BuildType.h"
 #include "Foundation/Archtect.h"
 #include "Foundation/Assert.h"
+#include "Runtime/Core/Application/WindowsApplication.h"
 
 using namespace std;
 
@@ -13,9 +14,15 @@ int main() {
 	cout << "EngineTargetPlatform:" << SCARLETT_PLATFORM << endl;
 	cout << "EngineBuildType:" << BUILD_TYPE << endl;
 	
-	int a, b;
-	a = 1, b = 2;
-	SCARLETT_ASSERT(a > b);
+#if defined(SCARLETT_WINDOWS)
+	cout << "creating windows..." << endl;
+	scarlett::WindowsApplication app;
+	CHECK_APPLICATION_INIT(app.Initialize());
+	app.Run();
+	app.Finalize();
+	
+#elif defined(SCARLETT_MACOS)
 
+#endif
 	return 0;
 }

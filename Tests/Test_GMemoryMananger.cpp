@@ -20,6 +20,20 @@ int main() {
 	pModule->Free(pData2, 29);
 	pModule->Free(pData3, 129);
 
+	void* data[2048];
+
+	for (int i = 0; i < 1024; i++) {
+		data[i] = pModule->Allocate(i);
+	}
+	for (int i = 0; i < 1024; i++) {
+		data[i+1024] = pModule->Allocate(10);
+	}
+	for (int i = 0; i < 1024; i++) {
+		pModule->Free(data[i], i);
+	}
+	for (int i = 0; i < 1024; i++) {
+		pModule->Free(data[i+1024], 10);
+	}
 	
 	pModule->Finalize();
 	return 0;

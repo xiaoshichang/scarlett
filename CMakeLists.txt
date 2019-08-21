@@ -4,7 +4,6 @@ Project(Scarlett)
 
 include_directories("${PROJECT_SOURCE_DIR}/Cmake")
 include_directories("${PROJECT_SOURCE_DIR}/Engine/Sources")
-
 include_directories("${PROJECT_SOURCE_DIR}/Engine/External")
 
 include(${PROJECT_SOURCE_DIR}/Cmake/TargetArchDetect.cmake)
