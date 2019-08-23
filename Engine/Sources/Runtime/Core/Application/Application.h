@@ -1,6 +1,8 @@
 #pragma once
 
 #include "IApplication.h"
+#include "Runtime/Core/Memory/MemoryManager.h"
+#include "Runtime/RHI/GraphicsMgr.h"
 
 namespace scarlett {
 	class Application : public IApplication {
@@ -13,7 +15,16 @@ namespace scarlett {
 		virtual void Finalize() noexcept;
 		virtual void Quit() noexcept;
 		virtual bool IsQuit() noexcept;
+
+	public:
+		MemoryManager* mMemoryMgr;
+		GraphicsManager* mGraphicsManager;
+
+
 	private:
 		bool mQuit;
+		
+
+
 	};
 }

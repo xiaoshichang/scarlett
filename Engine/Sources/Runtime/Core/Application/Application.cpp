@@ -4,6 +4,8 @@ using namespace scarlett;
 
 int Application::Initialize() noexcept {
 	mQuit = false;
+	mMemoryMgr = nullptr;
+	mGraphicsManager = nullptr;
 	return 0;
 }
 

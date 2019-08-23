@@ -1,5 +1,5 @@
 #include "WindowsApplication.h"
-
+#include "Runtime/RHI/GraphicsMgrD11.h"
 using namespace scarlett;
 
 LRESULT scarlett::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -28,6 +28,14 @@ LRESULT scarlett::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM
 int WindowsApplication::Initialize() noexcept{
 	CHECK_APPLICATION_INIT(Application::Initialize());
 	CreateMainWindow();
+
+	mMemoryMgr = new MemoryManager();
+	mMemoryMgr->Initialize();
+
+	mGraphicsManager = new GraphicsMgrD11();
+	auto mgr = (GraphicsMgrD11*)mGraphicsManager;
+	mgr->InitializeWithWindow(mHWND);
+
 	return 0;
 }
 
@@ -42,7 +50,7 @@ void WindowsApplication::Tick() noexcept{
 }
 
 void WindowsApplication::Render() noexcept{
-
+	mGraphicsManager->Render();
 }
 
 HWND scarlett::WindowsApplication::GetWindowsHandler() noexcept
@@ -84,5 +92,7 @@ void scarlett::WindowsApplication::CreateMainWindow()
 }
 
 void WindowsApplication::Finalize() noexcept{
-
+	mGraphicsManager->Finalize();
+	mMemoryMgr->Finalize();
+	
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Application.h"
+#include "Runtime/Utils/Singleton.h"
 #include <Windows.h>
 
 namespace scarlett {
@@ -17,12 +18,14 @@ namespace scarlett {
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	private:
+		WindowsApplication() = default;
 		void CreateMainWindow();
 
 	private:
 		HWND mHWND;
 
+		friend class Singleton<WindowsApplication>;
 	};
-
+	typedef Singleton<WindowsApplication> GWindowsApplication;
 
 }

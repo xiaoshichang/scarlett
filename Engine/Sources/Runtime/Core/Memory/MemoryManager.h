@@ -38,7 +38,7 @@ namespace scarlett {
 			p->~T();
 			Free(p, sizeof(T));
 		}
-
+		MemoryManager() = default;
 		virtual ~MemoryManager() = default;
 		virtual int Initialize() noexcept;
 		virtual void Finalize() noexcept;
@@ -58,7 +58,6 @@ namespace scarlett {
 		void Free(void* p, size_t size);
 
 	private:
-		MemoryManager() = default;
 		MemoryManager(const MemoryManager& m) = default;
 		MemoryManager& operator=(const MemoryManager&) = default;
 
@@ -66,10 +65,8 @@ namespace scarlett {
 		static Allocator * m_pAllocators;
 		static Allocator* LookupAllocator(size_t size);
 		
-		friend class Singleton<MemoryManager>;	// to access pInstance
 	};
 
-	typedef Singleton<MemoryManager> GMemoryMananger;
 }
 
 #endif // GAMEENGINEX_MEMORYMANAGER_H

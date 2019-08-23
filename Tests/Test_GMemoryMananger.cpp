@@ -5,7 +5,7 @@ using namespace scarlett;
 using namespace std;
 
 int main() {
-	auto pModule = GMemoryMananger::GetInstance();
+	auto pModule = new MemoryManager();
 	pModule->Initialize();
 
 	auto pData1 = (unsigned char*)pModule->Allocate(19);

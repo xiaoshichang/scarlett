@@ -6,7 +6,16 @@
 #include "Foundation/Assert.h"
 #include "Runtime/Core/Application/WindowsApplication.h"
 
+
 using namespace std;
+using namespace scarlett;
+
+#if defined(SCARLETT_WINDOWS)
+extern Application* GApp = GWindowsApplication::GetInstance();
+#elif defined(SCARLETT_MACOS)
+
+#endif
+
 
 int main() {
 	cout << "EngineVersion:" << Engine_Version_Major << "." << Engine_Version_Minor << endl;
@@ -15,11 +24,9 @@ int main() {
 	cout << "EngineBuildType:" << BUILD_TYPE << endl;
 	
 #if defined(SCARLETT_WINDOWS)
-	cout << "creating windows..." << endl;
-	scarlett::WindowsApplication app;
-	CHECK_APPLICATION_INIT(app.Initialize());
-	app.Run();
-	app.Finalize();
+	CHECK_APPLICATION_INIT(GApp->Initialize());
+	GApp->Run();
+	GApp->Finalize();
 	
 #elif defined(SCARLETT_MACOS)
 
