@@ -1,6 +1,6 @@
 #include "GraphicsMgrD11.h"
 #include "Foundation/Assert.h"
-
+#include <iostream>
 using namespace scarlett;
 
 
@@ -88,21 +88,14 @@ void GraphicsMgrD11::CreateDeviceContext() noexcept {
 	// Convert the name of the video card to a character array and store it.
 	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	SCARLETT_ASSERT(error == 0);
+	std::cout << "video card description: " << m_videoCardDescription << std::endl;
 
 	delete[] displayModeList;
 	displayModeList = 0;
 
-	// Release the adapter output.
-	adapterOutput->Release();
-	adapterOutput = 0;
-
-	// Release the adapter.
-	adapter->Release();
-	adapter = 0;
-
-	// Release the factory.
-	factory->Release();
-	factory = 0;
+	SAVE_RELEASE_DXOBJ(adapterOutput);
+	SAVE_RELEASE_DXOBJ(adapter);
+	SAVE_RELEASE_DXOBJ(factory);
 
 	// Initialize the swap chain description.
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));

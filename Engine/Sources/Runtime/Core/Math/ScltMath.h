@@ -1,9 +1,10 @@
+#pragma once
 #include <Eigen3/include/eigen3/Eigen/Dense>
 #include <Eigen3/include/eigen3/Eigen/Geometry>
 
 using namespace Eigen;
 
-namespace Scarlett {
+namespace scarlett {
 	const float PI = 3.141592f;
 
 	inline Matrix4f BuildViewLookatRH(const Vector3f& eye, const Vector3f& lookat, const Vector3f& up) {

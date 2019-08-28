@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Runtime/Core/Math/ScltMath.h"
 
-using namespace Scarlett;
+using namespace scarlett;
 
 int main() {
 	Matrix3f m;

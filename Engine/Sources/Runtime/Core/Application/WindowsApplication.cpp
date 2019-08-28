@@ -36,6 +36,10 @@ int WindowsApplication::Initialize() noexcept{
 	auto mgr = (GraphicsMgrD11*)mGraphicsManager;
 	mgr->InitializeWithWindow(mHWND);
 
+	mWorld = new World();
+	mWorld->Initialize();
+	mWorld->LoadScene("scene");
+
 	return 0;
 }
 
@@ -46,11 +50,12 @@ void WindowsApplication::Tick() noexcept{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+	mWorld->Tick();
 	Render();
 }
 
 void WindowsApplication::Render() noexcept{
-	mGraphicsManager->Render();
+	mWorld->Render();
 }
 
 HWND scarlett::WindowsApplication::GetWindowsHandler() noexcept
@@ -92,6 +97,8 @@ void scarlett::WindowsApplication::CreateMainWindow()
 }
 
 void WindowsApplication::Finalize() noexcept{
+	mWorld->Finalize();
+
 	mGraphicsManager->Finalize();
 	mMemoryMgr->Finalize();
 	
