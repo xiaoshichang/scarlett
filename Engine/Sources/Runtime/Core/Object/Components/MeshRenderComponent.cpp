@@ -6,13 +6,25 @@ using namespace scarlett;
 
 int scarlett::MeshRenderComponent::Initialize() noexcept
 {
-	GetMaster()->GetWorld()->GetMeshRenderSystem()->AddComponent(this);
+	auto master = GetMaster();
+	if (master) {
+		auto world = master->GetWorld();
+		if (world) {
+			world->GetMeshRenderSystem()->AddComponent(this);
+		}
+	}
 	return 0;
 }
 
 void scarlett::MeshRenderComponent::Finalize() noexcept
 {
-	GetMaster()->GetWorld()->GetMeshRenderSystem()->DeleteComponent(this);
+	auto master = GetMaster();
+	if (master) {
+		auto world = master->GetWorld();
+		if (world) {
+			world->GetMeshRenderSystem()->DeleteComponent(this);
+		}
+	}
 }
 
 void scarlett::MeshRenderComponent::Render()
@@ -25,7 +37,11 @@ void scarlett::MeshRenderComponent::Render()
 }
 
 
-void scarlett::MeshRenderComponent::AddRenderObject(std::string resourcePath)
+void scarlett::MeshRenderComponent::AddMeshRender(std::string resourcePath)
+{
+}
+
+void scarlett::MeshRenderComponent::AddRenderObject()
 {
 	// todo: create a RenderObject by resource path.
 	auto renderObject = std::make_shared<RenderObject>();

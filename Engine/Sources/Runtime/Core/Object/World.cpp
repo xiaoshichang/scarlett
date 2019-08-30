@@ -68,5 +68,5 @@ void scarlett::World::LoadScene(std::string scenePath) {
 
 	auto mesh = entity->GetComponent<MeshRenderComponent>();
 	mesh->SetVisible(true);
-	mesh->AddRenderObject("aili");
+	mesh->
 }

@@ -15,7 +15,8 @@ namespace scarlett {
 	public:
 		void SetVisible(bool v) { mVisible = v; }
 		bool IsVisible() { return mVisible; }
-		void AddRenderObject(std::string resourcePath);
+		void AddMeshRender(std::string resourcePath);
+		void AddRenderObject();
 	
 	private:
 		bool mVisible;
