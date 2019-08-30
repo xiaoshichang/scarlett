@@ -32,7 +32,7 @@ namespace scarlett {
 
 		World*	GetWorld() { return mWorld; }
 
-		template<typename T>void	AddComponent();
+		template<typename T>T*	AddComponent();
 		template<typename T>T*	GetComponent();
 		template<typename T>void	RemoveComponent();
 		
@@ -50,18 +50,22 @@ namespace scarlett {
 	};
 
 	template<typename T>
-	void	scarlett::Entity::AddComponent() {
+	T*	scarlett::Entity::AddComponent() {
+		void* comp;
 		if (std::is_same<T, TransformComponent>::value) {
 			mTransform = new TransformComponent();
 			mTransform->SetMaster(this);
 			mTransform->Initialize();
+			comp = mTransform;
 		}
 
 		if (std::is_same<T, MeshRenderComponent>::value) {
 			mMeshRender = new MeshRenderComponent();
 			mMeshRender->SetMaster(this);
 			mMeshRender->Initialize();
+			comp = mMeshRender;
 		}
+		return (T*)comp;
 	}
 
 	template<typename T>

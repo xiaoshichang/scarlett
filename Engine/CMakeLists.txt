@@ -38,6 +38,7 @@ ${PlatformOnlySources}
 
 IF(${WIN32})
 	target_link_libraries(Scarlett user32 d3d11 d3dcompiler dxgi )
+	target_link_libraries(Scarlett ${ASSIMP_LIBRARY} ${IRRXML_LIBRARY} ${ZLIB_LIBRARY})
 ELSEIF(${UNIX})
 	IF(${APPLE})
 	ELSE(${APPLE})

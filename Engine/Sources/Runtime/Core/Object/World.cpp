@@ -1,5 +1,16 @@
+#include "Foundation/Assert.h"
+
 #include "Runtime/Core/Object/World.h"
+#include "Runtime/Core/Object/Components/MeshRenderComponent.h"
+
+#include "assimp/scene.h"
+#include "assimp/Importer.hpp"
+#include "assimp/postprocess.h"
+
+#include <iostream>
+
 using namespace scarlett;
+using namespace std;
 
 scarlett::World::World() : 
 	mMeshRenderSystem(nullptr)
@@ -58,15 +69,66 @@ void scarlett::World::DeleteEntity(const Guid & guid)
 	}
 }
 
+std::shared_ptr<Entity> scarlett::World::GetEntity(const Guid & guid)
+{
+	if (!mEntities[guid]) {
+		return nullptr;
+	}
+	return mEntities[guid];
+}
+
 size_t scarlett::World::GetEntityCount() {
 	return mEntities.size();
 }
 
-void scarlett::World::LoadScene(std::string scenePath) {
-	auto entity = CreateEntity();
-	entity->AddComponent<MeshRenderComponent>();
+void scarlett::World::LoadScene(const std::string& scenePath) {
+	Assimp::Importer importer2;
+	const aiScene* scene = importer2.ReadFile(scenePath,
+		aiProcess_CalcTangentSpace |
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices |
+		aiProcess_SortByPType);
 
-	auto mesh = entity->GetComponent<MeshRenderComponent>();
-	mesh->SetVisible(true);
-	mesh->
+	SCARLETT_ASSERT(scene);
+	
+	for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i) {
+		auto child = scene->mRootNode->mChildren[i];
+		if (child->mNumMeshes <= 0) {
+			continue;
+		}
+
+		auto entity = CreateEntity();
+		auto comp = entity->AddComponent<MeshRenderComponent>();
+		
+		for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
+			auto midx = child->mMeshes[j];
+			auto mesh = scene->mMeshes[midx];
+			auto robj = comp->AddRenderObject();
+			robj->SetName(mesh->mName.C_Str());
+		}
+	}
+}
+
+void scarlett::World::DumpEntities()
+{
+	cout << "dump entities:" << endl;
+	for (auto pair : mEntities) {
+		auto guid = pair.first;
+		auto entity = pair.second;
+		
+		cout << "guid: " << guid << endl;
+		cout << "transform component:" << endl;
+		auto position = entity->GetComponent<TransformComponent>()->GetPosition();
+		cout << "position: " <<  "(" << position.x() << "," << position.y() << "," << position.z() << "," << endl;
+		
+		auto meshRender = entity->GetComponent<MeshRenderComponent>();
+		if (meshRender) {
+			cout << "MeshRenderComponent:" << endl;
+			for (int i = 0; i < meshRender->GetRenderObjectCount(); ++i) {
+				auto robj = meshRender->GetRenderObject(i);
+				cout << "RenderObject: " << robj->GetName() << endl;
+			}
+		}
+		cout << endl;
+	}
 }

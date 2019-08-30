@@ -3,5 +3,4 @@
 
 void scarlett::RenderObject::Render()
 {
-	std::cout << "Render Object" << std::endl;
 }

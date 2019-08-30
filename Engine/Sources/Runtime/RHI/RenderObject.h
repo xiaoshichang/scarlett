@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+using namespace std;
+
 namespace scarlett {
 
 	/*
@@ -10,10 +13,14 @@ namespace scarlett {
 		virtual void Render();
 
 	public:
+		string	GetName() { return mName; }
+		void	SetName(string name) { mName = name; }
+
 		bool IsVisible() { return mVisible; }
 		void SetVisible(bool v) { mVisible = v; }
 
 	private:
+		string mName;
 		bool mVisible;
 
 	};

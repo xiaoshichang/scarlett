@@ -37,14 +37,22 @@ void scarlett::MeshRenderComponent::Render()
 }
 
 
-void scarlett::MeshRenderComponent::AddMeshRender(std::string resourcePath)
-{
-}
-
-void scarlett::MeshRenderComponent::AddRenderObject()
+std::shared_ptr<RenderObject> scarlett::MeshRenderComponent::AddRenderObject()
 {
 	// todo: create a RenderObject by resource path.
 	auto renderObject = std::make_shared<RenderObject>();
 	renderObject->SetVisible(true);
 	mRenderObjects.push_back(renderObject);
+	return renderObject;
+}
+
+std::shared_ptr<RenderObject> scarlett::MeshRenderComponent::GetRenderObject(int idx)
+{
+	return mRenderObjects[idx];
+}
+
+
+size_t scarlett::MeshRenderComponent::GetRenderObjectCount()
+{
+	return mRenderObjects.size();
 }

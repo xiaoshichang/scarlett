@@ -29,7 +29,9 @@ namespace scarlett {
 		std::shared_ptr<Entity>	GetEntity(const Guid& guid);
 		size_t GetEntityCount();
 
-		void LoadScene(std::string scenePath);
+		void LoadScene(const std::string& scenePath);
+		void DumpEntities();
+
 
 	public:
 		MeshRenderSystem* GetMeshRenderSystem() { return mMeshRenderSystem; }

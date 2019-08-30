@@ -38,7 +38,6 @@ int WindowsApplication::Initialize() noexcept{
 
 	mWorld = new World();
 	mWorld->Initialize();
-	mWorld->LoadScene("scene");
 
 	return 0;
 }
