@@ -1,6 +1,8 @@
-#include "GraphicsMgrD11.h"
+#include "Runtime/RHI/D11/GraphicsMgrD11.h"
+#include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Foundation/Assert.h"
 #include <iostream>
+
 using namespace scarlett;
 
 
@@ -12,19 +14,7 @@ int GraphicsMgrD11::Initialize() noexcept {
 int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 {
 	m_hwnd = handler;
-	CreateDeviceContext();
-	return 0;
-}
 
-void GraphicsMgrD11::Finalize() noexcept {
-
-}
-
-void GraphicsMgrD11::Tick() noexcept {
-
-}
-
-void GraphicsMgrD11::CreateDeviceContext() noexcept {
 	HRESULT result;
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
@@ -89,6 +79,7 @@ void GraphicsMgrD11::CreateDeviceContext() noexcept {
 	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	SCARLETT_ASSERT(error == 0);
 	std::cout << "video card description: " << m_videoCardDescription << std::endl;
+	std::cout << "video card memory: " << m_videoCardMemory << std::endl;
 
 	delete[] displayModeList;
 	displayModeList = 0;
@@ -263,9 +254,11 @@ void GraphicsMgrD11::CreateDeviceContext() noexcept {
 	viewport.TopLeftY = 0.0f;
 	// Create the viewport.
 	m_deviceContext->RSSetViewports(1, &viewport);
+	return 0;
 }
 
-void GraphicsMgrD11::ReleaseDeviceContext() noexcept {
+
+void GraphicsMgrD11::Finalize() noexcept {
 	if (m_swapChain)
 	{
 		m_swapChain->SetFullscreenState(false, NULL);
@@ -280,6 +273,10 @@ void GraphicsMgrD11::ReleaseDeviceContext() noexcept {
 	SAVE_RELEASE_DXOBJ(m_swapChain);
 }
 
+void GraphicsMgrD11::Tick() noexcept {
+
+}
+
 void GraphicsMgrD11::ClearRenderTarget(float r, float g, float b, float a) noexcept {
 	float color[4] = { r, g, b, a };
 	// Clear the back buffer.
@@ -289,15 +286,83 @@ void GraphicsMgrD11::ClearRenderTarget(float r, float g, float b, float a) noexc
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-void GraphicsMgrD11::Render() noexcept {
-	ClearRenderTarget(0.2f, 0.4f, 0.5f, 1.0f);
-	if (false)
-	{
+std::shared_ptr<VertexBuffer> scarlett::GraphicsMgrD11::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
+{
+	auto ptr = std::make_shared<VertexBufferD11>(count, vf);
+
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData;
+
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = ptr->GetVertexSize(vf) * count;
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.StructureByteStride = 0;
+
+	vertexData.pSysMem = data;
+	vertexData.SysMemPitch = 0;
+	vertexData.SysMemSlicePitch = 0;
+
+	auto result = m_device->CreateBuffer(&vertexBufferDesc, &vertexData, &(ptr->mVertexBuffer));
+	return ptr;
+}
+
+void scarlett::GraphicsMgrD11::DeleteVertexBuffer(std::shared_ptr<VertexBuffer> vb) noexcept
+{
+	auto ptr = static_pointer_cast<VertexBufferD11>(vb);
+	if (ptr->mVertexBuffer) {
+		ptr->mVertexBuffer->Release();
+	}
+	ptr->mVertexBuffer = nullptr;
+}
+
+std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh) noexcept
+{
+	auto ptr = std::make_shared<RenderMesh>();
+	auto count = mesh->mNumVertices;
+	if (mesh->HasPositions()) {
+		ptr->mPositions = CreateVertexBuffer(mesh->mVertices, count, VertexFormat::VF_P3F);
+	}
+
+	if (mesh->HasNormals()) {
+		ptr->mNormals = CreateVertexBuffer(mesh->mNormals, count, VertexFormat::VF_N3F);
+	}
+
+	if (mesh->HasTextureCoords(0)) {
+		float *texCoords = (float *)malloc(sizeof(float) * 2 * mesh->mNumVertices);
+		for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
+			texCoords[k * 2] = mesh->mTextureCoords[0][k].x;
+			texCoords[k * 2 + 1] = mesh->mTextureCoords[0][k].y;
+		}
+		ptr->mTexCoords = CreateVertexBuffer(texCoords, count, VertexFormat::VF_T2F);
+		delete texCoords;
+	}
+	return ptr;
+}
+
+void scarlett::GraphicsMgrD11::DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh) noexcept
+{
+	if (mesh->mPositions) {
+		DeleteVertexBuffer(mesh->mPositions);
+		mesh->mPositions = nullptr;
+	}
+	if (mesh->mNormals) {
+		DeleteVertexBuffer(mesh->mNormals);
+		mesh->mNormals = nullptr;
+	}
+	if (mesh->mTexCoords) {
+		DeleteVertexBuffer(mesh->mTexCoords);
+		mesh->mTexCoords = nullptr;
+	}
+}
+
+void GraphicsMgrD11::Present() noexcept {
+	if (false){
 		// Lock to screen refresh rate.
 		m_swapChain->Present(1, 0);
 	}
-	else
-	{
+	else{
 		// Present as fast as possible.
 		m_swapChain->Present(0, 0);
 	}

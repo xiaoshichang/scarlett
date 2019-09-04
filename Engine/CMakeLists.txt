@@ -6,8 +6,8 @@ IF(${WIN32})
 	set(PlatformOnlySources 
 	${SourcesPath}/Runtime/Core/Application/WindowsApplication.cpp
 
-	${SourcesPath}/Runtime/RHI/DeviceContextD11.cpp
-	${SourcesPath}/Runtime/RHI/GraphicsMgrD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/GraphicsMgrD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/VertexBufferD11.cpp
 	)
 ELSEIF(${UNIX})
 	IF(${APPLE})
@@ -31,6 +31,8 @@ ${SourcesPath}/Runtime/Core/Object/Components/MeshRenderComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/System/MeshRenderSystem.cpp
 
 ${SourcesPath}/Runtime/RHI/RenderObject.cpp
+${SourcesPath}/Runtime/RHI/RenderMesh.cpp
+${SourcesPath}/Runtime/RHI/VertexBuffer.cpp
 
 ${PlatformOnlySources}
 

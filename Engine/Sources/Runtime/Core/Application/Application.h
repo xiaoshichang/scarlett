@@ -23,11 +23,8 @@ namespace scarlett {
 
 		World* mWorld;
 
-
 	private:
 		bool mQuit;
-		
-
 
 	};
 }

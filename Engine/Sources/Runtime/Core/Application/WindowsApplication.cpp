@@ -1,5 +1,7 @@
 #include "WindowsApplication.h"
-#include "Runtime/RHI/GraphicsMgrD11.h"
+#include "Runtime/RHI/D11/GraphicsMgrD11.h"
+#include "Runtime/Core/Object/World.h"
+
 using namespace scarlett;
 
 LRESULT scarlett::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -36,7 +38,7 @@ int WindowsApplication::Initialize() noexcept{
 	auto mgr = (GraphicsMgrD11*)mGraphicsManager;
 	mgr->InitializeWithWindow(mHWND);
 
-	mWorld = new World();
+	mWorld = new World(this);
 	mWorld->Initialize();
 
 	return 0;

@@ -6,16 +6,17 @@
 #include "Foundation/Assert.h"
 #include "Runtime/Core/Application/WindowsApplication.h"
 
-
-using namespace std;
-using namespace scarlett;
-
+namespace scarlett {
 #if defined(SCARLETT_WINDOWS)
-extern Application* GApp = GWindowsApplication::GetInstance();
+	extern Application* GApp = GWindowsApplication::GetInstance();
 #elif defined(SCARLETT_MACOS)
 
 #endif
+}
 
+
+using namespace std;
+using namespace scarlett;
 
 int main() {
 	cout << "EngineVersion:" << Engine_Version_Major << "." << Engine_Version_Minor << endl;

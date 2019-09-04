@@ -1,7 +1,6 @@
 #include "Application.h"
 
 using namespace scarlett;
-
 int Application::Initialize() noexcept {
 	mQuit = false;
 	mMemoryMgr = nullptr;
@@ -9,6 +8,7 @@ int Application::Initialize() noexcept {
 	mWorld = nullptr;
 	return 0;
 }
+
 
 void Application::Tick() noexcept{
 

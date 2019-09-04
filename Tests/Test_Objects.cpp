@@ -3,9 +3,15 @@
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 #include <iostream>
 
+#include "Runtime/Core/Application/Application.h"
+
+namespace scarlett {
+	extern Application* GApp = new Application();
+}
+
 int main() {
 
-	auto world = new scarlett::World();
+	auto world = new scarlett::World(scarlett::GApp);
 	world->Initialize();
 	auto entity = world->CreateEntity();
 	std::cout << entity->GetGuid() << std::endl;

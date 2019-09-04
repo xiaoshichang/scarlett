@@ -5,13 +5,15 @@
 #include <string>
 
 #include "Runtime/Interface/IModule.h"
-#include "Runtime/Core/Object/Entity.h"
 
+#include "Runtime/Core/Object/Entity.h"
 #include "Runtime/Core/Object/System/MeshRenderSystem.h"
 #include "Guid.hpp"
 
 namespace scarlett {
 	class Entity;
+	class Application;
+
 	class World : public ITickableModule {
 
 	public:
@@ -21,7 +23,7 @@ namespace scarlett {
 		virtual void	Render() noexcept;
 		
 	public:
-		World();
+		World(Application* app);
 
 		std::shared_ptr<Entity>	CreateEntity();
 		std::shared_ptr<Entity>	CreateEntity(const Guid& guid);
@@ -36,7 +38,11 @@ namespace scarlett {
 	public:
 		MeshRenderSystem* GetMeshRenderSystem() { return mMeshRenderSystem; }
 
+	public:
+		Application* mApp;
+
 	private:
+
 		std::unordered_map<Guid, std::shared_ptr<Entity>>	mEntities;
 
 		// systems

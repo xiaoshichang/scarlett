@@ -12,14 +12,15 @@
 using namespace scarlett;
 using namespace std;
 
-scarlett::World::World() : 
+scarlett::World::World(Application* master) :
+	mApp(master),
 	mMeshRenderSystem(nullptr)
 {
 }
 
 int scarlett::World::Initialize() noexcept
 {
-	mMeshRenderSystem = new MeshRenderSystem();
+	mMeshRenderSystem = new MeshRenderSystem(this);
 	mMeshRenderSystem->Initialize();
 
 	return 0;
@@ -28,6 +29,8 @@ int scarlett::World::Initialize() noexcept
 void scarlett::World::Finalize() noexcept
 {
 	mEntities.clear();
+
+	mMeshRenderSystem->Finalize();
 }
 
 void scarlett::World::Tick() noexcept
@@ -88,8 +91,12 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_SortByPType);
-
 	SCARLETT_ASSERT(scene);
+
+	for (unsigned int j = 0; j < scene->mNumMeshes; ++j) {
+		auto mesh = scene->mMeshes[j];
+		mMeshRenderSystem->LoadMesh(mesh);
+	}
 	
 	for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i) {
 		auto child = scene->mRootNode->mChildren[i];
@@ -98,13 +105,19 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		}
 
 		auto entity = CreateEntity();
+		aiVector3D scaling, rotation, position;
+		child->mTransformation.Decompose(scaling, rotation, position);
+
+		auto transformation = entity->GetComponent<TransformComponent>();
+		transformation->SetPosition(Vector3f(position.x, position.y, position.z));
+		transformation->SetRotation(Vector3f(rotation.x, rotation.y, rotation.z));
+		transformation->SetScale(Vector3f(scaling.x, scaling.y, scaling.z));
+
 		auto comp = entity->AddComponent<MeshRenderComponent>();
 		
 		for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
 			auto midx = child->mMeshes[j];
-			auto mesh = scene->mMeshes[midx];
-			auto robj = comp->AddRenderObject();
-			robj->SetName(mesh->mName.C_Str());
+			comp->mMeshIdx.push_back(midx);
 		}
 	}
 }
@@ -119,15 +132,21 @@ void scarlett::World::DumpEntities()
 		cout << "guid: " << guid << endl;
 		cout << "transform component:" << endl;
 		auto position = entity->GetComponent<TransformComponent>()->GetPosition();
-		cout << "position: " <<  "(" << position.x() << "," << position.y() << "," << position.z() << "," << endl;
+		cout << "position: " <<  "(" << position.x() << "," << position.y() << "," << position.z() << ")" << endl;
 		
 		auto meshRender = entity->GetComponent<MeshRenderComponent>();
 		if (meshRender) {
-			cout << "MeshRenderComponent:" << endl;
-			for (int i = 0; i < meshRender->GetRenderObjectCount(); ++i) {
-				auto robj = meshRender->GetRenderObject(i);
-				cout << "RenderObject: " << robj->GetName() << endl;
+			cout << "MeshRenderComponent:" <<  endl;
+			cout << "MeshIndex:";
+			for (int i = 0; i < meshRender->mMeshIdx.size(); ++i) {
+				cout << meshRender->mMeshIdx[i] << " ";
 			}
+			cout << "Mesh name:";
+			for (int i = 0; i < meshRender->mMeshIdx.size(); ++i) {
+				auto idx = meshRender->mMeshIdx[i];
+				auto mesh = mMeshRenderSystem->mMeshes[idx];
+			}
+			cout << endl;
 		}
 		cout << endl;
 	}

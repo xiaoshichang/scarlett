@@ -13,7 +13,7 @@ int main()
 	// Usually - if speed is not the most important aspect for you - you'll 
 	// propably to request more postprocessing than we do in this example.
 	const aiScene* scene2 = importer2.ReadFile(pFile2,
-		aiProcess_CalcTangentSpace |
+		//aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_SortByPType);
@@ -43,6 +43,18 @@ int main()
 		}
 		std::cout << std::endl;
 	}
+
+	aiCamera* camera = nullptr;
+	if (scene2->HasCameras()) {
+		camera = scene2->mCameras[0];
+	}
+	std::cout << "camera:" << std::endl;
+	std::cout << "Aspect: " << camera->mAspect << std::endl;
+	std::cout << "name: " << camera->mName .C_Str() << std::endl;
+	std::cout << "mHorizontalFOV" << camera->mHorizontalFOV << std::endl;
+	std::cout << camera->mPosition.x << "," << camera->mPosition.y << "," << camera->mPosition.z << std::endl;
+	std::cout << camera->mLookAt.x << "," << camera->mLookAt.y << "," << camera->mLookAt.z << std::endl;
+	std::cout << camera->mUp.x << "," << camera->mUp.y << "," << camera->mUp.z << std::endl;
 
 	if ( scene2) {
 		return 0;

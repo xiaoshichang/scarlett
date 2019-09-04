@@ -15,13 +15,10 @@ namespace scarlett {
 	public:
 		void SetVisible(bool v) { mVisible = v; }
 		bool IsVisible() { return mVisible; }
-		std::shared_ptr<RenderObject> AddRenderObject();
-		std::shared_ptr<RenderObject> GetRenderObject(int idx);
-		size_t GetRenderObjectCount();
-	
-	private:
+
+	public:
+		std::vector<int> mMeshIdx;
 		bool mVisible;
-		std::vector<std::shared_ptr<RenderObject>> mRenderObjects;
 
 	};
 
