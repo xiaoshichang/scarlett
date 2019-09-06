@@ -5,6 +5,7 @@
 #include "Runtime/Interface/IModule.h"
 #include "Runtime/Core/Object/Components/TransformComponent.h"
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
+#include "Runtime/Core/Object/Components/CameraComponent.h"
 
 using namespace xg;
 
@@ -44,8 +45,9 @@ namespace scarlett {
 		std::vector<std::shared_ptr <Entity>>	mChildren;
 
 	protected:
-		TransformComponent* mTransform;
-		MeshRenderComponent* mMeshRender;
+		TransformComponent*		mTransform;
+		MeshRenderComponent*	mMeshRender;
+		CameraComponent*		mCamera;
 
 	};
 
@@ -65,6 +67,13 @@ namespace scarlett {
 			mMeshRender->Initialize();
 			comp = mMeshRender;
 		}
+
+		if (std::is_same<T, CameraComponent>::value) {
+			mCamera = new CameraComponent();
+			mCamera->SetMaster(this);
+			mCamera->Initialize();
+			comp = mCamera;
+		}
 		return (T*)comp;
 	}
 
@@ -76,6 +85,9 @@ namespace scarlett {
 		}
 		else if (std::is_same<T, MeshRenderComponent>::value) {
 			ret = mMeshRender;
+		}
+		else if (std::is_same<T, CameraComponent>::value) {
+			ret = mCamera;
 		}
 		return (T*)ret;
 	}
@@ -89,6 +101,10 @@ namespace scarlett {
 		if (std::is_same<T, MeshRenderComponent>::value) {
 			delete mMeshRender;
 			mMeshRender = nullptr;
+		}
+		if (std::is_same<T, CameraComponent>::value) {
+			delete mCamera;
+			mCamera = nullptr;
 		}
 	}
 

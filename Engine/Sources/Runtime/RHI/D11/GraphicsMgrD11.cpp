@@ -357,6 +357,16 @@ void scarlett::GraphicsMgrD11::DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh
 	}
 }
 
+void scarlett::GraphicsMgrD11::LoadShaders() noexcept
+{
+
+
+}
+
+void scarlett::GraphicsMgrD11::UseShader(const std::string & shaderName) noexcept
+{
+}
+
 void GraphicsMgrD11::Present() noexcept {
 	if (false){
 		// Lock to screen refresh rate.

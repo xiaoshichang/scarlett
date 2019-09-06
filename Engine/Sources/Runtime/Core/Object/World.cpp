@@ -23,6 +23,9 @@ int scarlett::World::Initialize() noexcept
 	mMeshRenderSystem = new MeshRenderSystem(this);
 	mMeshRenderSystem->Initialize();
 
+	mCameraSystem = new CameraSystem(this);
+	mCameraSystem->Initialize();
+
 	return 0;
 }
 
@@ -31,6 +34,7 @@ void scarlett::World::Finalize() noexcept
 	mEntities.clear();
 
 	mMeshRenderSystem->Finalize();
+	mCameraSystem->Finalize();
 }
 
 void scarlett::World::Tick() noexcept
@@ -93,11 +97,18 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		aiProcess_SortByPType);
 	SCARLETT_ASSERT(scene);
 
+	// load all mesh
 	for (unsigned int j = 0; j < scene->mNumMeshes; ++j) {
 		auto mesh = scene->mMeshes[j];
 		mMeshRenderSystem->LoadMesh(mesh);
 	}
-	
+
+	// build main camera
+	auto camera = CreateEntity();
+	camera->AddComponent<CameraComponent>();
+	mCameraSystem->SetMainCamera(camera);
+
+	// build scene graph entity
 	for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i) {
 		auto child = scene->mRootNode->mChildren[i];
 		if (child->mNumMeshes <= 0) {
@@ -148,6 +159,20 @@ void scarlett::World::DumpEntities()
 			}
 			cout << endl;
 		}
+
+		auto cameraComponent = entity->GetComponent<CameraComponent>();
+		if (cameraComponent)
+		{
+			cout << "camera type: " << cameraComponent->mCameraType << endl;
+			cout << "position: " << cameraComponent->mPosition.x() << "," <<cameraComponent->mPosition.y() << "," << cameraComponent->mPosition.z() << endl;
+			cout << "Lookat: " << cameraComponent->mLookat.x() << "," << cameraComponent->mLookat.y() << "," << cameraComponent->mLookat.z() << endl;
+			cout << "up: " << cameraComponent->mUp.x() << "," << cameraComponent->mUp.y() << "," << cameraComponent->mUp.z() << endl;
+			cout << "near and far: " << cameraComponent->mNearClip << "," << cameraComponent->mFarClip << endl;
+			cout << "fov: " << cameraComponent->mFov << endl;
+			cout << cameraComponent->GetViewMatrix();
+			cout << cameraComponent->GetPerspectiveMatrix();
+		}
+
 		cout << endl;
 	}
 }

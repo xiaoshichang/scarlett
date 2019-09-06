@@ -19,7 +19,11 @@ void scarlett::Entity::Finalize() noexcept {
 	mParent = nullptr;
 }
 
-scarlett::Entity::Entity() {
+scarlett::Entity::Entity():
+	mMeshRender(nullptr),
+	mCamera(nullptr),
+	mTransform(nullptr)
+{
 	mGuid = xg::newGuid();
 }
 

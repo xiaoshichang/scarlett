@@ -27,6 +27,9 @@ namespace scarlett {
 		virtual		std::shared_ptr<RenderMesh>		CreateRenderMesh(aiMesh* mesh) noexcept;
 		virtual		void	DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh) noexcept;
 
+		virtual		void	LoadShaders() noexcept;
+		virtual		void	UseShader(const std::string& shaderName) noexcept;
+
 	protected:
 		HWND m_hwnd;
 
@@ -41,7 +44,6 @@ namespace scarlett {
 		ID3D11DepthStencilState*	m_depthStencilState;
 		ID3D11DepthStencilView*		m_depthStencilView;
 		ID3D11RasterizerState*		m_rasterState;
-
 
 	};
 

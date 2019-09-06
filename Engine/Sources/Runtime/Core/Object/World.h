@@ -8,6 +8,7 @@
 
 #include "Runtime/Core/Object/Entity.h"
 #include "Runtime/Core/Object/System/MeshRenderSystem.h"
+#include "Runtime/Core/Object/System/CameraSystem.h"
 #include "Guid.hpp"
 
 namespace scarlett {
@@ -46,7 +47,8 @@ namespace scarlett {
 		std::unordered_map<Guid, std::shared_ptr<Entity>>	mEntities;
 
 		// systems
-		MeshRenderSystem* mMeshRenderSystem;
+		MeshRenderSystem*	mMeshRenderSystem;
+		CameraSystem*		mCameraSystem;
 
 	};
 
