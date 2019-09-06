@@ -1,10 +1,10 @@
 #include "Shader.h"
 
-bool scarlett::Shader::InitializeFromFile(GraphicsMgr* mgr, const string & vsPath, const string & psPath) noexcept
+bool scarlett::Shader::InitializeFromFile(GraphicsManager* mgr, const string & vsPath, const string & psPath) noexcept
 {
 	return true;
 }
 
-void scarlett::Shader::Use(GraphicsMgr* mgr) noexcept
+void scarlett::Shader::Use(GraphicsManager* mgr) noexcept
 {
 }

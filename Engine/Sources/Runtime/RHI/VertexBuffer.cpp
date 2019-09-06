@@ -1,4 +1,9 @@
 #include "VertexBuffer.h"
+#include "Runtime/RHI/GraphicsMgr.h"
+
+void scarlett::VertexBuffer::Initialize(GraphicsManager * mgr, void * data, unsigned int count, VertexFormat vf) noexcept
+{
+}
 
 size_t scarlett::VertexBuffer::GetVertexSize(VertexFormat vf) noexcept
 {
@@ -15,3 +20,4 @@ size_t scarlett::VertexBuffer::GetVertexSize(VertexFormat vf) noexcept
 		return 0;
 	}
 }
+

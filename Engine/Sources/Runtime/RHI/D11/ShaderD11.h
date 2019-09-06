@@ -5,14 +5,15 @@
 
 
 namespace scarlett {
-	class GraphicsMgr;
+	class GraphicsManager;
 	class ShaderD11 : public Shader {
 	public:
-		virtual	bool	InitializeFromFile(GraphicsMgr* mgr, const string& vsPath, const string& psPath) noexcept;
-		virtual	void	Use(GraphicsMgr* mgr) noexcept;
+		virtual	bool	InitializeFromFile(GraphicsManager* mgr, const string& vsPath, const string& psPath) noexcept;
+		virtual	void	Use(GraphicsManager* mgr) noexcept;
 
 	public:
-
+		ID3D11VertexShader* m_vertexShader;
+		ID3D11PixelShader* m_pixelShader;
 	};
 
 }

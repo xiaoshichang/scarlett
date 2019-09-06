@@ -1,5 +1,6 @@
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/RHI/D11/VertexBufferD11.h"
+#include "Runtime/RHI/D11/ShaderD11.h"
 #include "Foundation/Assert.h"
 #include <iostream>
 
@@ -254,6 +255,9 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	viewport.TopLeftY = 0.0f;
 	// Create the viewport.
 	m_deviceContext->RSSetViewports(1, &viewport);
+
+	LoadShaders();
+
 	return 0;
 }
 
@@ -288,23 +292,8 @@ void GraphicsMgrD11::ClearRenderTarget(float r, float g, float b, float a) noexc
 
 std::shared_ptr<VertexBuffer> scarlett::GraphicsMgrD11::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
 {
-	auto ptr = std::make_shared<VertexBufferD11>(count, vf);
-
-	D3D11_BUFFER_DESC vertexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData;
-
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = ptr->GetVertexSize(vf) * count;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-	vertexBufferDesc.StructureByteStride = 0;
-
-	vertexData.pSysMem = data;
-	vertexData.SysMemPitch = 0;
-	vertexData.SysMemSlicePitch = 0;
-
-	auto result = m_device->CreateBuffer(&vertexBufferDesc, &vertexData, &(ptr->mVertexBuffer));
+	auto ptr = std::make_shared<VertexBufferD11>();
+	ptr->Initialize(this, data, count, vf);
 	return ptr;
 }
 
@@ -359,6 +348,10 @@ void scarlett::GraphicsMgrD11::DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 {
+	std::string debugShaderVS = "Asset/Shaders/debug.vs";
+	std::string debugShaderPS = "Asset/Shaders/debug.ps";
+	auto debugShader = std::make_shared<ShaderD11>();
+	debugShader->InitializeFromFile(this, debugShaderVS, debugShaderPS);
 
 
 }

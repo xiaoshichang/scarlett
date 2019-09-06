@@ -30,7 +30,7 @@ namespace scarlett {
 		virtual		void	LoadShaders() noexcept;
 		virtual		void	UseShader(const std::string& shaderName) noexcept;
 
-	protected:
+	public:
 		HWND m_hwnd;
 
 		char m_videoCardDescription[128];

@@ -3,11 +3,11 @@
 #include "Runtime/Interface/IResource.h"
 
 namespace scarlett {
-
+	class GraphicsManager;
 	class VertexBuffer : public IVertexBuffer{
 	public:
-		VertexBuffer(unsigned int count, VertexFormat vf) : mCount(count) { mVertexFormat = VertexFormat::None; }
-		virtual		size_t	GetVertexSize(VertexFormat vf) noexcept;
+		virtual void Initialize(GraphicsManager* mgr, void* data, unsigned int count, VertexFormat vf) noexcept;
+		virtual size_t GetVertexSize(VertexFormat vf) noexcept;
 	public:
 		unsigned int mCount;
 		VertexFormat mVertexFormat;

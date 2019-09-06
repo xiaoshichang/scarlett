@@ -3,11 +3,11 @@
 using namespace std;
 
 namespace scarlett {
-	class GraphicsMgr;
+	class GraphicsManager;
 	class IShader {
 	public:
-		virtual	bool	InitializeFromFile(GraphicsMgr* mgr, const string& vsPath, const string& psPath) noexcept = 0;
-		virtual	void	Use(GraphicsMgr* mgr) noexcept = 0;
+		virtual	bool	InitializeFromFile(GraphicsManager* mgr, const string& vsPath, const string& psPath) noexcept = 0;
+		virtual	void	Use(GraphicsManager* mgr) noexcept = 0;
 
 	};
 
