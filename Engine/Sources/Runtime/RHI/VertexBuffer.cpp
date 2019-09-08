@@ -3,9 +3,11 @@
 
 void scarlett::VertexBuffer::Initialize(GraphicsManager * mgr, void * data, unsigned int count, VertexFormat vf) noexcept
 {
+	mCount = count;
+	mVertexFormat = vf;
 }
 
-size_t scarlett::VertexBuffer::GetVertexSize(VertexFormat vf) noexcept
+unsigned int scarlett::VertexBuffer::GetVertexSize(VertexFormat vf) noexcept
 {
 	if (vf == VertexFormat::VF_P3F || vf == VertexFormat::VF_N3F) {
 		return sizeof(float) * 3;

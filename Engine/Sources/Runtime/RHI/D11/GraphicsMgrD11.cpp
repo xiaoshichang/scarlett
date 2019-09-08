@@ -1,6 +1,8 @@
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/RHI/D11/VertexBufferD11.h"
+#include "Runtime/RHI/D11/IndexBufferD11.h"
 #include "Runtime/RHI/D11/ShaderD11.h"
+#include "Runtime/RHI/D11/RenderMeshD11.h"
 #include "Foundation/Assert.h"
 #include <iostream>
 
@@ -306,9 +308,29 @@ void scarlett::GraphicsMgrD11::DeleteVertexBuffer(std::shared_ptr<VertexBuffer> 
 	ptr->mVertexBuffer = nullptr;
 }
 
+std::shared_ptr<IndexBuffer> scarlett::GraphicsMgrD11::CreateIndexBuffer(void * data, int count, IndexFormat iformat) noexcept
+{
+	auto ptr = std::make_shared<IndexBufferD11>();
+	ptr->Initialize(this, data, count, iformat);
+	return ptr;
+}
+
+void scarlett::GraphicsMgrD11::DeleteIndexBuffer(std::shared_ptr<IndexBuffer> ib) noexcept
+{
+	auto ptr = static_pointer_cast<IndexBufferD11>(ib);
+	if (ptr->mIndexBuffer) {
+		ptr->mIndexBuffer->Release();
+	}
+	ptr->mIndexBuffer = nullptr;
+}
+
 std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh) noexcept
 {
-	auto ptr = std::make_shared<RenderMesh>();
+	auto ptr = std::make_shared<RenderMeshD11>();
+	if (!mesh) {
+		return ptr;
+	}
+
 	auto count = mesh->mNumVertices;
 	if (mesh->HasPositions()) {
 		ptr->mPositions = CreateVertexBuffer(mesh->mVertices, count, VertexFormat::VF_P3F);
@@ -327,6 +349,34 @@ std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * 
 		ptr->mTexCoords = CreateVertexBuffer(texCoords, count, VertexFormat::VF_T2F);
 		delete texCoords;
 	}
+
+	if (mesh->HasFaces()) {
+		unsigned int count = 3 * mesh->mNumFaces;
+		unsigned int * idata = new unsigned int[count];
+		for (int i = 0; i < mesh->mNumFaces; ++i) {
+			auto face = mesh->mFaces[i];
+			idata[i * 3] = face.mIndices[0];
+			idata[i * 3 + 1] = face.mIndices[1];
+			idata[i * 3 + 2] = face.mIndices[2];
+		}
+		ptr->mIndexes = CreateIndexBuffer(idata, count, IndexFormat::IF_UINT32);
+		delete idata;
+	}
+
+	if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_POINT) {
+		ptr->mType = PrimitiveType::PT_POINT;
+	}
+	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_LINE) {
+		ptr->mType = PrimitiveType::PT_LINE;
+	}
+	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_TRIANGLE)
+	{
+		ptr->mType = PrimitiveType::PT_TRIANGLE;
+	}
+	else {
+		SCARLETT_ASSERT(false);
+	}
+
 	return ptr;
 }
 
@@ -344,6 +394,10 @@ void scarlett::GraphicsMgrD11::DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh
 		DeleteVertexBuffer(mesh->mTexCoords);
 		mesh->mTexCoords = nullptr;
 	}
+	if (mesh->mIndexes) {
+		DeleteIndexBuffer(mesh->mIndexes);
+		mesh->mIndexes = nullptr;
+	}
 }
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
@@ -352,12 +406,25 @@ void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 	std::string debugShaderPS = "Asset/Shaders/debug.ps";
 	auto debugShader = std::make_shared<ShaderD11>();
 	debugShader->InitializeFromFile(this, debugShaderVS, debugShaderPS);
-
-
+	mShaders["debug"] = debugShader;
 }
 
-void scarlett::GraphicsMgrD11::UseShader(const std::string & shaderName) noexcept
+std::shared_ptr<Shader> scarlett::GraphicsMgrD11::UseShader(const std::string & shaderName) noexcept
 {
+	auto shader = mShaders[shaderName];
+	if (!shader) {
+		SCARLETT_ASSERT(false);
+	}
+	shader->Use(this);
+	return shader;
+}
+
+void scarlett::GraphicsMgrD11::Draw(unsigned int vcount, unsigned int start) noexcept{
+	m_deviceContext->Draw(vcount, start);
+}
+
+void scarlett::GraphicsMgrD11::DrawIndexed(unsigned int icount, unsigned int start, int baseLoc) noexcept{
+	m_deviceContext->DrawIndexed(icount, start, baseLoc);
 }
 
 void GraphicsMgrD11::Present() noexcept {

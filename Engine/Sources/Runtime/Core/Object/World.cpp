@@ -1,5 +1,5 @@
 #include "Foundation/Assert.h"
-
+#include "Runtime/Core/Application/Application.h"
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 
@@ -26,6 +26,9 @@ int scarlett::World::Initialize() noexcept
 	mCameraSystem = new CameraSystem(this);
 	mCameraSystem->Initialize();
 
+	mRenderDebugSystem = new RenderDebugSystem(this);
+	mRenderDebugSystem->Initialize();
+
 	return 0;
 }
 
@@ -44,7 +47,10 @@ void scarlett::World::Tick() noexcept
 
 void scarlett::World::Render() noexcept
 {
+	mApp->mGraphicsManager->ClearRenderTarget(0.2f, 0.4f, 0.6f, 1.0f);
 	mMeshRenderSystem->Render();
+	mRenderDebugSystem->Render();
+	mApp->mGraphicsManager->Present();
 }
 
 std::shared_ptr<Entity> scarlett::World::CreateEntity()
@@ -128,7 +134,7 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		
 		for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
 			auto midx = child->mMeshes[j];
-			comp->mMeshIdx.push_back(midx);
+			comp->mMeshIdxes.push_back(midx);
 		}
 	}
 }
@@ -149,12 +155,12 @@ void scarlett::World::DumpEntities()
 		if (meshRender) {
 			cout << "MeshRenderComponent:" <<  endl;
 			cout << "MeshIndex:";
-			for (int i = 0; i < meshRender->mMeshIdx.size(); ++i) {
-				cout << meshRender->mMeshIdx[i] << " ";
+			for (int i = 0; i < meshRender->mMeshIdxes.size(); ++i) {
+				cout << meshRender->mMeshIdxes[i] << " ";
 			}
 			cout << "Mesh name:";
-			for (int i = 0; i < meshRender->mMeshIdx.size(); ++i) {
-				auto idx = meshRender->mMeshIdx[i];
+			for (int i = 0; i < meshRender->mMeshIdxes.size(); ++i) {
+				auto idx = meshRender->mMeshIdxes[i];
 				auto mesh = mMeshRenderSystem->mMeshes[idx];
 			}
 			cout << endl;

@@ -24,11 +24,17 @@ namespace scarlett {
 		virtual		std::shared_ptr<VertexBuffer>	CreateVertexBuffer(void* data, int count, VertexFormat vf) noexcept;
 		virtual		void	DeleteVertexBuffer(std::shared_ptr<VertexBuffer> vb) noexcept;
 
+		virtual		std::shared_ptr<IndexBuffer>	CreateIndexBuffer(void* data, int count, IndexFormat iformat) noexcept;
+		virtual		void	DeleteIndexBuffer(std::shared_ptr<IndexBuffer> ib) noexcept;
+
 		virtual		std::shared_ptr<RenderMesh>		CreateRenderMesh(aiMesh* mesh) noexcept;
 		virtual		void	DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh) noexcept;
 
 		virtual		void	LoadShaders() noexcept;
-		virtual		void	UseShader(const std::string& shaderName) noexcept;
+		virtual		std::shared_ptr<Shader>	UseShader(const std::string& shaderName) noexcept;
+
+		virtual		void	Draw(unsigned int vcount, unsigned int start) noexcept;
+		virtual		void	DrawIndexed(unsigned int icount, unsigned int start, int baseLoc) noexcept;
 
 	public:
 		HWND m_hwnd;

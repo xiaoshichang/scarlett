@@ -42,15 +42,16 @@ void scarlett::MeshRenderSystem::Render()
 	if (!IsActive())
 		return;
 
-	mGraphicsManager->ClearRenderTarget(0.2f, 0.4f, 0.6f, 1.0f);
-
 	for (auto comp : mComponents) {
 		if (comp->IsVisible()) {
-			comp->Render();
+			for (auto mid : comp->mMeshIdxes) {
+				auto mesh = mMeshes[mid];
+				if (mesh) {
+					mesh->Render(mGraphicsManager, mWorld);
+				}
+			}
 		}
 	}
-
-	mGraphicsManager->Present();
 }
 
 void scarlett::MeshRenderSystem::LoadMesh(aiMesh * mesh)

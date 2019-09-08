@@ -26,7 +26,3 @@ void scarlett::MeshRenderComponent::Finalize() noexcept
 		}
 	}
 }
-
-void scarlett::MeshRenderComponent::Render()
-{
-}

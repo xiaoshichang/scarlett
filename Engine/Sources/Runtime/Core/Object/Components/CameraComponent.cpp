@@ -1,11 +1,13 @@
 #include "CameraComponent.h"
+#include <DirectXMath.h>
+using namespace DirectX;
 
 scarlett::CameraComponent::CameraComponent() :
 	mCameraType(CameraType::Perspective),
-	mPosition(Vector3f(0, 100, -100)),
+	mPosition(Vector3f(200, 200, 200)),
 	mLookat(Vector3f(0, 0, 0)),
 	mUp(Vector3f(0, 1, 0)),
-	mNearClip(1.0f),
+	mNearClip(0.01f),
 	mFarClip(1000.0f),
 	mFov(PI / 3)
 {
@@ -22,7 +24,7 @@ void scarlett::CameraComponent::Finalize() noexcept
 
 Matrix4f scarlett::CameraComponent::GetViewMatrix()
 {
-	return BuildViewLookatRH(mPosition, mLookat, mUp);
+	return BuildViewLookatLH(mPosition, mLookat, mUp);
 }
 
 Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
@@ -30,11 +32,11 @@ Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
 	float width = 1024.0f;
 	float height = 768.0f;
 	if (mCameraType == CameraType::Orth) {
-		return BuildOrthoRH(width, height, mNearClip, mFarClip);
+		return BuildOrthoLH(width, height, mNearClip, mFarClip);
 	}
 	else
 	{
-		return BuildPerspectiveFovRH(mFov, width / height, mNearClip, mFarClip);
+		return BuildPerspectiveFovLH(mFov, width / height, mNearClip, mFarClip);
 	}
 
 }

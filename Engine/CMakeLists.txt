@@ -9,6 +9,8 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/GraphicsMgrD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/VertexBufferD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/ShaderD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/RenderMeshD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/IndexBufferD11.cpp
 	)
 ELSEIF(${UNIX})
 	IF(${APPLE})
@@ -31,10 +33,12 @@ ${SourcesPath}/Runtime/Core/Object/Components/CameraComponent.cpp
 
 ${SourcesPath}/Runtime/Core/Object/System/MeshRenderSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/CameraSystem.cpp
+${SourcesPath}/Runtime/Core/Object/System/RenderDebugSystem.cpp
 
 ${SourcesPath}/Runtime/RHI/RenderObject.cpp
 ${SourcesPath}/Runtime/RHI/RenderMesh.cpp
 ${SourcesPath}/Runtime/RHI/VertexBuffer.cpp
+${SourcesPath}/Runtime/RHI/IndexBuffer.cpp
 ${SourcesPath}/Runtime/RHI/Shader.cpp
 
 ${PlatformOnlySources}

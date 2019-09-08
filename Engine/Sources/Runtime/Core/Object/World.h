@@ -9,6 +9,8 @@
 #include "Runtime/Core/Object/Entity.h"
 #include "Runtime/Core/Object/System/MeshRenderSystem.h"
 #include "Runtime/Core/Object/System/CameraSystem.h"
+#include "Runtime/Core/Object/System/RenderDebugSystem.h"
+
 #include "Guid.hpp"
 
 namespace scarlett {
@@ -37,8 +39,8 @@ namespace scarlett {
 
 
 	public:
-		MeshRenderSystem* GetMeshRenderSystem() { return mMeshRenderSystem; }
-
+		MeshRenderSystem*	GetMeshRenderSystem() { return mMeshRenderSystem; }
+		CameraSystem*		GetCameraSystem() { return mCameraSystem; }
 	public:
 		Application* mApp;
 
@@ -49,6 +51,7 @@ namespace scarlett {
 		// systems
 		MeshRenderSystem*	mMeshRenderSystem;
 		CameraSystem*		mCameraSystem;
+		RenderDebugSystem*	mRenderDebugSystem;
 
 	};
 

@@ -6,20 +6,26 @@
 
 #include "Runtime/Interface/IResource.h"
 #include "Runtime/RHI/VertexBuffer.h"
+#include "Runtime/RHI/IndexBuffer.h"
 
 using namespace std;
 
 namespace scarlett {
-	class GraphicsManager;
 
 	class RenderMesh : public IMesh{
 	public:
 		RenderMesh();
 		virtual ~RenderMesh();
+
+		virtual void Render(GraphicsManager* mgr, World* world) noexcept;
+		int GetVaildVertexBufferCount() noexcept;
+
 	public:
 		shared_ptr<VertexBuffer>	mPositions;
 		shared_ptr<VertexBuffer>	mNormals;
 		shared_ptr<VertexBuffer>	mTexCoords;
+		shared_ptr<IndexBuffer>		mIndexes;
+		PrimitiveType				mType;
 	};
 
 }

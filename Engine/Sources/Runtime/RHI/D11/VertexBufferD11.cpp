@@ -8,12 +8,14 @@ using namespace scarlett;
 
 void scarlett::VertexBufferD11::Initialize(GraphicsManager * mgr, void * data, unsigned int count, VertexFormat vf) noexcept
 {
+	VertexBuffer::Initialize(mgr, data, count, vf);
+
 	auto mgrd11 = (GraphicsMgrD11*)mgr;
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData;
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = this->GetVertexSize(vf) * count;
+	vertexBufferDesc.ByteWidth = GetVertexSize(vf) * count;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
