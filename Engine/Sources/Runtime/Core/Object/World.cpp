@@ -48,7 +48,7 @@ void scarlett::World::Tick() noexcept
 void scarlett::World::Render() noexcept
 {
 	mApp->mGraphicsManager->ClearRenderTarget(0.2f, 0.4f, 0.6f, 1.0f);
-	mMeshRenderSystem->Render();
+	//mMeshRenderSystem->Render();
 	mRenderDebugSystem->Render();
 	mApp->mGraphicsManager->Present();
 }

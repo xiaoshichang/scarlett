@@ -16,7 +16,8 @@ cbuffer MatrixBuffer
 
 v2p main(a2v input) {
 	v2p output;
-	output.position = mul(input.position, worldMatrix);
+	float4 HPos = float4(input.position, 1.0);
+	output.position = mul(HPos, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 	return output;

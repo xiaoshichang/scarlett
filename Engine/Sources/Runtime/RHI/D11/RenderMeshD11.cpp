@@ -61,23 +61,14 @@ void scarlett::RenderMeshD11::Render(GraphicsManager * mgr, World* world) noexce
 	delete stride;
 	delete offset;
 	delete vbuffers;
-
-	auto view = DirectX::XMMatrixLookAtLH({200, 200, 200}, {0, 0, 0}, {0, 1, 0});
-	auto project = DirectX::XMMatrixPerspectiveFovLH(3.14f / 4, 1.33, 0.1, 1000);
-
-	auto _view = XMMatrixTranspose(view);
-	auto _project = XMMatrixTranspose(project);
 	
 	auto shader = mgrd11->UseShader("debug");
 	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
 
-	auto view1 = camera->GetViewMatrix();
-	auto project1 = camera->GetPerspectiveMatrix();
-
 	ConstantBuffer cb;
 	cb.world = Matrix4f::Identity();
-	cb.view = camera->GetViewMatrix();
-	cb.projection = camera->GetPerspectiveMatrix();
+	cb.view = camera->GetViewMatrix().transpose();
+	cb.projection = camera->GetPerspectiveMatrix().transpose();
 	shader->SetConstantBuffer(mgrd11, cb);
 
 	if (mIndexes) {
