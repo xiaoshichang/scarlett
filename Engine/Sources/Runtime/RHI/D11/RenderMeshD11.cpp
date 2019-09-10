@@ -3,14 +3,30 @@
 #include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Object/World.h"
+#include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
-void scarlett::RenderMeshD11::Initialize(GraphicsManager * mgr, aiMesh * mesh) noexcept
+scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh)
+{
+	Initialize(mesh);
+}
+
+scarlett::RenderMeshD11::RenderMeshD11(std::shared_ptr<VertexBuffer> vb)
+{
+	Initialize(vb);
+}
+
+scarlett::RenderMeshD11::~RenderMeshD11()
+{
+	Finialize();
+}
+
+void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
 {
 	if (!mesh) {
 		return;
 	}
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 
 	auto count = mesh->mNumVertices;
 	if (mesh->HasPositions()) {
@@ -87,9 +103,9 @@ void scarlett::RenderMeshD11::Initialize(GraphicsManager * mgr, aiMesh * mesh) n
 	}
 }
 
-void scarlett::RenderMeshD11::Initialize(GraphicsManager * mgr, std::shared_ptr<VertexBuffer> vb) noexcept
+void scarlett::RenderMeshD11::Initialize(std::shared_ptr<VertexBuffer> vb) noexcept
 {
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mPositions = vb;
 	mType = PrimitiveType::PT_LINE;
 	vbcount = GetVaildVertexBufferCount();
@@ -107,9 +123,9 @@ void scarlett::RenderMeshD11::Initialize(GraphicsManager * mgr, std::shared_ptr<
 	}
 }
 
-void scarlett::RenderMeshD11::Render(GraphicsManager * mgr, World* world, const Matrix4f& worldMatrix) noexcept
+void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) noexcept
 {
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
 
 	// Set the index buffer to active in the input assembler so it can be rendered.
@@ -136,7 +152,7 @@ void scarlett::RenderMeshD11::Render(GraphicsManager * mgr, World* world, const 
 	cb.world = worldMatrix.transpose();
 	cb.view = camera->GetViewMatrix().transpose();
 	cb.projection = camera->GetPerspectiveMatrix().transpose();
-	shader->SetConstantBuffer(mgrd11, cb);
+	shader->SetConstantBuffer(cb);
 
 	if (mIndexes) {
 		mgrd11->DrawIndexed(mIndexes->mCount, 0, 0);
@@ -145,4 +161,12 @@ void scarlett::RenderMeshD11::Render(GraphicsManager * mgr, World* world, const 
 		mgrd11->Draw(mPositions->mCount, 0);
 	}
 
+}
+
+void scarlett::RenderMeshD11::Finialize() noexcept
+{
+	mPositions = nullptr;
+	mNormals = nullptr;
+	mTexCoords = nullptr;
+	mIndexes = nullptr;
 }

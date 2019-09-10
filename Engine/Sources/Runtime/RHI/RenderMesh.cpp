@@ -16,11 +16,11 @@ scarlett::RenderMesh::~RenderMesh()
 {
 }
 
-void scarlett::RenderMesh::Initialize(GraphicsManager * mgr, std::shared_ptr<VertexBuffer> vb) noexcept
+void scarlett::RenderMesh::Initialize(std::shared_ptr<VertexBuffer> vb) noexcept
 {
 }
 
-void scarlett::RenderMesh::Render(GraphicsManager* mgr, World* world, const Matrix4f& worldMatrix) noexcept {
+void scarlett::RenderMesh::Render(World* world, const Matrix4f& worldMatrix) noexcept {
 }
 
 int scarlett::RenderMesh::GetVaildVertexBufferCount() noexcept {
@@ -35,4 +35,8 @@ int scarlett::RenderMesh::GetVaildVertexBufferCount() noexcept {
 		result += 1;
 	}
 	return result;
+}
+
+void scarlett::RenderMesh::Finialize() noexcept
+{
 }

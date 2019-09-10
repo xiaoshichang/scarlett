@@ -15,13 +15,12 @@ namespace scarlett {
 		Matrix4f projection;
 	};
 
-	class GraphicsManager;
 	class IShader {
 	public:
-		virtual	bool	InitializeFromFile(GraphicsManager* mgr, const string& vsPath, const string& psPath) noexcept = 0;
-		virtual	void	Use(GraphicsManager* mgr) noexcept = 0;
-		virtual void	Finialize(GraphicsManager* mgr) noexcept = 0;
-		virtual void	SetConstantBuffer(GraphicsManager* mgr, const ConstantBuffer& cbuffer) noexcept = 0;
+		virtual	bool	InitializeFromFile(const string& vsPath, const string& psPath) noexcept = 0;
+		virtual	void	Use() noexcept = 0;
+		virtual void	Finialize() noexcept = 0;
+		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept = 0;
 
 	};
 

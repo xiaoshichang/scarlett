@@ -24,7 +24,7 @@ void scarlett::RenderDebugSystem::Render() noexcept {
 	for (auto pair : mMeshes) {
 		auto mesh = pair.second;
 		auto worldMatrix = Matrix4f::Identity();
-		mesh->Render(mgr, mWorld, worldMatrix);
+		mesh->Render(mWorld, worldMatrix);
 	}
 }
 
@@ -68,7 +68,6 @@ void scarlett::RenderDebugSystem::DeleteDebugMesh() noexcept {
 
 	auto mesh = mMeshes["mesh"];
 	if (mesh) {
-		mgr->DeleteRenderMesh(mesh);
 		mMeshes.erase("mesh");
 	}
 }

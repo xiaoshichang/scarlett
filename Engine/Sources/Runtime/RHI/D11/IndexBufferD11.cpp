@@ -1,13 +1,24 @@
 #include "IndexBufferD11.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
+#include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
-void scarlett::IndexBufferD11::Initialize(GraphicsManager * mgr, void * data, unsigned int count, IndexFormat iformat) noexcept
+scarlett::IndexBufferD11::IndexBufferD11(void* data, unsigned int count, IndexFormat iformat)
 {
-	IndexBuffer::Initialize(mgr, data, count, iformat);
+	Initialize(data, count, iformat);
+}
+
+scarlett::IndexBufferD11::~IndexBufferD11()
+{
+	Finialize();
+}
+
+void scarlett::IndexBufferD11::Initialize(void * data, unsigned int count, IndexFormat iformat) noexcept
+{
+	IndexBuffer::Initialize(data, count, iformat);
 
 	HRESULT result;
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	D3D11_BUFFER_DESC indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA indexData;
 	// Set up the description of the static index buffer.
@@ -27,5 +38,12 @@ void scarlett::IndexBufferD11::Initialize(GraphicsManager * mgr, void * data, un
 	result = mgrd11->m_device->CreateBuffer(&indexBufferDesc, &indexData, &mIndexBuffer);
 	if (FAILED(result)){
 		SCARLETT_ASSERT(false);
+	}
+}
+
+void scarlett::IndexBufferD11::Finialize() noexcept
+{
+	if (mIndexBuffer) {
+		mIndexBuffer->Release();
 	}
 }

@@ -27,4 +27,6 @@ namespace scarlett {
 		bool mQuit;
 
 	};
+
+	extern Application* GApp;
 }

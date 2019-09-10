@@ -1,13 +1,18 @@
 #pragma once
 #include "Runtime/RHI/RenderMesh.h"
+
 #include <d3d11.h>
 
 namespace scarlett {
 	class RenderMeshD11 : public RenderMesh {
 	public:
-		virtual void		Initialize(GraphicsManager* mgr, aiMesh* mesh) noexcept;
-		virtual void		Initialize(GraphicsManager* mgr, std::shared_ptr<VertexBuffer> vb) noexcept;
-		virtual void		Render(GraphicsManager* mgr, World* world, const Matrix4f& worldMatrix) noexcept;
+		RenderMeshD11(aiMesh* mesh);
+		RenderMeshD11(std::shared_ptr<VertexBuffer> vb);
+		virtual ~RenderMeshD11();
+		virtual void		Initialize(aiMesh* mesh) noexcept;
+		virtual void		Initialize(std::shared_ptr<VertexBuffer> vb) noexcept;
+		virtual void		Render(World* world, const Matrix4f& worldMatrix) noexcept;
+		virtual void		Finialize() noexcept;
 
 	private:
 		unsigned int*		stride;

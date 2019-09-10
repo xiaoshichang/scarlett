@@ -1,18 +1,18 @@
 #include "Shader.h"
 
-bool scarlett::Shader::InitializeFromFile(GraphicsManager* mgr, const string & vsPath, const string & psPath) noexcept
+bool scarlett::Shader::InitializeFromFile(const string & vsPath, const string & psPath) noexcept
 {
 	return true;
 }
 
-void scarlett::Shader::Use(GraphicsManager* mgr) noexcept
+void scarlett::Shader::Use() noexcept
 {
 }
 
-void scarlett::Shader::Finialize(GraphicsManager* mgr) noexcept {
+void scarlett::Shader::Finialize() noexcept {
 
 }
 
-void scarlett::Shader::SetConstantBuffer(GraphicsManager* mgr, const ConstantBuffer& cbuffer) noexcept {
+void scarlett::Shader::SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept {
 
 }

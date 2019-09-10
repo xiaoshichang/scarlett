@@ -1,13 +1,24 @@
 #include "Runtime/RHI/D11/ShaderD11.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/RHI/GraphicsMgr.h"
+#include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 #include <d3dcompiler.h>
 #include <iostream>
 
-bool scarlett::ShaderD11::InitializeFromFile(GraphicsManager* mgr, const string & vsPath, const string & psPath) noexcept
+scarlett::ShaderD11::ShaderD11(const string & vsPath, const string & psPath)
 {
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	InitializeFromFile(vsPath, psPath);
+}
+
+scarlett::ShaderD11::~ShaderD11()
+{
+	Finialize();
+}
+
+bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string & psPath) noexcept
+{
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -102,9 +113,9 @@ bool scarlett::ShaderD11::InitializeFromFile(GraphicsManager* mgr, const string 
 	return true;
 }
 
-void scarlett::ShaderD11::Use(GraphicsManager* mgr) noexcept
+void scarlett::ShaderD11::Use() noexcept
 {
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	// Set the vertex input layout.
 	mgrd11->m_deviceContext->IASetInputLayout(m_layout);
 	// Set the vertex and pixel shaders that will be used to render this triangle.
@@ -112,7 +123,7 @@ void scarlett::ShaderD11::Use(GraphicsManager* mgr) noexcept
 	mgrd11->m_deviceContext->PSSetShader(m_pixelShader, NULL, 0);
 }
 
-void scarlett::ShaderD11::Finialize(GraphicsManager * mgr) noexcept
+void scarlett::ShaderD11::Finialize() noexcept
 {
 	// Release the matrix constant buffer.
 	if (m_matrixBuffer){
@@ -139,9 +150,9 @@ void scarlett::ShaderD11::Finialize(GraphicsManager * mgr) noexcept
 	}
 }
 
-void scarlett::ShaderD11::SetConstantBuffer(GraphicsManager * mgr, const ConstantBuffer & cbuffer) noexcept
+void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noexcept
 {
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;

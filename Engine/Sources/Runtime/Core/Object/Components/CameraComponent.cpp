@@ -9,7 +9,9 @@ scarlett::CameraComponent::CameraComponent() :
 	mUp(Vector3f(0, 1, 0)),
 	mNearClip(0.01f),
 	mFarClip(1000.0f),
-	mFov(PI / 3)
+	mFov(PI / 3),
+	mViewDirty(true),
+	mProjectionDirty(true)
 {
 }
 
@@ -24,19 +26,27 @@ void scarlett::CameraComponent::Finalize() noexcept
 
 Matrix4f scarlett::CameraComponent::GetViewMatrix()
 {
-	return BuildViewLookatLH(mPosition, mLookat, mUp);
+	if (mViewDirty) {
+		mViewMatrix = BuildViewLookatLH(mPosition, mLookat, mUp);
+		mViewDirty = false;
+	}
+
+	return mViewMatrix;
 }
 
 Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
 {	
 	float width = 1024.0f;
 	float height = 768.0f;
-	if (mCameraType == CameraType::Orth) {
-		return BuildOrthoLH(width, height, mNearClip, mFarClip);
-	}
-	else
-	{
-		return BuildPerspectiveFovLH(mFov, width / height, mNearClip, mFarClip);
-	}
 
+	if (mProjectionDirty) {
+		if (mCameraType == CameraType::Orth) {
+			mProjectionMatrix = BuildOrthoLH(width, height, mNearClip, mFarClip);
+		}
+		else
+		{
+			mProjectionMatrix = BuildPerspectiveFovLH(mFov, width / height, mNearClip, mFarClip);
+		}
+	}
+	return mProjectionMatrix;
 }

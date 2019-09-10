@@ -87,10 +87,6 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	delete[] displayModeList;
 	displayModeList = 0;
 
-	SAVE_RELEASE_DXOBJ(adapterOutput);
-	SAVE_RELEASE_DXOBJ(adapter);
-	SAVE_RELEASE_DXOBJ(factory);
-
 	// Initialize the swap chain description.
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
@@ -123,7 +119,7 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	swapChainDesc.OutputWindow = m_hwnd;
 
 	// Turn multisampling off.
-	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.SampleDesc.Count = 4;
 	swapChainDesc.SampleDesc.Quality = 0;
 
 	// Set to full screen or windowed mode.
@@ -150,14 +146,23 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
-		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
+	result = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D10_CREATE_DEVICE_DEBUG, &featureLevel, 1,
+		D3D11_SDK_VERSION, &m_device, NULL, &m_deviceContext);
+	SCARLETT_ASSERT(result >= 0);
+
+	UINT x4MsaaQuality;
+	result = m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, 8, &x4MsaaQuality);
+	SCARLETT_ASSERT(result >= 0);
+
+	result = m_device->CheckMultisampleQualityLevels(DXGI_FORMAT_D24_UNORM_S8_UINT, 8, &x4MsaaQuality);
+	SCARLETT_ASSERT(result >= 0);
+
+	result = factory->CreateSwapChain(m_device, &swapChainDesc, &m_swapChain);
 	SCARLETT_ASSERT(result >= 0);
 
 	// Get the pointer to the back buffer.
 	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	SCARLETT_ASSERT(result >= 0);
-
 	// Create the render target view with the back buffer pointer.
 	result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
 	SCARLETT_ASSERT(result >= 0);
@@ -175,7 +180,7 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	depthBufferDesc.MipLevels = 1;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthBufferDesc.SampleDesc.Count = 1;
+	depthBufferDesc.SampleDesc.Count = 4;
 	depthBufferDesc.SampleDesc.Quality = 0;
 	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -219,7 +224,7 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 
 	// Set up the depth stencil view description.
 	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;	//Your dimension for the DSV needs to be D3D11_DSV_DIMENSION_TEXTURE2DMS if the Texture2D was created with multisampling.
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
@@ -237,7 +242,7 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	rasterDesc.DepthClipEnable = true;
 	rasterDesc.FillMode = D3D11_FILL_SOLID;
 	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable = false;
+	rasterDesc.MultisampleEnable = true;
 	rasterDesc.ScissorEnable = false;
 	rasterDesc.SlopeScaledDepthBias = 0.0f;
 
@@ -260,6 +265,9 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 
 	LoadShaders();
 
+	SAVE_RELEASE_DXOBJ(adapterOutput);
+	SAVE_RELEASE_DXOBJ(adapter);
+	SAVE_RELEASE_DXOBJ(factory);
 	return 0;
 }
 
@@ -294,76 +302,36 @@ void GraphicsMgrD11::ClearRenderTarget(float r, float g, float b, float a) noexc
 
 std::shared_ptr<VertexBuffer> scarlett::GraphicsMgrD11::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
 {
-	auto ptr = std::make_shared<VertexBufferD11>();
-	ptr->Initialize(this, data, count, vf);
+	auto ptr = std::make_shared<VertexBufferD11>(data, count, vf);
 	return ptr;
 }
 
-void scarlett::GraphicsMgrD11::DeleteVertexBuffer(std::shared_ptr<VertexBuffer> vb) noexcept
-{
-	auto ptr = static_pointer_cast<VertexBufferD11>(vb);
-	if (ptr->mVertexBuffer) {
-		ptr->mVertexBuffer->Release();
-	}
-	ptr->mVertexBuffer = nullptr;
-}
 
 std::shared_ptr<IndexBuffer> scarlett::GraphicsMgrD11::CreateIndexBuffer(void * data, int count, IndexFormat iformat) noexcept
 {
-	auto ptr = std::make_shared<IndexBufferD11>();
-	ptr->Initialize(this, data, count, iformat);
+	auto ptr = std::make_shared<IndexBufferD11>(data, count, iformat);
 	return ptr;
 }
 
-void scarlett::GraphicsMgrD11::DeleteIndexBuffer(std::shared_ptr<IndexBuffer> ib) noexcept
-{
-	auto ptr = static_pointer_cast<IndexBufferD11>(ib);
-	if (ptr->mIndexBuffer) {
-		ptr->mIndexBuffer->Release();
-	}
-	ptr->mIndexBuffer = nullptr;
-}
 
 std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshD11>();
-	ptr->Initialize(this, mesh);
+	auto ptr = std::make_shared<RenderMeshD11>(mesh);
 	return ptr;
 }
 
 std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshD11>();
-	ptr->Initialize(this, vb);
+	auto ptr = std::make_shared<RenderMeshD11>(vb);
 	return ptr;
 }
 
-void scarlett::GraphicsMgrD11::DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh) noexcept
-{
-	if (mesh->mPositions) {
-		DeleteVertexBuffer(mesh->mPositions);
-		mesh->mPositions = nullptr;
-	}
-	if (mesh->mNormals) {
-		DeleteVertexBuffer(mesh->mNormals);
-		mesh->mNormals = nullptr;
-	}
-	if (mesh->mTexCoords) {
-		DeleteVertexBuffer(mesh->mTexCoords);
-		mesh->mTexCoords = nullptr;
-	}
-	if (mesh->mIndexes) {
-		DeleteIndexBuffer(mesh->mIndexes);
-		mesh->mIndexes = nullptr;
-	}
-}
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 {
 	std::string debugShaderVS = "Asset/Shaders/debug.vs";
 	std::string debugShaderPS = "Asset/Shaders/debug.ps";
-	auto debugShader = std::make_shared<ShaderD11>();
-	debugShader->InitializeFromFile(this, debugShaderVS, debugShaderPS);
+	auto debugShader = std::make_shared<ShaderD11>(debugShaderVS, debugShaderPS);
 	mShaders["debug"] = debugShader;
 }
 
@@ -373,7 +341,7 @@ std::shared_ptr<Shader> scarlett::GraphicsMgrD11::UseShader(const std::string & 
 	if (!shader) {
 		SCARLETT_ASSERT(false);
 	}
-	shader->Use(this);
+	shader->Use();
 	return shader;
 }
 

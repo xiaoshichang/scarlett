@@ -1,16 +1,27 @@
 #include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Runtime/RHI/GraphicsMgr.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
+#include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
 #include <d3d11.h>
 using namespace scarlett;
 
-void scarlett::VertexBufferD11::Initialize(GraphicsManager * mgr, void * data, unsigned int count, VertexFormat vf) noexcept
+scarlett::VertexBufferD11::VertexBufferD11(void * data, unsigned int count, VertexFormat vf)
 {
-	VertexBuffer::Initialize(mgr, data, count, vf);
+	Initialize(data, count, vf);
+}
 
-	auto mgrd11 = (GraphicsMgrD11*)mgr;
+scarlett::VertexBufferD11::~VertexBufferD11()
+{
+	Finialize();
+}
+
+void scarlett::VertexBufferD11::Initialize(void * data, unsigned int count, VertexFormat vf) noexcept
+{
+	VertexBuffer::Initialize(data, count, vf);
+
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData;
 
@@ -26,4 +37,11 @@ void scarlett::VertexBufferD11::Initialize(GraphicsManager * mgr, void * data, u
 	vertexData.SysMemSlicePitch = 0;
 
 	auto result = mgrd11->m_device->CreateBuffer(&vertexBufferDesc, &vertexData, &(this->mVertexBuffer));
+}
+
+void scarlett::VertexBufferD11::Finialize() noexcept
+{
+	if (mVertexBuffer) {
+		mVertexBuffer->Release();
+	}
 }

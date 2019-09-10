@@ -168,12 +168,7 @@ void scarlett::World::DumpEntities()
 		auto cameraComponent = entity->GetComponent<CameraComponent>();
 		if (cameraComponent)
 		{
-			cout << "camera type: " << cameraComponent->mCameraType << endl;
-			cout << "position: " << cameraComponent->mPosition.x() << "," <<cameraComponent->mPosition.y() << "," << cameraComponent->mPosition.z() << endl;
-			cout << "Lookat: " << cameraComponent->mLookat.x() << "," << cameraComponent->mLookat.y() << "," << cameraComponent->mLookat.z() << endl;
-			cout << "up: " << cameraComponent->mUp.x() << "," << cameraComponent->mUp.y() << "," << cameraComponent->mUp.z() << endl;
-			cout << "near and far: " << cameraComponent->mNearClip << "," << cameraComponent->mFarClip << endl;
-			cout << "fov: " << cameraComponent->mFov << endl;
+			cout << "camera type: " << cameraComponent->GetType() << endl;
 			cout << cameraComponent->GetViewMatrix();
 			cout << cameraComponent->GetPerspectiveMatrix();
 		}

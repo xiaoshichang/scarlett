@@ -144,6 +144,10 @@ namespace scarlett {
 		return tmp;
 	}
 
+	inline Matrix4f BuildRotationMatrix(const float rx, const float ry, const float rz) {
+
+	}
+
 
 }
 
