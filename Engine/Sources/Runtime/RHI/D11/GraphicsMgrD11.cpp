@@ -327,56 +327,14 @@ void scarlett::GraphicsMgrD11::DeleteIndexBuffer(std::shared_ptr<IndexBuffer> ib
 std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh) noexcept
 {
 	auto ptr = std::make_shared<RenderMeshD11>();
-	if (!mesh) {
-		return ptr;
-	}
+	ptr->Initialize(this, mesh);
+	return ptr;
+}
 
-	auto count = mesh->mNumVertices;
-	if (mesh->HasPositions()) {
-		ptr->mPositions = CreateVertexBuffer(mesh->mVertices, count, VertexFormat::VF_P3F);
-	}
-
-	if (mesh->HasNormals()) {
-		ptr->mNormals = CreateVertexBuffer(mesh->mNormals, count, VertexFormat::VF_N3F);
-	}
-
-	if (mesh->HasTextureCoords(0)) {
-		float *texCoords = (float *)malloc(sizeof(float) * 2 * mesh->mNumVertices);
-		for (unsigned int k = 0; k < mesh->mNumVertices; ++k) {
-			texCoords[k * 2] = mesh->mTextureCoords[0][k].x;
-			texCoords[k * 2 + 1] = mesh->mTextureCoords[0][k].y;
-		}
-		ptr->mTexCoords = CreateVertexBuffer(texCoords, count, VertexFormat::VF_T2F);
-		delete texCoords;
-	}
-
-	if (mesh->HasFaces()) {
-		unsigned int count = 3 * mesh->mNumFaces;
-		unsigned int * idata = new unsigned int[count];
-		for (int i = 0; i < mesh->mNumFaces; ++i) {
-			auto face = mesh->mFaces[i];
-			idata[i * 3] = face.mIndices[0];
-			idata[i * 3 + 1] = face.mIndices[1];
-			idata[i * 3 + 2] = face.mIndices[2];
-		}
-		ptr->mIndexes = CreateIndexBuffer(idata, count, IndexFormat::IF_UINT32);
-		delete idata;
-	}
-
-	if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_POINT) {
-		ptr->mType = PrimitiveType::PT_POINT;
-	}
-	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_LINE) {
-		ptr->mType = PrimitiveType::PT_LINE;
-	}
-	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_TRIANGLE)
-	{
-		ptr->mType = PrimitiveType::PT_TRIANGLE;
-	}
-	else {
-		SCARLETT_ASSERT(false);
-	}
-
+std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept
+{
+	auto ptr = std::make_shared<RenderMeshD11>();
+	ptr->Initialize(this, vb);
 	return ptr;
 }
 

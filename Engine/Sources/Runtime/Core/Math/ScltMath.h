@@ -102,5 +102,48 @@ namespace scarlett {
 		return tmp;
 	}
 
+	inline Matrix4f BuildTranslationMatrix(const Vector3f& offset) {
+		Matrix4f tmp;
+		tmp <<
+			1.0f, 0.0f, 0.0f, offset.x(),
+			0.0f, 1.0f, 0.0f, offset.y(),
+			0.0f, 0.0f, 1.0f, offset.z(),
+			0.0f, 0.0f, 0.0f, 1.0f;
+		return tmp;
+	}
+
+	inline Matrix4f BuildScaleMatrix(const Vector3f& scale) {
+		Matrix4f tmp;
+		tmp <<
+			scale.x(), 0.0f, 0.0f, 0.0f,
+			0.0f, scale.y(), 0.0f, 0.0f,
+			0.0f, 0.0f, scale.z(), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f;
+		return tmp;
+	}
+
+	inline Matrix4f BuildRotationMatrix(const Vector3f& axis, const float radio) {
+		Matrix4f tmp;
+		float c = cosf(radio), s = sinf(radio), one_minus_c = 1.0f - c;
+		tmp << c + axis.x() * axis.x() * one_minus_c,
+			axis.x() * axis.y() * one_minus_c - axis.z() * s,
+			axis.x() * axis.z() * one_minus_c + axis.y() * s,
+			0.0f,
+			axis.x() * axis.y() * one_minus_c + axis.z() * s,
+			c + axis.y() * axis.y() * one_minus_c,
+			axis.y() * axis.z() * one_minus_c - axis.x() * s,
+			0.0f,
+			axis.x() * axis.z() * one_minus_c - axis.y() * s,
+			axis.y() * axis.z() * one_minus_c + axis.x() * s,
+			c + axis.z() * axis.z() * one_minus_c,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			1.0f;
+		return tmp;
+	}
+
+
 }
 

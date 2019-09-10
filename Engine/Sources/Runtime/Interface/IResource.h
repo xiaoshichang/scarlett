@@ -1,5 +1,8 @@
 #pragma once
 #include "Runtime/Interface/IModule.h"
+#include "Runtime/Core/Math/ScltMath.h"
+#include "assimp/scene.h"
+
 
 namespace scarlett {
 	class GraphicsManager;
@@ -41,7 +44,9 @@ namespace scarlett {
 
 	class IMesh : public IRenderResource {
 	public:
-		virtual void Render(GraphicsManager* mgr, World* world) noexcept = 0;
+		virtual void		Initialize(GraphicsManager* mgr, aiMesh* mesh) noexcept = 0;
+		virtual int			GetVaildVertexBufferCount() noexcept = 0;
+		virtual void		Render(GraphicsManager* mgr, World* world, const Matrix4f& worldMatrix) noexcept = 0;
 
 	};
 

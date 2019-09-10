@@ -1,9 +1,11 @@
 struct v2p {
 	float4 position : SV_POSITION;
+	float4 color : Color;
 };
 
 float4 main(v2p input) : SV_TARGET
 {
-    return float4(1.0, 1.0, 1.0, 1.0);
+
+    return float4(frac(input.color.x), frac(input.color.y), frac(input.color.z), 1.0);
 }
 

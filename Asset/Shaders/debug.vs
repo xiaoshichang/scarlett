@@ -5,6 +5,7 @@ struct a2v {
 
 struct v2p {
 	float4 position : SV_POSITION;
+	float4 color : Color;
 };
 
 cbuffer MatrixBuffer
@@ -20,6 +21,7 @@ v2p main(a2v input) {
 	output.position = mul(HPos, worldMatrix);
     output.position = mul(output.position, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
+	output.color = float4(input.position, 1.0);
 	return output;
 }
 

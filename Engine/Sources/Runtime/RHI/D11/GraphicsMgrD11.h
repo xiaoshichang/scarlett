@@ -28,6 +28,7 @@ namespace scarlett {
 		virtual		void	DeleteIndexBuffer(std::shared_ptr<IndexBuffer> ib) noexcept;
 
 		virtual		std::shared_ptr<RenderMesh>		CreateRenderMesh(aiMesh* mesh) noexcept;
+		virtual		std::shared_ptr<RenderMesh>		CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept;
 		virtual		void	DeleteRenderMesh(std::shared_ptr<RenderMesh> mesh) noexcept;
 
 		virtual		void	LoadShaders() noexcept;

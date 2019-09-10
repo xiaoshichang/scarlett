@@ -23,7 +23,8 @@ void scarlett::RenderDebugSystem::Render() noexcept {
 
 	for (auto pair : mMeshes) {
 		auto mesh = pair.second;
-		mesh->Render(mgr, mWorld);
+		auto worldMatrix = Matrix4f::Identity();
+		mesh->Render(mgr, mWorld, worldMatrix);
 	}
 }
 
@@ -56,7 +57,7 @@ void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
 	auto vertexBuffer = mgr->CreateVertexBuffer(data, pointCount, VertexFormat::VF_P3F);
 	delete data;
 
-	auto mesh = mgr->CreateRenderMesh(nullptr);
+	auto mesh = mgr->CreateRenderMeshDebug(vertexBuffer);
 	mesh->mPositions = vertexBuffer;
 	mesh->mType = PrimitiveType::PT_LINE;
 	mMeshes["mesh"] = mesh;

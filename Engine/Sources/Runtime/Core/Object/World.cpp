@@ -48,7 +48,7 @@ void scarlett::World::Tick() noexcept
 void scarlett::World::Render() noexcept
 {
 	mApp->mGraphicsManager->ClearRenderTarget(0.2f, 0.4f, 0.6f, 1.0f);
-	//mMeshRenderSystem->Render();
+	mMeshRenderSystem->Render();
 	mRenderDebugSystem->Render();
 	mApp->mGraphicsManager->Present();
 }
@@ -124,7 +124,6 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		auto entity = CreateEntity();
 		aiVector3D scaling, rotation, position;
 		child->mTransformation.Decompose(scaling, rotation, position);
-
 		auto transformation = entity->GetComponent<TransformComponent>();
 		transformation->SetPosition(Vector3f(position.x, position.y, position.z));
 		transformation->SetRotation(Vector3f(rotation.x, rotation.y, rotation.z));

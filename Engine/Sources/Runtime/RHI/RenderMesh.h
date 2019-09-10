@@ -16,9 +16,9 @@ namespace scarlett {
 	public:
 		RenderMesh();
 		virtual ~RenderMesh();
-
-		virtual void Render(GraphicsManager* mgr, World* world) noexcept;
-		int GetVaildVertexBufferCount() noexcept;
+		virtual void		Initialize(GraphicsManager* mgr, std::shared_ptr<VertexBuffer> vb) noexcept;
+		virtual void		Render(GraphicsManager* mgr, World* world, const Matrix4f& worldMatrix) noexcept;
+		virtual int			GetVaildVertexBufferCount() noexcept;
 
 	public:
 		shared_ptr<VertexBuffer>	mPositions;
