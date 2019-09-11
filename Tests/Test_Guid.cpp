@@ -3,14 +3,15 @@
 //
 
 #include <iostream>
-#include "Guid.hpp"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
-using namespace xg;
 using namespace std;
 
 int main(int argc, char* argv[]) {
-	Guid guid = newGuid();
-	cout << "Guid test:" << guid << endl;
-
+	boost::uuids::uuid tag;
+	tag = boost::uuids::random_generator()();
+	std::cout << tag;
 	return 0;
 }

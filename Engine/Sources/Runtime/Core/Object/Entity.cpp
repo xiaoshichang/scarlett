@@ -24,13 +24,13 @@ scarlett::Entity::Entity():
 	mCamera(nullptr),
 	mTransform(nullptr)
 {
-	mGuid = xg::newGuid();
+	mGuid = boost::uuids::random_generator()();
 }
 
-scarlett::Entity::Entity(const Guid& guid):
-	mGuid(guid),
+scarlett::Entity::Entity(const boost::uuids::uuid& guid):
 	mParent(nullptr),
-	mTransform(nullptr)
+	mTransform(nullptr),
+	mGuid(guid)
 {
 }
 
@@ -38,12 +38,12 @@ scarlett::Entity::~Entity() {
 	std::cout << "destructor of entity: " << mGuid << std::endl;
 }
 
-Guid scarlett::Entity::GetGuid() const noexcept
+boost::uuids::uuid scarlett::Entity::GetGuid() const noexcept
 {
 	return mGuid;
 }
 
-void scarlett::Entity::SetGuid(const Guid & guid) noexcept
+void scarlett::Entity::SetGuid(const boost::uuids::uuid & guid) noexcept
 {
 	mGuid = guid;
 }

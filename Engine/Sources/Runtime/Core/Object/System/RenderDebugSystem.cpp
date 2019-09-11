@@ -5,7 +5,6 @@
 scarlett::RenderDebugSystem::RenderDebugSystem(World * world):
 	mWorld(world)
 {
-	CreateDebugMesh();
 }
 
 int scarlett::RenderDebugSystem::Initialize() noexcept

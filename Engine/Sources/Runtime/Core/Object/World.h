@@ -11,7 +11,7 @@
 #include "Runtime/Core/Object/System/CameraSystem.h"
 #include "Runtime/Core/Object/System/RenderDebugSystem.h"
 
-#include "Guid.hpp"
+#include <boost/functional/hash.hpp>
 
 namespace scarlett {
 	class Entity;
@@ -29,9 +29,9 @@ namespace scarlett {
 		World(Application* app);
 
 		std::shared_ptr<Entity>	CreateEntity();
-		std::shared_ptr<Entity>	CreateEntity(const Guid& guid);
-		void	DeleteEntity(const Guid & guid);
-		std::shared_ptr<Entity>	GetEntity(const Guid& guid);
+		std::shared_ptr<Entity>	CreateEntity(const boost::uuids::uuid& guid);
+		void	DeleteEntity(const boost::uuids::uuid & guid);
+		std::shared_ptr<Entity>	GetEntity(const boost::uuids::uuid& guid);
 		size_t GetEntityCount();
 
 		void LoadScene(const std::string& scenePath);
@@ -41,12 +41,13 @@ namespace scarlett {
 	public:
 		MeshRenderSystem*	GetMeshRenderSystem() { return mMeshRenderSystem; }
 		CameraSystem*		GetCameraSystem() { return mCameraSystem; }
+		RenderDebugSystem*	GetRenderDebugSystem() { return mRenderDebugSystem; }
 	public:
 		Application* mApp;
 
 	private:
 
-		std::unordered_map<Guid, std::shared_ptr<Entity>>	mEntities;
+		std::unordered_map<boost::uuids::uuid, std::shared_ptr<Entity>, boost::hash<boost::uuids::uuid>>	mEntities;
 
 		// systems
 		MeshRenderSystem*	mMeshRenderSystem;

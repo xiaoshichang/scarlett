@@ -61,7 +61,7 @@ std::shared_ptr<Entity> scarlett::World::CreateEntity()
 	return entity;
 }
 
-std::shared_ptr<Entity> scarlett::World::CreateEntity(const Guid & guid)
+std::shared_ptr<Entity> scarlett::World::CreateEntity(const boost::uuids::uuid & guid)
 {
 	if (mEntities[guid]) {
 		return nullptr;
@@ -73,7 +73,7 @@ std::shared_ptr<Entity> scarlett::World::CreateEntity(const Guid & guid)
 	return entity;
 }
 
-void scarlett::World::DeleteEntity(const Guid & guid)
+void scarlett::World::DeleteEntity(const boost::uuids::uuid & guid)
 {
 	auto entity = mEntities[guid];
 	if (entity) {
@@ -82,7 +82,7 @@ void scarlett::World::DeleteEntity(const Guid & guid)
 	}
 }
 
-std::shared_ptr<Entity> scarlett::World::GetEntity(const Guid & guid)
+std::shared_ptr<Entity> scarlett::World::GetEntity(const boost::uuids::uuid & guid)
 {
 	if (!mEntities[guid]) {
 		return nullptr;

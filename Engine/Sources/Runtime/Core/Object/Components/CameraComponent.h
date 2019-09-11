@@ -16,8 +16,8 @@ namespace scarlett {
 		virtual int Initialize() noexcept;
 		virtual void Finalize() noexcept;
 
-		Matrix4f	GetViewMatrix();
-		Matrix4f	GetPerspectiveMatrix();
+		const Matrix4f&	GetViewMatrix();
+		const Matrix4f&	GetPerspectiveMatrix();
 
 		CameraType	GetType() { return mCameraType; }
 		void		SetType(CameraType type) { mCameraType = type; mViewDirty = true; mProjectionDirty = true; }

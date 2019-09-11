@@ -16,7 +16,7 @@ int main() {
 	auto entity = world->CreateEntity();
 	std::cout << entity->GetGuid() << std::endl;
 
-	auto guid = xg::newGuid();
+	auto guid = boost::uuids::random_generator()();
 	auto entity2 = world->CreateEntity(guid);
 	std::cout << entity2->GetGuid() << std::endl;
 	std::cout << guid << std::endl;

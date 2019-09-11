@@ -1,6 +1,5 @@
 #pragma once
 #include <set>
-#include "Guid.hpp"
 
 #include "Runtime/Interface/ISystem.h"
 
@@ -9,8 +8,6 @@
 
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 
-
-using namespace xg;
 using namespace std;
 
 namespace scarlett {

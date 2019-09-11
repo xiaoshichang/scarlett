@@ -24,7 +24,7 @@ void scarlett::CameraComponent::Finalize() noexcept
 {
 }
 
-Matrix4f scarlett::CameraComponent::GetViewMatrix()
+const Matrix4f& scarlett::CameraComponent::GetViewMatrix()
 {
 	if (mViewDirty) {
 		mViewMatrix = BuildViewLookatLH(mPosition, mLookat, mUp);
@@ -34,7 +34,7 @@ Matrix4f scarlett::CameraComponent::GetViewMatrix()
 	return mViewMatrix;
 }
 
-Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
+const Matrix4f& scarlett::CameraComponent::GetPerspectiveMatrix()
 {	
 	float width = 1024.0f;
 	float height = 768.0f;

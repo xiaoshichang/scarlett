@@ -1,13 +1,14 @@
 #pragma once
 #include <vector>
 
-#include "Guid.hpp"
 #include "Runtime/Interface/IModule.h"
 #include "Runtime/Core/Object/Components/TransformComponent.h"
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 #include "Runtime/Core/Object/Components/CameraComponent.h"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
-using namespace xg;
 
 namespace scarlett {
 	class World;
@@ -19,10 +20,10 @@ namespace scarlett {
 		
 	public:
 		Entity();
-		Entity(const Guid& guid);
+		Entity(const boost::uuids::uuid& guid);
 		virtual ~Entity();
-		Guid	GetGuid() const noexcept;
-		void	SetGuid(const Guid& guid) noexcept;
+		boost::uuids::uuid	GetGuid() const noexcept;
+		void	SetGuid(const boost::uuids::uuid& guid) noexcept;
 
 		void	AddChild(std::shared_ptr<Entity> child);
 		void	RemoveChild(std::shared_ptr<Entity> child);
@@ -39,7 +40,7 @@ namespace scarlett {
 		
 
 	protected:
-		Guid		mGuid;
+		boost::uuids::uuid		mGuid;
 		Entity*		mParent;
 		World*		mWorld;
 		std::vector<std::shared_ptr <Entity>>	mChildren;
