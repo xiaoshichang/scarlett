@@ -35,6 +35,8 @@ ${SourcesPath}/Runtime/Core/Object/System/MeshRenderSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/CameraSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/RenderDebugSystem.cpp
 
+${SourcesPath}/Runtime/Core/Time/TimeMgr.cpp
+
 ${SourcesPath}/Runtime/RHI/RenderObject.cpp
 ${SourcesPath}/Runtime/RHI/RenderMesh.cpp
 ${SourcesPath}/Runtime/RHI/VertexBuffer.cpp

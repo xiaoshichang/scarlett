@@ -3,6 +3,7 @@
 #include "IApplication.h"
 #include "Runtime/Core/Memory/MemoryManager.h"
 #include "Runtime/RHI/GraphicsMgr.h"
+#include "Runtime/Core/Time/TimeMgr.h"
 #include "Runtime/Core/Object/World.h"
 
 namespace scarlett {
@@ -20,7 +21,7 @@ namespace scarlett {
 	public:
 		MemoryManager* mMemoryMgr;
 		GraphicsManager* mGraphicsManager;
-
+		TimeMgr*		mTimeMgr;
 		World* mWorld;
 
 	private:

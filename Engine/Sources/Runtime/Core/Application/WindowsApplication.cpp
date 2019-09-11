@@ -38,6 +38,9 @@ int WindowsApplication::Initialize() noexcept{
 	auto mgr = (GraphicsMgrD11*)mGraphicsManager;
 	mgr->InitializeWithWindow(mHWND);
 
+	mTimeMgr = new TimeMgr();
+	mTimeMgr->Initialize();
+
 	mWorld = new World(this);
 	mWorld->Initialize();
 
@@ -45,6 +48,8 @@ int WindowsApplication::Initialize() noexcept{
 }
 
 void WindowsApplication::Tick() noexcept{
+
+	mTimeMgr->PreTick();
 	Application::Tick();
 	MSG msg = {};
 	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -53,6 +58,9 @@ void WindowsApplication::Tick() noexcept{
 	}
 	mWorld->Tick();
 	Render();
+	mTimeMgr->Tick();
+
+	mTimeMgr->PostTick();
 }
 
 void WindowsApplication::Render() noexcept{
