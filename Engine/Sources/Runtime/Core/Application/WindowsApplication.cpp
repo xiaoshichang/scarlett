@@ -1,6 +1,7 @@
 #include "WindowsApplication.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Object/World.h"
+#include <windowsx.h>
 
 using namespace scarlett;
 
@@ -14,7 +15,38 @@ LRESULT scarlett::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM
 			SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
 			return 0;
 		}
+		case WM_LBUTTONDOWN: {
+			pThis->mInputManager->OnKeyDown(KEY_CODE_LBUTTON);
+			return 0;
+		}
+		case WM_LBUTTONUP: {
+			pThis->mInputManager->OnKeyUp(KEY_CODE_LBUTTON);
+			return 0;
+		}
 
+		case WM_RBUTTONDOWN: {
+			pThis->mInputManager->OnKeyDown(KEY_CODE_RBUTTON);
+			return 0;
+		}
+
+		case WM_RBUTTONUP: {
+			pThis->mInputManager->OnKeyUp(KEY_CODE_RBUTTON);
+			return 0;
+		}
+
+		case WM_KEYDOWN:
+			pThis->mInputManager->OnKeyDown(wParam);
+			return 0;
+		case WM_KEYUP:
+			pThis->mInputManager->OnKeyUp(wParam);
+			return 0;
+		case WM_MOUSEMOVE:
+		{
+			auto xPos = GET_X_LPARAM(lParam);
+			auto yPos = GET_Y_LPARAM(lParam);
+			pThis->mInputManager->OnMouseMove(xPos, yPos);
+			return 0;
+		}
 		case WM_DESTROY:
 		{
 			PostQuitMessage(0);
@@ -30,6 +62,9 @@ LRESULT scarlett::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM
 int WindowsApplication::Initialize() noexcept{
 	CHECK_APPLICATION_INIT(Application::Initialize());
 	CreateMainWindow();
+
+	mInputManager = new InputMgr();
+	mInputManager->Initialize();
 
 	mMemoryMgr = new MemoryManager();
 	mMemoryMgr->Initialize();

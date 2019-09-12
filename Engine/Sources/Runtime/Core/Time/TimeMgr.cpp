@@ -21,7 +21,6 @@ void scarlett::TimeMgr::Tick() noexcept
 		m_fFPS = m_frameCount;
 		m_frameCount = 0;
 		m_LastStatisticTime = m_frameStartTime;
-		std::cout << m_fFPS << std::endl;
 	}
 	else {
 		m_frameCount++;

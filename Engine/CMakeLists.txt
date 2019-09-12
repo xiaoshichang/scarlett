@@ -36,6 +36,7 @@ ${SourcesPath}/Runtime/Core/Object/System/CameraSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/RenderDebugSystem.cpp
 
 ${SourcesPath}/Runtime/Core/Time/TimeMgr.cpp
+${SourcesPath}/Runtime/Core/Input/InputMgr.cpp
 
 ${SourcesPath}/Runtime/RHI/RenderObject.cpp
 ${SourcesPath}/Runtime/RHI/RenderMesh.cpp
