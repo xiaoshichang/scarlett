@@ -4,6 +4,7 @@
 #include "Runtime/RHI/D11/ShaderD11.h"
 #include "Runtime/RHI/D11/RenderMeshD11.h"
 #include "Foundation/Assert.h"
+#include "Runtime/Utils/Logging.h"
 #include <iostream>
 
 using namespace scarlett;
@@ -81,8 +82,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	// Convert the name of the video card to a character array and store it.
 	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	SCARLETT_ASSERT(error == 0);
-	std::cout << "video card description: " << m_videoCardDescription << std::endl;
-	std::cout << "video card memory: " << m_videoCardMemory << std::endl;
+	SCARLETT_LOG(info) << "video card description: " << m_videoCardDescription;
+	SCARLETT_LOG(info) << "video card memory: " << m_videoCardMemory;
 
 	delete[] displayModeList;
 	displayModeList = 0;

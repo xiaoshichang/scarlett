@@ -1,10 +1,12 @@
 #include "InputMgr.h"
 #include <iostream>
+#include "Runtime/Utils/Logging.h"
 using namespace std;
 
 
 int scarlett::InputMgr::Initialize() noexcept
 {
+	SCARLETT_LOG(info) << "InputMgr Initialize ok.";
 	return 0;
 }
 

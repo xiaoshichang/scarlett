@@ -1,9 +1,10 @@
 #include "TimeMgr.h"
-
+#include "Runtime/Utils/Logging.h"
 #include <iostream>
 
 int scarlett::TimeMgr::Initialize() noexcept
 {
+	SCARLETT_LOG(info) << "TimerMgr Initialize ok.";
 	m_bFirstUpdate = true;
 	m_startTime = m_LastStatisticTime = std::chrono::high_resolution_clock::now();
 	m_frameCount = 0;

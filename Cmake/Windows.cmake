@@ -16,7 +16,7 @@ else( CMAKE_BUILD_TYPE STREQUAL "Release" )
 
 	include_directories("${PROJECT_SOURCE_DIR}/Engine/External/Boost/include")
 
-
+link_directories("${PROJECT_SOURCE_DIR}/Engine/External/Boost/libs")
 
 endif( CMAKE_BUILD_TYPE STREQUAL "Release")
 
