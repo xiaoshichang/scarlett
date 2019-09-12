@@ -54,6 +54,14 @@ namespace scarlett {
 
 	};
 
+	struct ConstantBuffer
+	{
+		Matrix4f world;
+		Matrix4f view;
+		Matrix4f projection;
+		Vector4f debugColor;
+	};
+
 	class Shader;
 	class IMaterial : public IRenderResource {
 	public:
@@ -61,6 +69,7 @@ namespace scarlett {
 		virtual void		Finialize() noexcept = 0;
 		virtual	void		SetShader(std::shared_ptr<Shader>) = 0;
 		virtual std::shared_ptr<Shader>		GetShader() = 0;
+		virtual void		Apply(ConstantBuffer cb) noexcept = 0;
 	};
 
 }

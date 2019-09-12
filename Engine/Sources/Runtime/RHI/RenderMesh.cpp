@@ -40,3 +40,8 @@ int scarlett::RenderMesh::GetVaildVertexBufferCount() noexcept {
 void scarlett::RenderMesh::Finialize() noexcept
 {
 }
+
+shared_ptr<scarlett::Material> scarlett::RenderMesh::GetMaterial() noexcept
+{
+	return mMaterial;
+}

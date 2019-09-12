@@ -170,10 +170,11 @@ void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noex
 	dataPtr->world = cbuffer.world;
 	dataPtr->view = cbuffer.view;
 	dataPtr->projection = cbuffer.projection;
-
+	dataPtr->debugColor = cbuffer.debugColor;
 	// Unlock the constant buffer.
 	mgrd11->m_deviceContext->Unmap(m_matrixBuffer, 0);
 	// Set the position of the constant buffer in the vertex shader.
 	bufferNumber = 0;
 	mgrd11->m_deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	mgrd11->m_deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 }

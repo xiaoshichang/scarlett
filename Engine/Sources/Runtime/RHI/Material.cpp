@@ -17,3 +17,19 @@ std::shared_ptr<scarlett::Shader> scarlett::Material::GetShader()
 {
 	return mShader;
 }
+
+void scarlett::Material::Apply(ConstantBuffer cb) noexcept
+{
+	mShader->Use();
+	for (auto pair : mParameters) {
+		if (pair.first == "color") {
+			cb.debugColor = pair.second;
+		}
+	}
+	mShader->SetConstantBuffer(cb);
+}
+
+void scarlett::Material::SetShaderParamter(std::string name, Vector4f value) noexcept
+{
+	mParameters[name] = value;
+}

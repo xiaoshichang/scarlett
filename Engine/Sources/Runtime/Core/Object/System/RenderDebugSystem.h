@@ -17,6 +17,9 @@ namespace scarlett {
 		void CreateDebugMesh() noexcept;
 		void DeleteDebugMesh() noexcept;
 
+		void CreateDebugAxis() noexcept;
+		void DeleteDebugAxis() noexcept;
+
 	private:
 		World* mWorld;
 		std::unordered_map<std::string, shared_ptr<RenderMesh>>		mMeshes;

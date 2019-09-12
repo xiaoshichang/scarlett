@@ -11,7 +11,7 @@ scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh)
 	Initialize(mesh);
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mMaterial = std::make_shared<Material>();
-	auto shader = mgrd11->GetShader("debug");
+	auto shader = mgrd11->GetShader("pbr");
 	mMaterial->SetShader(shader);
 
 }
@@ -153,16 +153,13 @@ void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) 
 	else if (mType == PrimitiveType::PT_TRIANGLE) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-	
-	auto shader = mMaterial->GetShader();
-	shader->Use();
-	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
 
 	ConstantBuffer cb;
+	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
 	cb.world = worldMatrix.transpose();
 	cb.view = camera->GetViewMatrix().transpose();
 	cb.projection = camera->GetPerspectiveMatrix().transpose();
-	shader->SetConstantBuffer(cb);
+	mMaterial->Apply(cb);
 
 	if (mIndexes) {
 		mgrd11->DrawIndexed(mIndexes->mCount, 0, 0);

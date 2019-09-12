@@ -9,12 +9,12 @@ scarlett::RenderDebugSystem::RenderDebugSystem(World * world):
 
 int scarlett::RenderDebugSystem::Initialize() noexcept
 {
-
 	return 0;
 }
 
 void scarlett::RenderDebugSystem::Finalize() noexcept
 {
+	DeleteDebugMesh();
 }
 
 void scarlett::RenderDebugSystem::Render() noexcept {
@@ -30,11 +30,12 @@ void scarlett::RenderDebugSystem::Render() noexcept {
 void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
 	auto mgr = mWorld->mApp->mGraphicsManager;
 
-	unsigned int pointCount = 84;
+	unsigned int pointCount = 80;
 	float* data = new float[3 * pointCount];
 
 	int p = 0;
 	for (int x = -10; x <= 10; ++x) {
+		if (x == 0) continue;
 		data[p * 6] = x;
 		data[p * 6 + 1] = 0;
 		data[p * 6 + 2] = -10;
@@ -44,6 +45,7 @@ void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
 		p += 1;
 	}
 	for (int z = -10; z <= 10; ++z) {
+		if (z == 0) continue;
 		data[p * 6] = -10;
 		data[p * 6 + 1] = 0;
 		data[p * 6 + 2] = z;
@@ -59,6 +61,7 @@ void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
 	auto mesh = mgr->CreateRenderMeshDebug(vertexBuffer);
 	mesh->mPositions = vertexBuffer;
 	mesh->mType = PrimitiveType::PT_LINE;
+	mesh->mMaterial->SetShaderParamter("color", Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 	mMeshes["mesh"] = mesh;
 }
 
@@ -68,5 +71,71 @@ void scarlett::RenderDebugSystem::DeleteDebugMesh() noexcept {
 	auto mesh = mMeshes["mesh"];
 	if (mesh) {
 		mMeshes.erase("mesh");
+	}
+}
+
+void scarlett::RenderDebugSystem::CreateDebugAxis() noexcept
+{
+	auto mgr = mWorld->mApp->mGraphicsManager;
+	float* x = new float[3 * 2];
+	x[0] = 1000.0f;
+	x[1] = 0.0f;
+	x[2] = 0.0f;
+	x[3] = -1000.0f;
+	x[4] = 0.0f;
+	x[5] = 0.0f;
+	auto vertexBuffer = mgr->CreateVertexBuffer(x, 2, VertexFormat::VF_P3F);
+	delete x;
+	auto mesh = mgr->CreateRenderMeshDebug(vertexBuffer);
+	mesh->mPositions = vertexBuffer;
+	mesh->mType = PrimitiveType::PT_LINE;
+	mesh->mMaterial->SetShaderParamter("color", Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
+	mMeshes["x"] = mesh;
+
+	float* y = new float[3 * 2];
+	y[0] = 0.0f;
+	y[1] = 1000.0f;
+	y[2] = 0.0f;
+	y[3] = 0.0f;
+	y[4] = -1000.0f;
+	y[5] = 0.0f;
+	auto vertexBuffery = mgr->CreateVertexBuffer(y, 2, VertexFormat::VF_P3F);
+	delete y;
+	auto meshy = mgr->CreateRenderMeshDebug(vertexBuffery);
+	meshy->mPositions = vertexBuffery;
+	meshy->mType = PrimitiveType::PT_LINE;
+	meshy->mMaterial->SetShaderParamter("color", Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
+	mMeshes["y"] = meshy;
+
+	float* z = new float[3 * 2];
+	z[0] = 0.0f;
+	z[1] = 0.0f;
+	z[2] = 1000.0f;
+	z[3] = 0.0f;
+	z[4] = 0.0f;
+	z[5] = -1000.0f;
+	auto vertexBufferz = mgr->CreateVertexBuffer(z, 2, VertexFormat::VF_P3F);
+	delete z;
+	auto meshz = mgr->CreateRenderMeshDebug(vertexBufferz);
+	meshz->mPositions = vertexBufferz;
+	meshz->mType = PrimitiveType::PT_LINE;
+	meshz->mMaterial->SetShaderParamter("color", Vector4f(0.0f, 0.0f, 1.0f, 1.0f));
+	mMeshes["z"] = meshz;
+}
+
+void scarlett::RenderDebugSystem::DeleteDebugAxis() noexcept
+{
+	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto meshx = mMeshes["x"];
+	if (meshx) {
+		mMeshes.erase("x");
+	}
+	auto meshy = mMeshes["y"];
+	if (meshy) {
+		mMeshes.erase("y");
+	}
+	auto meshz = mMeshes["z"];
+	if (meshz) {
+		mMeshes.erase("z");
 	}
 }

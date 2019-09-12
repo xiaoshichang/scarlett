@@ -329,6 +329,11 @@ std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(std:
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 {
+	std::string pbrShaderVS = "Asset/Shaders/pbr.vs";
+	std::string pbrShaderPS = "Asset/Shaders/pbr.ps";
+	auto pbrShader = std::make_shared<ShaderD11>(pbrShaderVS, pbrShaderPS);
+	mShaders["pbr"] = pbrShader;
+
 	std::string debugShaderVS = "Asset/Shaders/debug.vs";
 	std::string debugShaderPS = "Asset/Shaders/debug.ps";
 	auto debugShader = std::make_shared<ShaderD11>(debugShaderVS, debugShaderPS);

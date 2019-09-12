@@ -29,6 +29,7 @@ int main() {
 	GApp->mWorld->LoadScene("Asset/Scenes/aili_cycle.fbx");
 	GApp->mWorld->DumpEntities();
 	GApp->mWorld->GetRenderDebugSystem()->CreateDebugMesh();
+	GApp->mWorld->GetRenderDebugSystem()->CreateDebugAxis();
 
 	GApp->Run();
 	GApp->Finalize();

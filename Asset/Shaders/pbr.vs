@@ -13,9 +13,7 @@ cbuffer MatrixBuffer
     matrix worldMatrix;
     matrix viewMatrix;
     matrix projectionMatrix;
-	float4 debugColor;
 };
-
 
 v2p main(a2v input) {
 	v2p output;
