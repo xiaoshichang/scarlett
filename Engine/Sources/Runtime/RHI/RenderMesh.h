@@ -7,6 +7,7 @@
 #include "Runtime/Interface/IResource.h"
 #include "Runtime/RHI/VertexBuffer.h"
 #include "Runtime/RHI/IndexBuffer.h"
+#include "Runtime/RHI/Material.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ namespace scarlett {
 		shared_ptr<VertexBuffer>	mTexCoords;
 		shared_ptr<IndexBuffer>		mIndexes;
 		PrimitiveType				mType;
+		shared_ptr<Material>		mMaterial;
 	};
 
 }

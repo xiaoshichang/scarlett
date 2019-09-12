@@ -29,7 +29,8 @@ namespace scarlett {
 		virtual		std::shared_ptr<RenderMesh>		CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept;
 
 		virtual		void	LoadShaders() noexcept;
-		virtual		std::shared_ptr<Shader>	UseShader(const std::string& shaderName) noexcept;
+		virtual		void	UseShader(std::shared_ptr<Shader>) noexcept;
+		virtual		std::shared_ptr<Shader> GetShader(const std::string& shaderName) noexcept;
 
 		virtual		void	Draw(unsigned int vcount, unsigned int start) noexcept;
 		virtual		void	DrawIndexed(unsigned int icount, unsigned int start, int baseLoc) noexcept;

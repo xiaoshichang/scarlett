@@ -169,8 +169,8 @@ void scarlett::World::DumpEntities()
 		if (cameraComponent)
 		{
 			cout << "camera type: " << cameraComponent->GetType() << endl;
-			cout << cameraComponent->GetViewMatrix();
-			cout << cameraComponent->GetPerspectiveMatrix();
+			cout << cameraComponent->GetViewMatrix() << endl;
+			cout << cameraComponent->GetPerspectiveMatrix() << endl;
 		}
 
 		cout << endl;

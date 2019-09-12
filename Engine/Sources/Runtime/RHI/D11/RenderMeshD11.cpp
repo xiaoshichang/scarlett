@@ -9,11 +9,20 @@
 scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh)
 {
 	Initialize(mesh);
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	mMaterial = std::make_shared<Material>();
+	auto shader = mgrd11->GetShader("debug");
+	mMaterial->SetShader(shader);
+
 }
 
 scarlett::RenderMeshD11::RenderMeshD11(std::shared_ptr<VertexBuffer> vb)
 {
 	Initialize(vb);
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	mMaterial = std::make_shared<Material>();
+	auto shader = mgrd11->GetShader("debug");
+	mMaterial->SetShader(shader);
 }
 
 scarlett::RenderMeshD11::~RenderMeshD11()
@@ -145,7 +154,8 @@ void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) 
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	
-	auto shader = mgrd11->UseShader("debug");
+	auto shader = mMaterial->GetShader();
+	shader->Use();
 	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
 
 	ConstantBuffer cb;

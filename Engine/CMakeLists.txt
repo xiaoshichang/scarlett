@@ -43,6 +43,7 @@ ${SourcesPath}/Runtime/RHI/RenderMesh.cpp
 ${SourcesPath}/Runtime/RHI/VertexBuffer.cpp
 ${SourcesPath}/Runtime/RHI/IndexBuffer.cpp
 ${SourcesPath}/Runtime/RHI/Shader.cpp
+${SourcesPath}/Runtime/RHI/Material.cpp
 
 ${PlatformOnlySources}
 

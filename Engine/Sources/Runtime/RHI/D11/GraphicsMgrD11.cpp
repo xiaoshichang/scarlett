@@ -36,7 +36,6 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
 	D3D11_RASTERIZER_DESC rasterDesc;
 	D3D11_VIEWPORT viewport;
-	float fieldOfView, screenAspect;
 
 	// Use the factory to create an adapter for the primary graphics interface (video card).
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -336,14 +335,17 @@ void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 	mShaders["debug"] = debugShader;
 }
 
-std::shared_ptr<Shader> scarlett::GraphicsMgrD11::UseShader(const std::string & shaderName) noexcept
+void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<Shader> shader) noexcept
 {
-	auto shader = mShaders[shaderName];
 	if (!shader) {
 		SCARLETT_ASSERT(false);
 	}
 	shader->Use();
-	return shader;
+}
+
+std::shared_ptr<Shader> scarlett::GraphicsMgrD11::GetShader(const std::string & shaderName) noexcept
+{
+	return mShaders[shaderName];
 }
 
 void scarlett::GraphicsMgrD11::Draw(unsigned int vcount, unsigned int start) noexcept{
