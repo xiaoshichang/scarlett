@@ -18,7 +18,14 @@ int main()
 		aiProcess_JoinIdenticalVertices |
 		aiProcess_SortByPType);
 
+	if (scene2 == nullptr) {
+		std::cout << importer2.GetErrorString() << std::endl;
+		return 1;
+	}
 	auto root = scene2->mRootNode;
+
+	std::cout << "numtexuters: " << scene2->mNumTextures << std::endl;
+	
 	for (unsigned int i = 0; i < root->mNumChildren; ++i) {
 		auto node = root->mChildren[i];
 		std::cout << "node name: " << node->mName.C_Str() << std::endl;
@@ -40,6 +47,38 @@ int main()
 			if (uv) {
 				std::cout << "first uv" << uv->x << "," << uv->y << std::endl;
 			}
+
+			auto midx = mesh->mMaterialIndex;
+			auto material = scene2->mMaterials[midx];
+
+			aiColor4D diffuse;
+			aiColor4D displace;
+			aiColor4D emb;
+			aiString name;
+
+			if (AI_SUCCESS == aiGetMaterialString(material, AI_MATKEY_NAME, &name)) {
+				std::cout << "material name" << name.C_Str() <<  std::endl;
+			}
+
+			if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse)) {
+				std::cout << "diffuse color" << diffuse.r << diffuse.g << diffuse.b << std::endl;
+			}
+			if (AI_SUCCESS == aiGetMaterialColor(material, AI_MATKEY_COLOR_AMBIENT, &emb)) {
+				std::cout << "emb color" << emb.r << emb.g << emb.b << std::endl;
+			}
+			int model;
+			if (AI_SUCCESS == aiGetMaterialInteger(material, AI_MATKEY_SHADING_MODEL, &model)) {
+				std::cout << "MODEL" << model << std::endl;
+			}
+
+			auto diffuset = aiGetMaterialTextureCount(material, aiTextureType::aiTextureType_DIFFUSE);
+			auto displayt = aiGetMaterialTextureCount(material, aiTextureType::aiTextureType_DISPLACEMENT);
+			std::cout << "ttt" << diffuset << displayt << std::endl;
+
+			for (int i = 0; i < material->mNumProperties; ++i) {
+				std::cout << material->mProperties[i]->mKey.C_Str() << "	ttt" << material->mProperties[i]->mType << "	l" << material->mProperties[i]->mDataLength << std::endl;
+			}
+
 		}
 		std::cout << std::endl;
 	}

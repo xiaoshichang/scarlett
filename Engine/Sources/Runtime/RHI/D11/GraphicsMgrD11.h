@@ -25,8 +25,11 @@ namespace scarlett {
 
 		virtual		std::shared_ptr<IndexBuffer>	CreateIndexBuffer(void* data, int count, IndexFormat iformat) noexcept;
 
-		virtual		std::shared_ptr<RenderMesh>		CreateRenderMesh(aiMesh* mesh) noexcept;
+		virtual		std::shared_ptr<RenderMesh>		CreateRenderMesh(aiMesh* mesh, const aiScene* world) noexcept;
 		virtual		std::shared_ptr<RenderMesh>		CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept;
+
+		virtual		std::shared_ptr<Texture>		CreateTexture2D(const std::string& path) noexcept;
+		virtual		std::shared_ptr<SamplerState>	CreateSamplerState() noexcept;
 
 		virtual		void	LoadShaders() noexcept;
 		virtual		void	UseShader(std::shared_ptr<Shader>) noexcept;

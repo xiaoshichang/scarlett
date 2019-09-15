@@ -106,7 +106,7 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 	// load all mesh
 	for (unsigned int j = 0; j < scene->mNumMeshes; ++j) {
 		auto mesh = scene->mMeshes[j];
-		mMeshRenderSystem->LoadMesh(mesh);
+		mMeshRenderSystem->LoadMesh(mesh, scene);
 	}
 
 	// build main camera

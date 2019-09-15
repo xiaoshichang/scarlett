@@ -28,7 +28,7 @@ namespace scarlett {
 		virtual void Render();
 
 	public:
-		virtual void LoadMesh(aiMesh* mesh);
+		virtual void LoadMesh(aiMesh* mesh, const aiScene* world);
 
 
 	public:

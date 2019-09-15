@@ -11,6 +11,9 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/ShaderD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/RenderMeshD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/IndexBufferD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/MaterialD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/TextureD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/SamplerStateD11.cpp
 	)
 ELSEIF(${UNIX})
 	IF(${APPLE})
@@ -44,6 +47,8 @@ ${SourcesPath}/Runtime/RHI/VertexBuffer.cpp
 ${SourcesPath}/Runtime/RHI/IndexBuffer.cpp
 ${SourcesPath}/Runtime/RHI/Shader.cpp
 ${SourcesPath}/Runtime/RHI/Material.cpp
+${SourcesPath}/Runtime/RHI/Texture.cpp
+${SourcesPath}/Runtime/RHI/SamplerState.cpp
 
 ${PlatformOnlySources}
 

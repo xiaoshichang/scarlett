@@ -3,6 +3,8 @@
 #include "Runtime/RHI/D11/IndexBufferD11.h"
 #include "Runtime/RHI/D11/ShaderD11.h"
 #include "Runtime/RHI/D11/RenderMeshD11.h"
+#include "Runtime/RHI/D11/TextureD11.h"
+#include "Runtime/RHI/D11/SamplerStateD11.h"
 #include "Foundation/Assert.h"
 #include "Runtime/Utils/Logging.h"
 #include <iostream>
@@ -314,15 +316,32 @@ std::shared_ptr<IndexBuffer> scarlett::GraphicsMgrD11::CreateIndexBuffer(void * 
 }
 
 
-std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh) noexcept
+std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh, const aiScene* world) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshD11>(mesh);
+	auto ptr = std::make_shared<RenderMeshD11>(mesh, world);
 	return ptr;
 }
 
 std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept
 {
 	auto ptr = std::make_shared<RenderMeshD11>(vb);
+	return ptr;
+}
+
+std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::string& path) noexcept
+{
+	if (mTextures[path]) {
+		return mTextures[path];
+	}
+
+	auto ptr = std::make_shared<TextureD11>(path);
+	mTextures[path] = ptr;
+	return ptr;
+}
+
+std::shared_ptr<SamplerState> scarlett::GraphicsMgrD11::CreateSamplerState() noexcept
+{
+	auto ptr = std::make_shared<SamplerStateD11>();
 	return ptr;
 }
 

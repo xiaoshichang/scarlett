@@ -55,8 +55,8 @@ void scarlett::MeshRenderSystem::Render()
 	}
 }
 
-void scarlett::MeshRenderSystem::LoadMesh(aiMesh * mesh)
+void scarlett::MeshRenderSystem::LoadMesh(aiMesh * mesh, const aiScene* world)
 {
-	auto _mesh = mGraphicsManager->CreateRenderMesh(mesh);
+	auto _mesh = mGraphicsManager->CreateRenderMesh(mesh, world);
 	mMeshes.push_back(_mesh);
 }

@@ -3,7 +3,6 @@
 #include <d3d11.h>
 
 namespace scarlett {
-	class GraphicsManager;
 
 	class IndexBufferD11 : public IndexBuffer {
 	public:

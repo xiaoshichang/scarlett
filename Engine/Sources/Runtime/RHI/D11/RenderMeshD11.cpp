@@ -1,26 +1,54 @@
 #include "Runtime/RHI/D11/RenderMeshD11.h"
 #include "Runtime/RHI/D11/IndexBufferD11.h"
 #include "Runtime/RHI/D11/VertexBufferD11.h"
+#include "Runtime/RHI/D11/MaterialD11.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
-scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh)
+scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh, const aiScene* world)
 {
 	Initialize(mesh);
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	mMaterial = std::make_shared<Material>();
-	auto shader = mgrd11->GetShader("pbr");
-	mMaterial->SetShader(shader);
+	auto material = world->mMaterials[mesh->mMaterialIndex];
+	aiString name;
+	aiGetMaterialString(material, AI_MATKEY_NAME, &name);
 
+	mMaterial = std::make_shared<MaterialD11>();
+	// setup parameters and textures
+	if (strcmp(name.C_Str(),"skirt_w") == 0) {
+		auto shader = mgrd11->GetShader("pbr");
+		mMaterial->SetShader(shader);
+		auto tex = mgrd11->CreateTexture2D(".\\Asset\\Textures\\aili\\w.jpg");
+		auto sampler = mgrd11->CreateSamplerState();
+		mMaterial->SetTexture("tBaseMap", tex);
+		mMaterial->SerSamplerState("tBaseMap", sampler);
+	}
+	else if(strcmp(name.C_Str(), "skirt_b") == 0) {
+		auto shader = mgrd11->GetShader("pbr");
+		mMaterial->SetShader(shader);
+		auto tex = mgrd11->CreateTexture2D(".\\Asset\\Textures\\aili\\b.jpg");
+		auto sampler = mgrd11->CreateSamplerState();
+		mMaterial->SetTexture("tBaseMap", tex);
+		mMaterial->SerSamplerState("tBaseMap", sampler);
+	}
+	else {
+		aiColor4D diffuse;
+		aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
+		auto shader = mgrd11->GetShader("debug");
+		mMaterial->SetShader(shader);
+		mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+	}
+
+	
 }
 
 scarlett::RenderMeshD11::RenderMeshD11(std::shared_ptr<VertexBuffer> vb)
 {
 	Initialize(vb);
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	mMaterial = std::make_shared<Material>();
+	mMaterial = std::make_shared<MaterialD11>();
 	auto shader = mgrd11->GetShader("debug");
 	mMaterial->SetShader(shader);
 }
@@ -53,7 +81,7 @@ void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
 			texCoords[k * 2 + 1] = mesh->mTextureCoords[0][k].y;
 		}
 		mTexCoords = mgrd11->CreateVertexBuffer(texCoords, count, VertexFormat::VF_T2F);
-		delete texCoords;
+		free(texCoords);
 	}
 
 	if (mesh->HasFaces()) {
@@ -66,7 +94,7 @@ void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
 			idata[i * 3 + 2] = face.mIndices[2];
 		}
 		mIndexes = mgrd11->CreateIndexBuffer(idata, count, IndexFormat::IF_UINT32);
-		delete idata;
+		free(idata);
 	}
 
 	if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_POINT) {
@@ -172,6 +200,9 @@ void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) 
 
 void scarlett::RenderMeshD11::Finialize() noexcept
 {
+	delete stride;
+	delete offset;
+	delete vbuffers;
 	mPositions = nullptr;
 	mNormals = nullptr;
 	mTexCoords = nullptr;

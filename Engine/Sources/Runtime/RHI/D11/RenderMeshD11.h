@@ -6,7 +6,7 @@
 namespace scarlett {
 	class RenderMeshD11 : public RenderMesh {
 	public:
-		RenderMeshD11(aiMesh* mesh);
+		RenderMeshD11(aiMesh* mesh, const aiScene* world);
 		RenderMeshD11(std::shared_ptr<VertexBuffer> vb);
 		virtual ~RenderMeshD11();
 		virtual void		Initialize(aiMesh* mesh) noexcept;

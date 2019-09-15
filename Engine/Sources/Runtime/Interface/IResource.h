@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 #include "Runtime/Interface/IModule.h"
 #include "Runtime/Core/Math/ScltMath.h"
 #include "assimp/scene.h"
@@ -63,6 +64,8 @@ namespace scarlett {
 	};
 
 	class Shader;
+	class Texture;
+	class SamplerState;
 	class IMaterial : public IRenderResource {
 	public:
 		virtual void		Initialize() noexcept = 0;
@@ -70,6 +73,21 @@ namespace scarlett {
 		virtual	void		SetShader(std::shared_ptr<Shader>) = 0;
 		virtual std::shared_ptr<Shader>		GetShader() = 0;
 		virtual void		Apply(ConstantBuffer cb) noexcept = 0;
+		virtual void		SetShaderParamter(std::string name, Vector4f value) noexcept = 0;
+		virtual void		SetTexture(std::string name, std::shared_ptr<Texture> tex) noexcept = 0;
+		virtual void		SerSamplerState(std::string name, std::shared_ptr<SamplerState>) noexcept = 0;
 	};
 
+	class ITexture : public IRenderResource {
+	public:
+		virtual void		Initialize(const std::string&) noexcept = 0;
+		virtual void		Finialize() noexcept = 0;
+
+	};
+
+	class ISamplerState : public IRenderResource {
+	public:
+		virtual void		Initialize() noexcept = 0;
+		virtual void		Finialize() noexcept = 0;
+	};
 }
