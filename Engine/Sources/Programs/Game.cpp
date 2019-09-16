@@ -26,7 +26,7 @@ int main() {
 	
 #if defined(SCARLETT_WINDOWS)
 	CHECK_APPLICATION_INIT(GApp->Initialize());
-	GApp->mWorld->LoadScene("Asset/Scenes/aili_cycle.fbx");
+	GApp->mWorld->LoadScene("Asset/Scenes/robot-v2.fbx");
 	GApp->mWorld->DumpEntities();
 	GApp->mWorld->GetRenderDebugSystem()->CreateDebugMesh();
 	GApp->mWorld->GetRenderDebugSystem()->CreateDebugAxis();

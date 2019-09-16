@@ -24,7 +24,7 @@ v2p main(a2v input) {
     output.position = mul(output.position, projectionMatrix);
 	float4 HNormal = float4(input.normal, 0.0);
 	float4 WNormal =  mul(HNormal, worldMatrix);
-	output.normal = float3(WNormal.x, WNormal.y, WNormal.z);
+	output.normal = normalize(float3(WNormal.x, WNormal.y, WNormal.z));
 	return output;
 }
 

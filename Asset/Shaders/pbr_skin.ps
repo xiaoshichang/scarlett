@@ -16,7 +16,7 @@ cbuffer MatrixBuffer
 
 float4 main(v2p input) : SV_TARGET
 {
-	float3 lightDir = float3(0, -1, -1);
+	float3 lightDir = normalize(float3(0, 1, -1));
 	float lightPow = 0.8;
 	float light = max(dot(lightDir, input.normal), 0.0);
 
