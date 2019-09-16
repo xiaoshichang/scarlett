@@ -357,6 +357,11 @@ void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 	std::string debugShaderPS = "Asset/Shaders/debug.ps";
 	auto debugShader = std::make_shared<ShaderD11>(debugShaderVS, debugShaderPS);
 	mShaders["debug"] = debugShader;
+
+	std::string pbr_skinVS = "Asset/Shaders/pbr_skin.vs";
+	std::string pbr_skinPS = "Asset/Shaders/pbr_skin.ps";
+	auto pbr_skin = std::make_shared<ShaderD11>(pbr_skinVS, pbr_skinPS);
+	mShaders["pbr_skin"] = pbr_skin;
 }
 
 void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<Shader> shader) noexcept

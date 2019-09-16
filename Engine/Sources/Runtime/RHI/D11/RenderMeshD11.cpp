@@ -36,7 +36,7 @@ scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh, const aiScene* world)
 	else {
 		aiColor4D diffuse;
 		aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
-		auto shader = mgrd11->GetShader("debug");
+		auto shader = mgrd11->GetShader("pbr_skin");
 		mMaterial->SetShader(shader);
 		mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
 	}

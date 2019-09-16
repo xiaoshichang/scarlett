@@ -4,7 +4,6 @@ SamplerState tBaseMapSamplerState;
 struct v2p {
 	float4 position : SV_POSITION;
 	float3 normal	: NORMAL;
-	float2 texcood	: TEXCOOD;
 };
 
 cbuffer MatrixBuffer
@@ -22,7 +21,10 @@ float4 main(v2p input) : SV_TARGET
 	float light = max(dot(lightDir, input.normal), 0.0);
 
 	float4 color;
-	color = tBaseMap.Sample(tBaseMapSamplerState, input.texcood) * light;
+	color.a = 1.0;
+	color.r = debugColor.r * light;
+	color.g = debugColor.g * light;
+	color.b = debugColor.b * light;
     return color;
 }
 
