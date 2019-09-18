@@ -55,14 +55,12 @@ void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
 		p += 1;
 	}
 
-	auto vertexBuffer = mgr->CreateVertexBuffer(data, pointCount, VertexFormat::VF_P3F);
-	delete data;
-
-	auto mesh = mgr->CreateRenderMeshDebug(vertexBuffer);
-	mesh->mPositions = vertexBuffer;
+	auto mesh = mgr->CreateRenderMeshDebug(data, pointCount, VertexFormat::VF_P3F);
 	mesh->mType = PrimitiveType::PT_LINE;
 	mesh->mMaterial->SetShaderParamter("color", Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
 	mMeshes["mesh"] = mesh;
+	delete data;
+
 }
 
 void scarlett::RenderDebugSystem::DeleteDebugMesh() noexcept {
@@ -84,10 +82,7 @@ void scarlett::RenderDebugSystem::CreateDebugAxis() noexcept
 	x[3] = -1000.0f;
 	x[4] = 0.0f;
 	x[5] = 0.0f;
-	auto vertexBuffer = mgr->CreateVertexBuffer(x, 2, VertexFormat::VF_P3F);
-	delete x;
-	auto mesh = mgr->CreateRenderMeshDebug(vertexBuffer);
-	mesh->mPositions = vertexBuffer;
+	auto mesh = mgr->CreateRenderMeshDebug(x, 2, VertexFormat::VF_P3F);
 	mesh->mType = PrimitiveType::PT_LINE;
 	mesh->mMaterial->SetShaderParamter("color", Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
 	mMeshes["x"] = mesh;
@@ -99,10 +94,7 @@ void scarlett::RenderDebugSystem::CreateDebugAxis() noexcept
 	y[3] = 0.0f;
 	y[4] = -1000.0f;
 	y[5] = 0.0f;
-	auto vertexBuffery = mgr->CreateVertexBuffer(y, 2, VertexFormat::VF_P3F);
-	delete y;
-	auto meshy = mgr->CreateRenderMeshDebug(vertexBuffery);
-	meshy->mPositions = vertexBuffery;
+	auto meshy = mgr->CreateRenderMeshDebug(y, 2, VertexFormat::VF_P3F);
 	meshy->mType = PrimitiveType::PT_LINE;
 	meshy->mMaterial->SetShaderParamter("color", Vector4f(0.0f, 1.0f, 0.0f, 1.0f));
 	mMeshes["y"] = meshy;
@@ -114,13 +106,15 @@ void scarlett::RenderDebugSystem::CreateDebugAxis() noexcept
 	z[3] = 0.0f;
 	z[4] = 0.0f;
 	z[5] = -1000.0f;
-	auto vertexBufferz = mgr->CreateVertexBuffer(z, 2, VertexFormat::VF_P3F);
-	delete z;
-	auto meshz = mgr->CreateRenderMeshDebug(vertexBufferz);
-	meshz->mPositions = vertexBufferz;
+	auto meshz = mgr->CreateRenderMeshDebug(z, 2, VertexFormat::VF_P3F);
 	meshz->mType = PrimitiveType::PT_LINE;
 	meshz->mMaterial->SetShaderParamter("color", Vector4f(0.0f, 0.0f, 1.0f, 1.0f));
 	mMeshes["z"] = meshz;
+
+	delete z;
+	delete y;
+	delete x;
+
 }
 
 void scarlett::RenderDebugSystem::DeleteDebugAxis() noexcept

@@ -5,6 +5,7 @@ Project(Scarlett)
 include_directories("${PROJECT_SOURCE_DIR}/Cmake")
 include_directories("${PROJECT_SOURCE_DIR}/Engine/Sources")
 include_directories("${PROJECT_SOURCE_DIR}/Engine/External")
+include_directories("${PROJECT_SOURCE_DIR}/Engine/External/Glad/include")
 
 include(${PROJECT_SOURCE_DIR}/Cmake/TargetArchDetect.cmake)
 target_architecture(TARGET_ARCH)

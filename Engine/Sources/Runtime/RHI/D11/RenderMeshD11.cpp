@@ -40,14 +40,12 @@ scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh, const aiScene* world)
 		mMaterial->SetShader(shader);
 		mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
 	}
-
-	
 }
 
-scarlett::RenderMeshD11::RenderMeshD11(std::shared_ptr<VertexBuffer> vb)
+scarlett::RenderMeshD11::RenderMeshD11(void* data, int count, VertexFormat vf)
 {
-	Initialize(vb);
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	Initialize(data, count, vf);
 	mMaterial = std::make_shared<MaterialD11>();
 	auto shader = mgrd11->GetShader("debug");
 	mMaterial->SetShader(shader);
@@ -140,10 +138,10 @@ void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
 	}
 }
 
-void scarlett::RenderMeshD11::Initialize(std::shared_ptr<VertexBuffer> vb) noexcept
+void scarlett::RenderMeshD11::Initialize(void* data, int count, VertexFormat vf) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	mPositions = vb;
+	mPositions = mgrd11->CreateVertexBuffer(data, count, vf);
 	mType = PrimitiveType::PT_LINE;
 	vbcount = GetVaildVertexBufferCount();
 	stride = new  unsigned int[vbcount];

@@ -1,24 +1,24 @@
-#pragma once
 #include "Runtime/RHI/RenderMesh.h"
-
-#include <d3d11.h>
+#include "glad/glad_wgl.h"
 
 namespace scarlett {
-	class RenderMeshD11 : public RenderMesh {
+
+	class RenderMeshGL : public RenderMesh {
+
 	public:
-		RenderMeshD11(aiMesh* mesh, const aiScene* world);
-		RenderMeshD11(void* data, int count, VertexFormat vf);
-		virtual ~RenderMeshD11();
+		RenderMeshGL(aiMesh* mesh, const aiScene* world);
+		RenderMeshGL(void* data, int count, VertexFormat vf);
+		virtual ~RenderMeshGL();
 		virtual void		Initialize(aiMesh* mesh) noexcept;
 		virtual void		Initialize(void* data, int count, VertexFormat vf) noexcept;
 		virtual void		Render(World* world, const Matrix4f& worldMatrix) noexcept;
 		virtual void		Finialize() noexcept;
 
 	private:
-		unsigned int*		stride;
-		unsigned int*		offset;
-		ID3D11Buffer **		vbuffers;
-		unsigned int		vbcount;
+		GLenum GetMode();
+
+		GLuint mVAO;
+
 	};
 
 }

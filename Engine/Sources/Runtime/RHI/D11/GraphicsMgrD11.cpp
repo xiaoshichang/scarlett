@@ -322,9 +322,9 @@ std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * 
 	return ptr;
 }
 
-std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(std::shared_ptr<VertexBuffer> vb) noexcept
+std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshD11>(vb);
+	auto ptr = std::make_shared<RenderMeshD11>(data, count, vf);
 	return ptr;
 }
 

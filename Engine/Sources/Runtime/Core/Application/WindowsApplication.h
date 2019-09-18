@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Runtime/Utils/Singleton.h"
 #include <Windows.h>
+#include "glad/glad_wgl.h"
 
 namespace scarlett {
 	class WindowsApplication : public Application {
@@ -21,10 +22,15 @@ namespace scarlett {
 		WindowsApplication() = default;
 		void CreateMainWindow();
 
+		void LoadWGL();
+		void CreateGLContext();
+
 	private:
 		HWND mHWND;
-
+		HGLRC m_RenderContext;
 		friend class Singleton<WindowsApplication>;
+
+		bool mUseOpengl;
 	};
 	typedef Singleton<WindowsApplication> GWindowsApplication;
 

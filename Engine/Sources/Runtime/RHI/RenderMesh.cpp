@@ -16,7 +16,7 @@ scarlett::RenderMesh::~RenderMesh()
 {
 }
 
-void scarlett::RenderMesh::Initialize(std::shared_ptr<VertexBuffer> vb) noexcept
+void scarlett::RenderMesh::Initialize(void* data, int count, VertexFormat vf) noexcept
 {
 }
 

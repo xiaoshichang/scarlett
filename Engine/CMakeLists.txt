@@ -1,6 +1,7 @@
 add_subdirectory(Sources/Programs)
 
 set(SourcesPath ${PROJECT_SOURCE_DIR}/Engine/Sources)
+set(ExternalPath ${PROJECT_SOURCE_DIR}/Engine/External)
 
 IF(${WIN32})
 	set(PlatformOnlySources 
@@ -14,6 +15,9 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/MaterialD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/TextureD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/SamplerStateD11.cpp
+
+	${ExternalPath}/Glad/src/glad.c
+	${ExternalPath}/Glad/src/glad_wgl.c
 	)
 ELSEIF(${UNIX})
 	IF(${APPLE})
@@ -50,12 +54,21 @@ ${SourcesPath}/Runtime/RHI/Material.cpp
 ${SourcesPath}/Runtime/RHI/Texture.cpp
 ${SourcesPath}/Runtime/RHI/SamplerState.cpp
 
+${SourcesPath}/Runtime/RHI/opengl/GraphicsMgrGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/RenderMeshGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/VertexBufferGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/IndexBufferGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/ShaderGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/MaterialGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/TextureGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/SamplerStateGL.cpp
+
 ${PlatformOnlySources}
 
 )
 
 IF(${WIN32})
-	target_link_libraries(Scarlett user32 d3d11 d3dcompiler dxgi )
+	target_link_libraries(Scarlett user32 d3d11 d3dcompiler dxgi opengl32)
 	target_link_libraries(Scarlett ${ASSIMP_LIBRARY} ${IRRXML_LIBRARY} ${ZLIB_LIBRARY})
 ELSEIF(${UNIX})
 	IF(${APPLE})

@@ -17,7 +17,7 @@ namespace scarlett {
 	public:
 		RenderMesh();
 		virtual ~RenderMesh();
-		virtual void		Initialize(std::shared_ptr<VertexBuffer> vb) noexcept;
+		virtual void		Initialize(void* data, int count, VertexFormat vf) noexcept;
 		virtual void		Render(World* world, const Matrix4f& worldMatrix) noexcept;
 		virtual int			GetVaildVertexBufferCount() noexcept;
 		virtual void		Finialize() noexcept;
