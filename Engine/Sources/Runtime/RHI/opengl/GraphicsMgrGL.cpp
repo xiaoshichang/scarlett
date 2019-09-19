@@ -77,6 +77,11 @@ std::shared_ptr<Texture> scarlett::GraphicsMgrGL::CreateTexture2D(const std::str
 	return std::shared_ptr<Texture>();
 }
 
+std::shared_ptr<Texture> scarlett::GraphicsMgrGL::CreateTextureCubemap(const std::string & path) noexcept
+{
+	return std::shared_ptr<Texture>();
+}
+
 std::shared_ptr<SamplerState> scarlett::GraphicsMgrGL::CreateSamplerState() noexcept
 {
 	return std::shared_ptr<SamplerState>();

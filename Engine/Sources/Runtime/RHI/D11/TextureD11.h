@@ -7,9 +7,12 @@ namespace scarlett {
 
 	class TextureD11 : public Texture {
 	public:
-		TextureD11(const std::string& filepath);
+		TextureD11(const std::string& filepath, TextureType type);
 		virtual ~TextureD11();
 		virtual void	Initialize(const std::string& filepath) noexcept;
+		virtual void	InitializeDefault(const std::string& filepath) noexcept;
+		virtual void	InitializeCubemap(const std::string& filepath) noexcept;
+
 		virtual void	Finialize() noexcept;
 
 	public:

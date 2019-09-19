@@ -13,5 +13,9 @@ namespace scarlett {
 			auto data = stbi_load(file.c_str(), width, height, channels, reqeryChannel);
 			return data;
 		}
+
+		static void Free(void* p) {
+			STBI_FREE(p);
+		}
 	};
 }

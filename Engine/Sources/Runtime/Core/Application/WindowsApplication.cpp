@@ -86,7 +86,7 @@ int WindowsApplication::Initialize() noexcept{
 	mMemoryMgr = new MemoryManager();
 	mMemoryMgr->Initialize();
 
-	mUseOpengl = true;
+	mUseOpengl = false;
 	if (mUseOpengl) {
 		LoadWGL();
 		CreateGLContext();

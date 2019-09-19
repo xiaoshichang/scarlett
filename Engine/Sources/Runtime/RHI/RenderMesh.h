@@ -13,6 +13,11 @@ using namespace std;
 
 namespace scarlett {
 
+	enum MeshType {
+		MT_Model = 1,
+		MT_Skybox = 2
+	};
+
 	class RenderMesh : public IMesh{
 	public:
 		RenderMesh();
@@ -24,6 +29,7 @@ namespace scarlett {
 		virtual shared_ptr<Material>		GetMaterial() noexcept;
 
 	public:
+		MeshType					mMeshType;
 		shared_ptr<VertexBuffer>	mPositions;
 		shared_ptr<VertexBuffer>	mNormals;
 		shared_ptr<VertexBuffer>	mTexCoords;

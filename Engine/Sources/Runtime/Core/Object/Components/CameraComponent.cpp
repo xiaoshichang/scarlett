@@ -1,6 +1,79 @@
 #include "CameraComponent.h"
 #include <DirectXMath.h>
+#include "Runtime/Core/Application/Application.h"
+
 using namespace DirectX;
+
+scarlett::SkyBox::SkyBox(const std::string & path)
+{
+	float skyboxVertices[] = {
+		// positions          
+		-1.0f,  1.0f, -1.0f,
+		-1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f, -1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+
+		-1.0f, -1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f,
+		-1.0f, -1.0f,  1.0f,
+
+		-1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f, -1.0f,
+		 1.0f,  1.0f,  1.0f,
+		 1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f,  1.0f,
+		-1.0f,  1.0f, -1.0f,
+
+		-1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f, -1.0f,
+		 1.0f, -1.0f, -1.0f,
+		-1.0f, -1.0f,  1.0f,
+		 1.0f, -1.0f,  1.0f
+	};
+
+	auto texture = GApp->mGraphicsManager->CreateTextureCubemap(path);
+	auto sampler = GApp->mGraphicsManager->CreateSamplerState();
+	mBox = GApp->mGraphicsManager->CreateRenderMeshDebug(skyboxVertices, 36, VF_P3F);
+	mBox->mType = PrimitiveType::PT_TRIANGLE;
+	auto shader = GApp->mGraphicsManager->GetShader("skybox");
+	mBox->mMeshType = MeshType::MT_Skybox;
+	mBox->mMaterial->SetType(MaterialType::Skybox);
+	mBox->mMaterial->SetShader(shader);
+	mBox->mMaterial->SetTexture("skybox", texture);
+	mBox->mMaterial->SerSamplerState("skybox", sampler);
+	mBox->mMaterial->GetDepthStencilState()->SetFunc(DepthStencilStateFunc::LESS_EQUAL);
+}
+
+scarlett::SkyBox::~SkyBox()
+{
+}
+
+void scarlett::SkyBox::Render()
+{
+	auto worldMatrix = Matrix4f::Identity();
+	mBox->Render(GApp->mWorld, worldMatrix);
+}
+
 
 scarlett::CameraComponent::CameraComponent() :
 	mCameraType(CameraType::Perspective),
@@ -11,8 +84,10 @@ scarlett::CameraComponent::CameraComponent() :
 	mFarClip(1000.0f),
 	mFov(PI / 3),
 	mViewDirty(true),
-	mProjectionDirty(true)
+	mProjectionDirty(true),
+	mSkybox(nullptr)
 {
+	SetSkybox("./Asset/Textures/skybox/");
 }
 
 int scarlett::CameraComponent::Initialize() noexcept
@@ -24,7 +99,7 @@ void scarlett::CameraComponent::Finalize() noexcept
 {
 }
 
-const Matrix4f& scarlett::CameraComponent::GetViewMatrix()
+const Matrix4f scarlett::CameraComponent::GetViewMatrix()
 {
 	if (mViewDirty) {
 		mViewMatrix = BuildViewLookatLH(mPosition, mLookat, mUp);
@@ -34,7 +109,16 @@ const Matrix4f& scarlett::CameraComponent::GetViewMatrix()
 	return mViewMatrix;
 }
 
-const Matrix4f& scarlett::CameraComponent::GetPerspectiveMatrix()
+const Matrix4f scarlett::CameraComponent::GetViewMatrixOrigin()
+{
+	auto m = GetViewMatrix();
+	m(0, 3) = 0.0f;
+	m(1, 3) = 0.0f;
+	m(2, 3) = 0.0f;
+	return m;
+}
+
+const Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
 {	
 	float width = 1024.0f;
 	float height = 768.0f;
@@ -50,3 +134,15 @@ const Matrix4f& scarlett::CameraComponent::GetPerspectiveMatrix()
 	}
 	return mProjectionMatrix;
 }
+
+void scarlett::CameraComponent::SetSkybox(const std::string & path)
+{
+	mSkybox = std::make_shared<SkyBox>(path);
+}
+
+std::shared_ptr<scarlett::SkyBox> scarlett::CameraComponent::GetSkybox()
+{
+	return mSkybox;
+}
+
+

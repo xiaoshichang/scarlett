@@ -12,6 +12,7 @@ namespace scarlett {
 		virtual		int		Initialize() noexcept;
 		virtual		void	Finalize() noexcept;
 	public:
+		void	RenderBackground();
 		std::shared_ptr<Entity>		GetMainCamera();
 		void	SetMainCamera(std::shared_ptr<Entity> camera);
 

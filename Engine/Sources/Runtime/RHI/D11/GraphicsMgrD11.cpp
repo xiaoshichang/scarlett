@@ -334,7 +334,18 @@ std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::st
 		return mTextures[path];
 	}
 
-	auto ptr = std::make_shared<TextureD11>(path);
+	auto ptr = std::make_shared<TextureD11>(path, TextureType::Default);
+	mTextures[path] = ptr;
+	return ptr;
+}
+
+std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTextureCubemap(const std::string & path) noexcept
+{
+	if (mTextures[path]) {
+		return mTextures[path];
+	}
+
+	auto ptr = std::make_shared<TextureD11>(path, TextureType::Cubemap);
 	mTextures[path] = ptr;
 	return ptr;
 }
@@ -362,6 +373,11 @@ void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 	std::string pbr_skinPS = "Asset/Shaders/pbr_skin.ps";
 	auto pbr_skin = std::make_shared<ShaderD11>(pbr_skinVS, pbr_skinPS);
 	mShaders["pbr_skin"] = pbr_skin;
+
+	std::string skyboxvs = "Asset/Shaders/skybox.vs";
+	std::string skyboxps = "Asset/Shaders/skybox.ps";
+	auto skybox = std::make_shared<ShaderD11>(skyboxvs, skyboxps);
+	mShaders["skybox"] = skybox;
 }
 
 void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<Shader> shader) noexcept

@@ -63,6 +63,30 @@ namespace scarlett {
 		Vector4f debugColor;
 	};
 
+	enum DepthStencilStateWriteMask {
+		ALL = 1,
+		ZORE = 2,
+	};
+
+	enum DepthStencilStateFunc {
+		NEVER = 1,
+		ALWAYS = 2,
+		LESS_EQUAL = 3,
+		LESS = 4,
+		EQUAL = 5,
+		GREATER_EQUAL = 6,
+		GREATER = 7,
+		NOT_EQUAL = 8,
+	};
+
+	
+	class IDepthStencilState : public IRenderResource {
+	public:
+		virtual void	SetWriteMask(DepthStencilStateWriteMask mask) = 0;
+		virtual void	SetFunc(DepthStencilStateFunc func) = 0;
+
+	};
+
 	class Shader;
 	class Texture;
 	class SamplerState;
@@ -76,6 +100,8 @@ namespace scarlett {
 		virtual void		SetShaderParamter(std::string name, Vector4f value) noexcept = 0;
 		virtual void		SetTexture(std::string name, std::shared_ptr<Texture> tex) noexcept = 0;
 		virtual void		SerSamplerState(std::string name, std::shared_ptr<SamplerState>) noexcept = 0;
+		virtual void		SetDepthStencilState(std::shared_ptr<IDepthStencilState>) = 0;
+		virtual std::shared_ptr<IDepthStencilState>		GetDepthStencilState() = 0;
 	};
 
 	class ITexture : public IRenderResource {

@@ -1,8 +1,21 @@
 #pragma once
 #include "Runtime/Core/Math/ScltMath.h"
 #include "Runtime/Interface/IComponent.h"
+#include "Runtime/RHI/Texture.h"
+#include "Runtime/RHI/RenderMesh.h"
 
 namespace scarlett {
+
+	class SkyBox {
+	public:
+		SkyBox(const std::string& path);
+		virtual ~SkyBox();
+		void	Render();
+
+	private:
+		std::shared_ptr<RenderMesh> mBox;
+	};
+
 
 	enum CameraType
 	{
@@ -16,8 +29,9 @@ namespace scarlett {
 		virtual int Initialize() noexcept;
 		virtual void Finalize() noexcept;
 
-		const Matrix4f&	GetViewMatrix();
-		const Matrix4f&	GetPerspectiveMatrix();
+		const Matrix4f	GetViewMatrix();
+		const Matrix4f  GetViewMatrixOrigin();
+		const Matrix4f	GetPerspectiveMatrix();
 
 		CameraType	GetType() { return mCameraType; }
 		void		SetType(CameraType type) { mCameraType = type; mViewDirty = true; mProjectionDirty = true; }
@@ -36,6 +50,9 @@ namespace scarlett {
 		void		SetFarClip(float f) { mProjectionDirty = true; mFarClip= f; }
 		void		SetFov(float fov) { mFov = fov; mProjectionDirty = true; }
 
+		void		SetSkybox(const std::string& path);
+		std::shared_ptr<SkyBox>	GetSkybox();
+
 	private:
 		CameraType	mCameraType;
 
@@ -51,6 +68,7 @@ namespace scarlett {
 		float		mFarClip;
 		float		mFov;
 
+		std::shared_ptr<SkyBox>		mSkybox;
 	};
 
 }

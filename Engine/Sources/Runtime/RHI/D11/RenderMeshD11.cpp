@@ -183,8 +183,17 @@ void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) 
 	ConstantBuffer cb;
 	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
 	cb.world = worldMatrix.transpose();
-	cb.view = camera->GetViewMatrix().transpose();
+
+	if (mMeshType == MeshType::MT_Model) {
+		cb.view = camera->GetViewMatrix().transpose();
+
+	}
+	else if (mMeshType == MeshType::MT_Skybox) {
+		cb.view = camera->GetViewMatrixOrigin().transpose();
+	}
+
 	cb.projection = camera->GetPerspectiveMatrix().transpose();
+
 	mMaterial->Apply(cb);
 
 	if (mIndexes) {

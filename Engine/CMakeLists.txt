@@ -15,7 +15,7 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/MaterialD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/TextureD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/SamplerStateD11.cpp
-
+	${SourcesPath}/Runtime/RHI/D11/DepthStencilStateD11.cpp
 	${ExternalPath}/Glad/src/glad.c
 	${ExternalPath}/Glad/src/glad_wgl.c
 	)

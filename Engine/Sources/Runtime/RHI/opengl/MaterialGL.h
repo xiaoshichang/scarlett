@@ -5,6 +5,7 @@ namespace scarlett {
 
 	class MaterialGL : public Material {
 	public:
-		virtual void		Apply(ConstantBuffer cb) noexcept;
+		virtual void			ApplySurface(ConstantBuffer cb);
+		virtual void			ApplySkybox(ConstantBuffer cb);
 	};
 }

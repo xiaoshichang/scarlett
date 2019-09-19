@@ -23,6 +23,7 @@ namespace scarlett{
 		virtual		std::shared_ptr<RenderMesh>		CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept;
 
 		virtual		std::shared_ptr<Texture>		CreateTexture2D(const std::string& path) noexcept;
+		virtual		std::shared_ptr<Texture>		CreateTextureCubemap(const std::string& path) noexcept;
 		virtual		std::shared_ptr<SamplerState>	CreateSamplerState() noexcept;
 
 		virtual		void	LoadShaders() noexcept;

@@ -20,6 +20,12 @@ std::shared_ptr<scarlett::Shader> scarlett::Material::GetShader()
 
 void scarlett::Material::Apply(ConstantBuffer cb) noexcept
 {
+	if (mType == MaterialType::Surface) {
+		ApplySurface(cb);
+	}
+	else if (mType == MaterialType::Skybox) {
+		ApplySkybox(cb);
+	}
 }
 
 void scarlett::Material::SetShaderParamter(std::string name, Vector4f value) noexcept

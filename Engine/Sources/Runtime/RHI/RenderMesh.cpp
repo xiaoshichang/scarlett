@@ -8,7 +8,8 @@ scarlett::RenderMesh::RenderMesh():
 	mPositions(nullptr),
 	mNormals(nullptr),
 	mTexCoords(nullptr),
-	mIndexes(nullptr)
+	mIndexes(nullptr),
+	mMeshType(MeshType::MT_Model)
 {
 }
 

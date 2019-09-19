@@ -1,0 +1,15 @@
+TextureCube tSkyboyMap;
+SamplerState tSkyboxSamplerState;
+
+struct v2p {
+	float4 position : SV_POSITION;
+	float3 texcood	: TEXCOOD;
+};
+
+
+float4 main(v2p input) : SV_TARGET
+{
+	float4 color = tSkyboyMap.Sample(tSkyboxSamplerState, input.texcood);
+    return color;
+}
+
