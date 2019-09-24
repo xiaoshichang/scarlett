@@ -16,8 +16,11 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/TextureD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/SamplerStateD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/DepthStencilStateD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/DDSTextureLoader.cpp
+
 	${ExternalPath}/Glad/src/glad.c
 	${ExternalPath}/Glad/src/glad_wgl.c
+
 	)
 ELSEIF(${UNIX})
 	IF(${APPLE})
@@ -68,7 +71,7 @@ ${PlatformOnlySources}
 )
 
 IF(${WIN32})
-	target_link_libraries(Scarlett user32 d3d11 d3dcompiler dxgi opengl32)
+	target_link_libraries(Scarlett user32 d3d11 d3dcompiler dxgi opengl32 dxguid.lib)
 	target_link_libraries(Scarlett ${ASSIMP_LIBRARY} ${IRRXML_LIBRARY} ${ZLIB_LIBRARY})
 ELSEIF(${UNIX})
 	IF(${APPLE})

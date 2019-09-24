@@ -87,7 +87,7 @@ scarlett::CameraComponent::CameraComponent() :
 	mProjectionDirty(true),
 	mSkybox(nullptr)
 {
-	SetSkybox("./Asset/Textures/skybox/");
+	SetSkybox("./Asset/Textures/skybox/output_skybox.dds");
 }
 
 int scarlett::CameraComponent::Initialize() noexcept

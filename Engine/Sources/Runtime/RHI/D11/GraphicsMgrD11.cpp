@@ -148,7 +148,7 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	result = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D10_CREATE_DEVICE_DEBUG, &featureLevel, 1,
+	result = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
 		D3D11_SDK_VERSION, &m_device, NULL, &m_deviceContext);
 	SCARLETT_ASSERT(result >= 0);
 

@@ -3,6 +3,18 @@
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Application/Application.h"
 #include "Runtime/Utils/ImageParser.h"
+#include "Runtime/RHI/D11/DDSTextureLoader.h"
+#include <codecvt>
+
+std::wstring stringToWstring(const std::string& t_str)
+{
+	//setup converter
+	typedef std::codecvt_utf8<wchar_t> convert_type;
+	std::wstring_convert<convert_type, wchar_t> converter;
+
+	//use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
+	return converter.from_bytes(t_str);
+}
 
 scarlett::TextureD11::TextureD11(const std::string& filepath, TextureType type)
 {
@@ -68,61 +80,10 @@ void scarlett::TextureD11::InitializeDefault(const std::string & filepath) noexc
 
 void scarlett::TextureD11::InitializeCubemap(const std::string & filepath) noexcept
 {
-	HRESULT result;
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	int width, height, channels;
-	unsigned char* data[6];
-	unsigned char* _data[6];
+	auto wpath = stringToWstring(filepath);
 
-	std::string names[6] = { "left.tga", "right.tga", "top.tga", "bottom.tga", "front.tga", "back.tga" };
-
-	for (int i = 0; i < 6; ++i) {
-		auto f = filepath + names[i];
-		data[i] = scarlett::ImageParser::Parse(f, &width, &height, &channels, 4);
-		SCARLETT_ASSERT(data[i]);
-	}
-
-	D3D11_TEXTURECUBE_FACE_POSITIVE_X;
-	D3D11_TEXTURE2D_DESC texDesc;
-	texDesc.Width = width;
-	texDesc.Height = height;
-	texDesc.MipLevels = 1;
-	texDesc.ArraySize = 6;
-	texDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	texDesc.CPUAccessFlags = 0;
-	texDesc.SampleDesc.Count = 1;
-	texDesc.SampleDesc.Quality = 0;
-	texDesc.Usage = D3D11_USAGE_DEFAULT;
-	texDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	texDesc.CPUAccessFlags = 0;
-	texDesc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
-
-	D3D11_SHADER_RESOURCE_VIEW_DESC SMViewDesc;
-	SMViewDesc.Format = texDesc.Format;
-	SMViewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-	SMViewDesc.TextureCube.MipLevels = texDesc.MipLevels;
-	SMViewDesc.TextureCube.MostDetailedMip = 0;
-
-	D3D11_SUBRESOURCE_DATA pData[6];
-
-	for (int cubeMapFaceIndex = 0; cubeMapFaceIndex < 6; cubeMapFaceIndex++)
-	{
-		pData[cubeMapFaceIndex].pSysMem = data[cubeMapFaceIndex];
-		pData[cubeMapFaceIndex].SysMemPitch = width * 4;
-		pData[cubeMapFaceIndex].SysMemSlicePitch = 0;
-	}
-
-	result = mgrd11->m_device->CreateTexture2D(&texDesc, &pData[0], &mTexture);
-	SCARLETT_ASSERT(result == S_OK);
-
-	result = mgrd11->m_device->CreateShaderResourceView(mTexture, &SMViewDesc, &mView);
-	SCARLETT_ASSERT(result == S_OK);
-
-
-	for (int i = 0; i < 6; ++i) {
-		scarlett::ImageParser::Free(data[i]);
-	}
-
+	auto hr = DirectX::CreateDDSTextureFromFile(mgrd11->m_device, mgrd11->m_deviceContext, wpath.c_str(), nullptr, &mView);
 }
 
 void scarlett::TextureD11::Finialize() noexcept {
