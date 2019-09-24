@@ -54,13 +54,13 @@ scarlett::SkyBox::SkyBox(const std::string & path)
 	auto texture = GApp->mGraphicsManager->CreateTextureCubemap(path);
 	auto sampler = GApp->mGraphicsManager->CreateSamplerState();
 	mBox = GApp->mGraphicsManager->CreateRenderMeshDebug(skyboxVertices, 36, VF_P3F);
-	mBox->mType = PrimitiveType::PT_TRIANGLE;
+	mBox->mPrimitiveType = PrimitiveType::PT_TRIANGLE;
 	auto shader = GApp->mGraphicsManager->GetShader("skybox");
 	mBox->mMeshType = MeshType::MT_Skybox;
-	mBox->mMaterial->SetType(MaterialType::Skybox);
+	mBox->mMaterial->SetName("skybox");
 	mBox->mMaterial->SetShader(shader);
 	mBox->mMaterial->SetTexture("skybox", texture);
-	mBox->mMaterial->SerSamplerState("skybox", sampler);
+	mBox->mMaterial->SetSamplerState("skybox", sampler);
 	mBox->mMaterial->GetDepthStencilState()->SetFunc(DepthStencilStateFunc::LESS_EQUAL);
 }
 

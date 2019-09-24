@@ -4,10 +4,9 @@
 
 namespace scarlett {
 
-	class SamplerState : public ISamplerState {
+	class ISamplerState : public IRenderResource {
 	public:
-		virtual void		Initialize() noexcept;
-		virtual void		Finialize() noexcept;
+		virtual void SetState() = 0;
 	};
 	
 }

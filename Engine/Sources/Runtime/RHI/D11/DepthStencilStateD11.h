@@ -1,5 +1,5 @@
 #pragma once
-#include "Runtime/Interface/IResource.h"
+#include "Runtime/RHI/DepthStencilState.h"
 #include <d3d11.h>
 
 namespace scarlett{

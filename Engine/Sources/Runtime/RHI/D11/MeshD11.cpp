@@ -1,4 +1,4 @@
-#include "Runtime/RHI/D11/RenderMeshD11.h"
+#include "Runtime/RHI/D11/MeshD11.h"
 #include "Runtime/RHI/D11/IndexBufferD11.h"
 #include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Runtime/RHI/D11/MaterialD11.h"
@@ -7,56 +7,46 @@
 #include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
-scarlett::RenderMeshD11::RenderMeshD11(aiMesh* mesh, const aiScene* world)
+scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 {
-	Initialize(mesh);
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	Initialize(mesh);
+
 	auto material = world->mMaterials[mesh->mMaterialIndex];
 	aiString name;
 	aiGetMaterialString(material, AI_MATKEY_NAME, &name);
 
 	mMaterial = std::make_shared<MaterialD11>();
-	// setup parameters and textures
-	if (strcmp(name.C_Str(),"skirt_w") == 0) {
-		auto shader = mgrd11->GetShader("pbr");
-		mMaterial->SetShader(shader);
-		auto tex = mgrd11->CreateTexture2D(".\\Asset\\Textures\\aili\\w.jpg");
-		auto sampler = mgrd11->CreateSamplerState();
-		mMaterial->SetTexture("tBaseMap", tex);
-		mMaterial->SerSamplerState("tBaseMap", sampler);
-	}
-	else if(strcmp(name.C_Str(), "skirt_b") == 0) {
-		auto shader = mgrd11->GetShader("pbr");
-		mMaterial->SetShader(shader);
-		auto tex = mgrd11->CreateTexture2D(".\\Asset\\Textures\\aili\\b.jpg");
-		auto sampler = mgrd11->CreateSamplerState();
-		mMaterial->SetTexture("tBaseMap", tex);
-		mMaterial->SerSamplerState("tBaseMap", sampler);
-	}
-	else {
-		aiColor4D diffuse;
-		aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
-		auto shader = mgrd11->GetShader("pbr_skin");
-		mMaterial->SetShader(shader);
-		mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
-	}
+	aiColor4D diffuse;
+	aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
+	auto shader = mgrd11->GetShader("pbr_skin");
+	mMaterial->SetShader(shader);
+	mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
+	
 }
 
-scarlett::RenderMeshD11::RenderMeshD11(void* data, int count, VertexFormat vf)
+scarlett::MeshD11::MeshD11(void* data, int count, VertexFormat vf)
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	Initialize(data, count, vf);
+
 	mMaterial = std::make_shared<MaterialD11>();
 	auto shader = mgrd11->GetShader("debug");
 	mMaterial->SetShader(shader);
 }
 
-scarlett::RenderMeshD11::~RenderMeshD11()
+scarlett::MeshD11::~MeshD11()
 {
-	Finialize();
+	delete stride;
+	delete offset;
+	delete vbuffers;
+	mPositions = nullptr;
+	mNormals = nullptr;
+	mTexCoords = nullptr;
+	mIndexes = nullptr;
 }
 
-void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
+void scarlett::MeshD11::Initialize(aiMesh * mesh) noexcept
 {
 	if (!mesh) {
 		return;
@@ -96,14 +86,14 @@ void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
 	}
 
 	if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_POINT) {
-		mType = PrimitiveType::PT_POINT;
+		mPrimitiveType = PrimitiveType::PT_POINT;
 	}
 	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_LINE) {
-		mType = PrimitiveType::PT_LINE;
+		mPrimitiveType = PrimitiveType::PT_LINE;
 	}
 	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_TRIANGLE)
 	{
-		mType = PrimitiveType::PT_TRIANGLE;
+		mPrimitiveType = PrimitiveType::PT_TRIANGLE;
 	}
 	else {
 		SCARLETT_ASSERT(false);
@@ -138,11 +128,11 @@ void scarlett::RenderMeshD11::Initialize(aiMesh * mesh) noexcept
 	}
 }
 
-void scarlett::RenderMeshD11::Initialize(void* data, int count, VertexFormat vf) noexcept
+void scarlett::MeshD11::Initialize(void * data, int count, VertexFormat vf) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mPositions = mgrd11->CreateVertexBuffer(data, count, vf);
-	mType = PrimitiveType::PT_LINE;
+	mPrimitiveType = PrimitiveType::PT_LINE;
 	vbcount = GetVaildVertexBufferCount();
 	stride = new  unsigned int[vbcount];
 	offset = new  unsigned int[vbcount];
@@ -158,7 +148,7 @@ void scarlett::RenderMeshD11::Initialize(void* data, int count, VertexFormat vf)
 	}
 }
 
-void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) noexcept
+void scarlett::MeshD11::Render(World* world, const Matrix4f& worldMatrix) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
@@ -170,13 +160,13 @@ void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) 
 	}
 
 	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-	if (mType == PrimitiveType::PT_LINE) {
+	if (mPrimitiveType == PrimitiveType::PT_LINE) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	}
-	else if (mType == PrimitiveType::PT_POINT) {
+	else if (mPrimitiveType == PrimitiveType::PT_POINT) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
 	}
-	else if (mType == PrimitiveType::PT_TRIANGLE) {
+	else if (mPrimitiveType == PrimitiveType::PT_TRIANGLE) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 
@@ -197,21 +187,10 @@ void scarlett::RenderMeshD11::Render(World* world, const Matrix4f& worldMatrix) 
 	mMaterial->Apply(cb);
 
 	if (mIndexes) {
-		mgrd11->DrawIndexed(mIndexes->mCount, 0, 0);
+		mgrd11->DrawIndexed(mIndexes->GetIndexCount(), 0, 0);
 	}
 	else {
-		mgrd11->Draw(mPositions->mCount, 0);
+		mgrd11->Draw(mPositions->GetVertextCount(), 0);
 	}
 
-}
-
-void scarlett::RenderMeshD11::Finialize() noexcept
-{
-	delete stride;
-	delete offset;
-	delete vbuffers;
-	mPositions = nullptr;
-	mNormals = nullptr;
-	mTexCoords = nullptr;
-	mIndexes = nullptr;
 }

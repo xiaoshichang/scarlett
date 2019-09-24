@@ -1,6 +1,6 @@
 #include "Runtime/RHI/opengl/MaterialGL.h"
 
-void scarlett::MaterialGL::ApplySurface(ConstantBuffer cb)
+void scarlett::MaterialGL::Apply(ConstantBuffer cb) noexcept
 {
 	mShader->Use();
 
@@ -10,8 +10,4 @@ void scarlett::MaterialGL::ApplySurface(ConstantBuffer cb)
 		}
 	}
 	mShader->SetConstantBuffer(cb);
-}
-
-void scarlett::MaterialGL::ApplySkybox(ConstantBuffer cb)
-{
 }

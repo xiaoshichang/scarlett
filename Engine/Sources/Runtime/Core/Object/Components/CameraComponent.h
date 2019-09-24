@@ -2,7 +2,7 @@
 #include "Runtime/Core/Math/ScltMath.h"
 #include "Runtime/Interface/IComponent.h"
 #include "Runtime/RHI/Texture.h"
-#include "Runtime/RHI/RenderMesh.h"
+#include "Runtime/RHI/Mesh.h"
 
 namespace scarlett {
 
@@ -13,7 +13,7 @@ namespace scarlett {
 		void	Render();
 
 	private:
-		std::shared_ptr<RenderMesh> mBox;
+		std::shared_ptr<IMesh> mBox;
 	};
 
 

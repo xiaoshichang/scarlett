@@ -4,7 +4,7 @@
 #include "Runtime/Interface/ISystem.h"
 
 #include "Runtime/RHI/GraphicsMgr.h"
-#include "Runtime/RHI/RenderMesh.h"
+#include "Runtime/RHI/Mesh.h"
 
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 
@@ -32,7 +32,7 @@ namespace scarlett {
 
 
 	public:
-		std::vector<shared_ptr<RenderMesh>>	mMeshes;
+		std::vector<shared_ptr<IMesh>>	mMeshes;
 	private:
 		World* mWorld;
 		GraphicsManager* mGraphicsManager;

@@ -13,7 +13,29 @@ scarlett::ShaderD11::ShaderD11(const string & vsPath, const string & psPath)
 
 scarlett::ShaderD11::~ShaderD11()
 {
-	Finialize();
+	// Release the matrix constant buffer.
+	if (m_matrixBuffer) {
+		m_matrixBuffer->Release();
+		m_matrixBuffer = 0;
+	}
+
+	// Release the layout.
+	if (m_layout) {
+		m_layout->Release();
+		m_layout = 0;
+	}
+
+	// Release the pixel shader.
+	if (m_pixelShader) {
+		m_pixelShader->Release();
+		m_pixelShader = 0;
+	}
+
+	// Release the vertex shader.
+	if (m_vertexShader) {
+		m_vertexShader->Release();
+		m_vertexShader = 0;
+	}
 }
 
 bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string & psPath) noexcept
@@ -131,32 +153,6 @@ void scarlett::ShaderD11::Use() noexcept
 	mgrd11->m_deviceContext->PSSetShader(m_pixelShader, NULL, 0);
 }
 
-void scarlett::ShaderD11::Finialize() noexcept
-{
-	// Release the matrix constant buffer.
-	if (m_matrixBuffer){
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
-	}
-
-	// Release the layout.
-	if (m_layout){
-		m_layout->Release();
-		m_layout = 0;
-	}
-
-	// Release the pixel shader.
-	if (m_pixelShader){
-		m_pixelShader->Release();
-		m_pixelShader = 0;
-	}
-
-	// Release the vertex shader.
-	if (m_vertexShader){
-		m_vertexShader->Release();
-		m_vertexShader = 0;
-	}
-}
 
 void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noexcept
 {

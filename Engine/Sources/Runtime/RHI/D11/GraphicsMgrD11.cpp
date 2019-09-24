@@ -2,7 +2,7 @@
 #include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Runtime/RHI/D11/IndexBufferD11.h"
 #include "Runtime/RHI/D11/ShaderD11.h"
-#include "Runtime/RHI/D11/RenderMeshD11.h"
+#include "Runtime/RHI/D11/MeshD11.h"
 #include "Runtime/RHI/D11/TextureD11.h"
 #include "Runtime/RHI/D11/SamplerStateD11.h"
 #include "Foundation/Assert.h"
@@ -302,33 +302,33 @@ void GraphicsMgrD11::ClearRenderTarget(float r, float g, float b, float a) noexc
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 }
 
-std::shared_ptr<VertexBuffer> scarlett::GraphicsMgrD11::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
+std::shared_ptr<IVertexBuffer> scarlett::GraphicsMgrD11::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
 {
 	auto ptr = std::make_shared<VertexBufferD11>(data, count, vf);
 	return ptr;
 }
 
 
-std::shared_ptr<IndexBuffer> scarlett::GraphicsMgrD11::CreateIndexBuffer(void * data, int count, IndexFormat iformat) noexcept
+std::shared_ptr<IIndexBuffer> scarlett::GraphicsMgrD11::CreateIndexBuffer(void * data, int count, IndexFormat iformat) noexcept
 {
 	auto ptr = std::make_shared<IndexBufferD11>(data, count, iformat);
 	return ptr;
 }
 
 
-std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh, const aiScene* world) noexcept
+std::shared_ptr<IMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh, const aiScene* world) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshD11>(mesh, world);
+	auto ptr = std::make_shared<MeshD11>(mesh, world);
 	return ptr;
 }
 
-std::shared_ptr<RenderMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept
+std::shared_ptr<IMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshD11>(data, count, vf);
+	auto ptr = std::make_shared<MeshD11>(data, count, vf);
 	return ptr;
 }
 
-std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::string& path) noexcept
+std::shared_ptr<ITexture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::string& path) noexcept
 {
 	if (mTextures[path]) {
 		return mTextures[path];
@@ -339,7 +339,7 @@ std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::st
 	return ptr;
 }
 
-std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTextureCubemap(const std::string & path) noexcept
+std::shared_ptr<ITexture> scarlett::GraphicsMgrD11::CreateTextureCubemap(const std::string & path) noexcept
 {
 	if (mTextures[path]) {
 		return mTextures[path];
@@ -350,7 +350,7 @@ std::shared_ptr<Texture> scarlett::GraphicsMgrD11::CreateTextureCubemap(const st
 	return ptr;
 }
 
-std::shared_ptr<SamplerState> scarlett::GraphicsMgrD11::CreateSamplerState() noexcept
+std::shared_ptr<ISamplerState> scarlett::GraphicsMgrD11::CreateSamplerState() noexcept
 {
 	auto ptr = std::make_shared<SamplerStateD11>();
 	return ptr;
@@ -380,7 +380,7 @@ void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 	mShaders["skybox"] = skybox;
 }
 
-void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<Shader> shader) noexcept
+void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<IShader> shader) noexcept
 {
 	if (!shader) {
 		SCARLETT_ASSERT(false);
@@ -388,7 +388,7 @@ void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<Shader> shader) noexcep
 	shader->Use();
 }
 
-std::shared_ptr<Shader> scarlett::GraphicsMgrD11::GetShader(const std::string & shaderName) noexcept
+std::shared_ptr<IShader> scarlett::GraphicsMgrD11::GetShader(const std::string & shaderName) noexcept
 {
 	return mShaders[shaderName];
 }

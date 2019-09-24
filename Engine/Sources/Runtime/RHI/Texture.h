@@ -9,18 +9,12 @@ namespace scarlett {
 		Cubemap = 2,
 	};
 
-	class Texture : public ITexture {
-
+	class ITexture : public IRenderResource {
 	public:
-
-		virtual void	Initialize(const std::string& filepath) noexcept;
-
-		virtual void	InitializeDefault(const std::string& filepath) noexcept;
-		virtual void	InitializeCubemap(const std::string& filepath) noexcept;
-
-		virtual void	Finialize() noexcept;
-
-	public:
+		ITexture(TextureType type) : mType(type){}
+		virtual void	InitializeDefault(const std::string& filepath) noexcept = 0;
+		virtual void	InitializeCubemap(const std::string& filepath) noexcept = 0;
+	protected:
 		TextureType mType;
 	};
 

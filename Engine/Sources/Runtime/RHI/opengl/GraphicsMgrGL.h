@@ -15,20 +15,20 @@ namespace scarlett{
 		virtual		void	Present() noexcept;
 		virtual		void	ClearRenderTarget(float r, float g, float b, float a) noexcept;
 
-		virtual		std::shared_ptr<VertexBuffer>	CreateVertexBuffer(void* data, int count, VertexFormat vf) noexcept;
+		virtual		std::shared_ptr<IVertexBuffer>	CreateVertexBuffer(void* data, int count, VertexFormat vf) noexcept;
 
-		virtual		std::shared_ptr<IndexBuffer>	CreateIndexBuffer(void* data, int count, IndexFormat iformat) noexcept;
+		virtual		std::shared_ptr<IIndexBuffer>	CreateIndexBuffer(void* data, int count, IndexFormat iformat) noexcept;
 
-		virtual		std::shared_ptr<RenderMesh>		CreateRenderMesh(aiMesh* mesh, const aiScene* world) noexcept;
-		virtual		std::shared_ptr<RenderMesh>		CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept;
+		virtual		std::shared_ptr<IMesh>		CreateRenderMesh(aiMesh* mesh, const aiScene* world) noexcept;
+		virtual		std::shared_ptr<IMesh>		CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept;
 
-		virtual		std::shared_ptr<Texture>		CreateTexture2D(const std::string& path) noexcept;
-		virtual		std::shared_ptr<Texture>		CreateTextureCubemap(const std::string& path) noexcept;
-		virtual		std::shared_ptr<SamplerState>	CreateSamplerState() noexcept;
+		virtual		std::shared_ptr<ITexture>		CreateTexture2D(const std::string& path) noexcept;
+		virtual		std::shared_ptr<ITexture>		CreateTextureCubemap(const std::string& path) noexcept;
+		virtual		std::shared_ptr<ISamplerState>	CreateSamplerState() noexcept;
 
 		virtual		void	LoadShaders() noexcept;
-		virtual		void	UseShader(std::shared_ptr<Shader>) noexcept;
-		virtual		std::shared_ptr<Shader> GetShader(const std::string& shaderName) noexcept;
+		virtual		void	UseShader(std::shared_ptr<IShader>) noexcept;
+		virtual		std::shared_ptr<IShader> GetShader(const std::string& shaderName) noexcept;
 
 		virtual		void	Draw(unsigned int vcount, unsigned int start) noexcept;
 		virtual		void	DrawIndexed(unsigned int icount, unsigned int start, int baseLoc) noexcept;

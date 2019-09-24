@@ -3,9 +3,8 @@
 
 namespace scarlett {
 
-	class MaterialGL : public Material {
+	class MaterialGL : public IMaterial {
 	public:
-		virtual void			ApplySurface(ConstantBuffer cb);
-		virtual void			ApplySkybox(ConstantBuffer cb);
+		virtual void		Apply(ConstantBuffer cb) noexcept;
 	};
 }

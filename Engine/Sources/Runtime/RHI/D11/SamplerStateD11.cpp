@@ -6,16 +6,6 @@
 
 scarlett::SamplerStateD11::SamplerStateD11()
 {
-	Initialize();
-}
-
-scarlett::SamplerStateD11::~SamplerStateD11()
-{
-	Finialize();
-}
-
-void scarlett::SamplerStateD11::Initialize() noexcept
-{
 	D3D11_SAMPLER_DESC samplerDesc;
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -38,9 +28,13 @@ void scarlett::SamplerStateD11::Initialize() noexcept
 	}
 }
 
-void scarlett::SamplerStateD11::Finialize() noexcept
+scarlett::SamplerStateD11::~SamplerStateD11()
 {
 	if (m_sampleState) {
 		m_sampleState->Release();
 	}
+}
+
+void scarlett::SamplerStateD11::SetState()
+{
 }

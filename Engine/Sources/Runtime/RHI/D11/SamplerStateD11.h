@@ -5,12 +5,13 @@
 
 namespace scarlett {
 
-	class SamplerStateD11 : public SamplerState {
+	class SamplerStateD11 : public ISamplerState {
 	public:
 		SamplerStateD11();
 		virtual ~SamplerStateD11();
-		virtual void		Initialize() noexcept;
-		virtual void		Finialize() noexcept;
+
+		virtual void SetState();
+
 	public:
 
 		ID3D11SamplerState* m_sampleState;

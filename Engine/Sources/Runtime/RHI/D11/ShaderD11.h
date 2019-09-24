@@ -5,14 +5,13 @@
 
 
 namespace scarlett {
-	class ShaderD11 : public Shader {
+	class ShaderD11 : public IShader {
 	public:
-		ShaderD11(const string & vsPath, const string & psPath);
+		ShaderD11(const std::string & vsPath, const std::string & psPath);
 		virtual ~ShaderD11();
 
-		virtual	bool	InitializeFromFile(const string& vsPath, const string& psPath) noexcept;
+		virtual	bool	InitializeFromFile(const std::string& vsPath, const std::string& psPath) noexcept;
 		virtual	void	Use() noexcept;
-		virtual void	Finialize() noexcept;
 		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept;
 
 	public:

@@ -1,7 +1,7 @@
 #include "GraphicsMgrGL.h"
 #include "Foundation/Assert.h"
 #include "glad/glad_wgl.h"
-#include "Runtime/RHI/opengl/RenderMeshGL.h"
+#include "Runtime/RHI/opengl/MeshGL.h"
 #include "Runtime/RHI/opengl/VertexBufferGL.h"
 #include "Runtime/RHI/opengl/ShaderGL.h"
 #include "Runtime/Utils/Logging.h"
@@ -49,42 +49,42 @@ void scarlett::GraphicsMgrGL::ClearRenderTarget(float r, float g, float b, float
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-std::shared_ptr<VertexBuffer> scarlett::GraphicsMgrGL::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
+std::shared_ptr<IVertexBuffer> scarlett::GraphicsMgrGL::CreateVertexBuffer(void * data, int count, VertexFormat vf) noexcept
 {
 	auto ptr = std::make_shared<VertexBufferGL>(data, count, vf, 0);
 	return ptr;
 }
 
-std::shared_ptr<IndexBuffer> scarlett::GraphicsMgrGL::CreateIndexBuffer(void * data, int count, IndexFormat iformat) noexcept
+std::shared_ptr<IIndexBuffer> scarlett::GraphicsMgrGL::CreateIndexBuffer(void * data, int count, IndexFormat iformat) noexcept
 {
 	return nullptr;
 }
 
-std::shared_ptr<RenderMesh> scarlett::GraphicsMgrGL::CreateRenderMesh(aiMesh * mesh, const aiScene * world) noexcept
+std::shared_ptr<IMesh> scarlett::GraphicsMgrGL::CreateRenderMesh(aiMesh * mesh, const aiScene * world) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshGL>(mesh, world);
+	auto ptr = std::make_shared<MeshGL>(mesh, world);
 	return ptr;
 }
 
-std::shared_ptr<RenderMesh> scarlett::GraphicsMgrGL::CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept
+std::shared_ptr<IMesh> scarlett::GraphicsMgrGL::CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept
 {
-	auto ptr = std::make_shared<RenderMeshGL>(data, count, vf);
+	auto ptr = std::make_shared<MeshGL>(data, count, vf);
 	return ptr;
 }
 
-std::shared_ptr<Texture> scarlett::GraphicsMgrGL::CreateTexture2D(const std::string & path) noexcept
+std::shared_ptr<ITexture> scarlett::GraphicsMgrGL::CreateTexture2D(const std::string & path) noexcept
 {
-	return std::shared_ptr<Texture>();
+	return std::shared_ptr<ITexture>();
 }
 
-std::shared_ptr<Texture> scarlett::GraphicsMgrGL::CreateTextureCubemap(const std::string & path) noexcept
+std::shared_ptr<ITexture> scarlett::GraphicsMgrGL::CreateTextureCubemap(const std::string & path) noexcept
 {
-	return std::shared_ptr<Texture>();
+	return std::shared_ptr<ITexture>();
 }
 
-std::shared_ptr<SamplerState> scarlett::GraphicsMgrGL::CreateSamplerState() noexcept
+std::shared_ptr<ISamplerState> scarlett::GraphicsMgrGL::CreateSamplerState() noexcept
 {
-	return std::shared_ptr<SamplerState>();
+	return std::shared_ptr<ISamplerState>();
 }
 
 void scarlett::GraphicsMgrGL::LoadShaders() noexcept
@@ -101,7 +101,7 @@ void scarlett::GraphicsMgrGL::LoadShaders() noexcept
 }
 
 
-void scarlett::GraphicsMgrGL::UseShader(std::shared_ptr<Shader> shader) noexcept
+void scarlett::GraphicsMgrGL::UseShader(std::shared_ptr<IShader> shader) noexcept
 {
 	if (!shader) {
 		SCARLETT_ASSERT(false);
@@ -109,7 +109,7 @@ void scarlett::GraphicsMgrGL::UseShader(std::shared_ptr<Shader> shader) noexcept
 	shader->Use();
 }
 
-std::shared_ptr<Shader> scarlett::GraphicsMgrGL::GetShader(const std::string & shaderName) noexcept
+std::shared_ptr<IShader> scarlett::GraphicsMgrGL::GetShader(const std::string & shaderName) noexcept
 {
 	return mShaders[shaderName];
 }

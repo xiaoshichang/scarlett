@@ -1,16 +1,14 @@
 #pragma once
-
-#include "Runtime/Interface/IShader.h"
+#include "Runtime/Interface/IResource.h"
+#include <string>
 
 namespace scarlett {
 
-	class Shader : public IShader {
-
+	class IShader : public IRenderResource {
 	public:
-		virtual	bool	InitializeFromFile(const string& vsPath, const string& psPath) noexcept;
-		virtual void	Use() noexcept;
-		virtual void	Finialize() noexcept;
-		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept;
-	};
+		virtual	bool	InitializeFromFile(const std::string& vsPath, const std::string& psPath) noexcept = 0;
+		virtual	void	Use() noexcept = 0;
+		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept = 0;
 
+	};
 }

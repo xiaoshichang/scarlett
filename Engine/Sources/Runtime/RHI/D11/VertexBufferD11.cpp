@@ -14,12 +14,13 @@ scarlett::VertexBufferD11::VertexBufferD11(void * data, unsigned int count, Vert
 
 scarlett::VertexBufferD11::~VertexBufferD11()
 {
-	Finialize();
+	if (mVertexBuffer) mVertexBuffer->Release();
 }
 
 void scarlett::VertexBufferD11::Initialize(void * data, unsigned int count, VertexFormat vf) noexcept
 {
-	VertexBuffer::Initialize(data, count, vf);
+	mVertexCount = count;
+	mVertexFormat = vf;
 
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	D3D11_BUFFER_DESC vertexBufferDesc;
@@ -37,11 +38,4 @@ void scarlett::VertexBufferD11::Initialize(void * data, unsigned int count, Vert
 	vertexData.SysMemSlicePitch = 0;
 
 	auto result = mgrd11->m_device->CreateBuffer(&vertexBufferDesc, &vertexData, &(this->mVertexBuffer));
-}
-
-void scarlett::VertexBufferD11::Finialize() noexcept
-{
-	if (mVertexBuffer) {
-		mVertexBuffer->Release();
-	}
 }

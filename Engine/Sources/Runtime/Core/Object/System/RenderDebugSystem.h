@@ -1,7 +1,8 @@
 #pragma once
 #include <unordered_map>
+#include <memory>
 #include "Runtime/Interface/ISystem.h"
-#include "Runtime/RHI/RenderMesh.h"
+#include "Runtime/RHI/Mesh.h"
 
 namespace scarlett {
 	class World;
@@ -22,7 +23,7 @@ namespace scarlett {
 
 	private:
 		World* mWorld;
-		std::unordered_map<std::string, shared_ptr<RenderMesh>>		mMeshes;
+		std::unordered_map<std::string, std::shared_ptr<IMesh>>		mMeshes;
 	};
 
 }

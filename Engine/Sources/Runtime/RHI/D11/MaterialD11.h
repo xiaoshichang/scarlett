@@ -3,10 +3,12 @@
 
 namespace scarlett {
 
-	class MaterialD11 : public Material {
+	class MaterialD11 : public IMaterial {
 	public:
 		MaterialD11();
-		virtual void			ApplySurface(ConstantBuffer cb);
-		virtual void			ApplySkybox(ConstantBuffer cb);
+
+		virtual void Apply(ConstantBuffer cb) noexcept;
+		void ApplySurface(ConstantBuffer cb);
+		void ApplySkybox(ConstantBuffer cb);
 	};
 }

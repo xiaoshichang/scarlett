@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 #include "Runtime/Interface/IComponent.h"
-#include "Runtime/RHI/RenderObject.h"
 
 namespace scarlett {
 

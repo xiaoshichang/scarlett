@@ -1,18 +1,17 @@
-#include "Runtime/RHI/RenderMesh.h"
+#include "Runtime/RHI/Mesh.h"
 #include "glad/glad_wgl.h"
 
 namespace scarlett {
 
-	class RenderMeshGL : public RenderMesh {
+	class MeshGL : public IMesh {
 
 	public:
-		RenderMeshGL(aiMesh* mesh, const aiScene* world);
-		RenderMeshGL(void* data, int count, VertexFormat vf);
-		virtual ~RenderMeshGL();
+		MeshGL(aiMesh* mesh, const aiScene* world);
+		MeshGL(void* data, int count, VertexFormat vf);
+		virtual ~MeshGL();
 		virtual void		Initialize(aiMesh* mesh) noexcept;
 		virtual void		Initialize(void* data, int count, VertexFormat vf) noexcept;
 		virtual void		Render(World* world, const Matrix4f& worldMatrix) noexcept;
-		virtual void		Finialize() noexcept;
 
 	private:
 		GLenum GetMode();

@@ -9,12 +9,13 @@ scarlett::VertexBufferGL::VertexBufferGL(void * data, unsigned int count, Vertex
 
 scarlett::VertexBufferGL::~VertexBufferGL()
 {
+	glDeleteBuffers(1, &mVBO);
 }
 
 void scarlett::VertexBufferGL::Initialize(void * data, unsigned int count, VertexFormat vf) noexcept
 {
-	VertexBuffer::Initialize(data, count, vf);
-
+	mVertexCount = count;
+	mVertexFormat = vf;
 	size_t dataSize = GetVertexSize(vf) * count;
 	glGenBuffers(1, &mVBO);
 	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
@@ -40,9 +41,4 @@ void scarlett::VertexBufferGL::Initialize(void * data, unsigned int count, Verte
 	default:
 		SCARLETT_ASSERT(false);
 	}
-}
-
-void scarlett::VertexBufferGL::Finialize() noexcept
-{
-	glDeleteBuffers(1, &mVBO);
 }

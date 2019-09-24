@@ -5,14 +5,13 @@
 
 namespace scarlett {
 
-	class ShaderGL : public Shader {
+	class ShaderGL : public IShader {
 	public:
-		ShaderGL(const string & vsPath, const string & psPath);
+		ShaderGL(const std::string & vsPath, const std::string & psPath);
 		virtual ~ShaderGL();
 	public:
-		virtual	bool	InitializeFromFile(const string& vsPath, const string& psPath) noexcept;
+		virtual	bool	InitializeFromFile(const std::string& vsPath, const std::string& psPath) noexcept;
 		virtual	void	Use() noexcept;
-		virtual void	Finialize() noexcept;
 		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept;
 
 	public:

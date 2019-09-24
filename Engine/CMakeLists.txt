@@ -10,7 +10,7 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/GraphicsMgrD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/VertexBufferD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/ShaderD11.cpp
-	${SourcesPath}/Runtime/RHI/D11/RenderMeshD11.cpp
+	${SourcesPath}/Runtime/RHI/D11/MeshD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/IndexBufferD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/MaterialD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/TextureD11.cpp
@@ -48,17 +48,8 @@ ${SourcesPath}/Runtime/Core/Object/System/RenderDebugSystem.cpp
 ${SourcesPath}/Runtime/Core/Time/TimeMgr.cpp
 ${SourcesPath}/Runtime/Core/Input/InputMgr.cpp
 
-${SourcesPath}/Runtime/RHI/RenderObject.cpp
-${SourcesPath}/Runtime/RHI/RenderMesh.cpp
-${SourcesPath}/Runtime/RHI/VertexBuffer.cpp
-${SourcesPath}/Runtime/RHI/IndexBuffer.cpp
-${SourcesPath}/Runtime/RHI/Shader.cpp
-${SourcesPath}/Runtime/RHI/Material.cpp
-${SourcesPath}/Runtime/RHI/Texture.cpp
-${SourcesPath}/Runtime/RHI/SamplerState.cpp
-
 ${SourcesPath}/Runtime/RHI/opengl/GraphicsMgrGL.cpp
-${SourcesPath}/Runtime/RHI/opengl/RenderMeshGL.cpp
+${SourcesPath}/Runtime/RHI/opengl/MeshGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/VertexBufferGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/IndexBufferGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/ShaderGL.cpp

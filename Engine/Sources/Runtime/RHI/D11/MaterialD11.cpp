@@ -10,6 +10,16 @@ scarlett::MaterialD11::MaterialD11()
 	mDepthStencilState = std::make_shared<DepthStencilStateD11>();
 }
 
+void scarlett::MaterialD11::Apply(ConstantBuffer cb) noexcept
+{
+	if (mName == "skybox") {
+		ApplySkybox(cb);
+	}
+	else {
+		ApplySurface(cb);
+	}
+}
+
 void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;

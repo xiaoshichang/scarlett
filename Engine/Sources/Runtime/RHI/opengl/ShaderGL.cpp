@@ -8,17 +8,17 @@
 #include <iostream>
 
 
-scarlett::ShaderGL::ShaderGL(const string & vsPath, const string & psPath)
+scarlett::ShaderGL::ShaderGL(const std::string & vsPath, const std::string & psPath)
 {
 	InitializeFromFile(vsPath, psPath);
 }
 
 scarlett::ShaderGL::~ShaderGL()
 {
-	Finialize();
+	glDeleteProgram(mProgram);
 }
 
-bool scarlett::ShaderGL::InitializeFromFile(const string & vsPath, const string & psPath) noexcept
+bool scarlett::ShaderGL::InitializeFromFile(const std::string & vsPath, const std::string & psPath) noexcept
 {
 	// 1. retrieve the vertex/fragment source code from filePath
 	std::string vertexCode;
@@ -106,10 +106,6 @@ void scarlett::ShaderGL::Use() noexcept
 	glUseProgram(mProgram);
 }
 
-void scarlett::ShaderGL::Finialize() noexcept
-{
-	glDeleteProgram(mProgram);
-}
 
 void scarlett::ShaderGL::SetConstantBuffer(const ConstantBuffer & cbuffer) noexcept
 {

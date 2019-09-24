@@ -4,12 +4,13 @@
 
 namespace scarlett {
 
-	class IndexBufferD11 : public IndexBuffer {
+	class IndexBufferD11 : public IIndexBuffer {
 	public:
+		virtual void Initialize(void* data, unsigned int count, IndexFormat iformat) noexcept;
+
 		IndexBufferD11(void* data, unsigned int count, IndexFormat iformat);
 		virtual ~IndexBufferD11();
-		virtual void Initialize(void* data, unsigned int count, IndexFormat iformat) noexcept;
-		virtual void Finialize() noexcept;
+
 
 	public:
 		ID3D11Buffer*	mIndexBuffer;

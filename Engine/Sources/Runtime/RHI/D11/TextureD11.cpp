@@ -11,23 +11,12 @@ std::wstring stringToWstring(const std::string& t_str)
 	//setup converter
 	typedef std::codecvt_utf8<wchar_t> convert_type;
 	std::wstring_convert<convert_type, wchar_t> converter;
-
-	//use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
 	return converter.from_bytes(t_str);
 }
 
-scarlett::TextureD11::TextureD11(const std::string& filepath, TextureType type)
-{
-	mType = type;
-	Initialize(filepath);
-}
 
-scarlett::TextureD11::~TextureD11()
-{
-	Finialize();
-}
-
-void scarlett::TextureD11::Initialize(const std::string& filepath) noexcept
+scarlett::TextureD11::TextureD11(const std::string& filepath, TextureType type):
+	ITexture(type)
 {
 	if (mType == TextureType::Default) {
 		InitializeDefault(filepath);
@@ -36,6 +25,19 @@ void scarlett::TextureD11::Initialize(const std::string& filepath) noexcept
 		InitializeCubemap(filepath);
 	}
 }
+
+scarlett::TextureD11::~TextureD11()
+{
+	if (mView) {
+		mView->Release();
+	}
+	if (mTexture) {
+		mTexture->Release();
+	}
+	mView = nullptr;
+	mTexture = nullptr;
+}
+
 
 void scarlett::TextureD11::InitializeDefault(const std::string & filepath) noexcept
 {
@@ -82,18 +84,5 @@ void scarlett::TextureD11::InitializeCubemap(const std::string & filepath) noexc
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	auto wpath = stringToWstring(filepath);
-
 	auto hr = DirectX::CreateDDSTextureFromFile(mgrd11->m_device, mgrd11->m_deviceContext, wpath.c_str(), nullptr, &mView);
-}
-
-void scarlett::TextureD11::Finialize() noexcept {
-	if (mView) {
-		mView->Release();
-	}
-	if (mTexture) {
-		mTexture->Release();
-	}
-	mView = nullptr;
-	mTexture = nullptr;
-	
 }

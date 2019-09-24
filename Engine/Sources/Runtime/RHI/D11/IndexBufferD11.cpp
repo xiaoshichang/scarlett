@@ -5,18 +5,20 @@
 
 scarlett::IndexBufferD11::IndexBufferD11(void* data, unsigned int count, IndexFormat iformat)
 {
+	mIndexCount = count;
+	mIndexFormat = iformat;
 	Initialize(data, count, iformat);
 }
 
 scarlett::IndexBufferD11::~IndexBufferD11()
 {
-	Finialize();
+	if (mIndexBuffer) {
+		mIndexBuffer->Release();
+	}
 }
 
 void scarlett::IndexBufferD11::Initialize(void * data, unsigned int count, IndexFormat iformat) noexcept
 {
-	IndexBuffer::Initialize(data, count, iformat);
-
 	HRESULT result;
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	D3D11_BUFFER_DESC indexBufferDesc;
@@ -38,12 +40,5 @@ void scarlett::IndexBufferD11::Initialize(void * data, unsigned int count, Index
 	result = mgrd11->m_device->CreateBuffer(&indexBufferDesc, &indexData, &mIndexBuffer);
 	if (FAILED(result)){
 		SCARLETT_ASSERT(false);
-	}
-}
-
-void scarlett::IndexBufferD11::Finialize() noexcept
-{
-	if (mIndexBuffer) {
-		mIndexBuffer->Release();
 	}
 }

@@ -1,4 +1,4 @@
-#include "Runtime/RHI/opengl/RenderMeshGL.h"
+#include "Runtime/RHI/opengl/MeshGL.h"
 #include "Runtime/RHI/opengl/VertexBufferGL.h"
 #include "Runtime/RHI/opengl/IndexBufferGL.h"
 #include "Runtime/RHI/opengl/MaterialGL.h"
@@ -7,7 +7,7 @@
 
 #include "Foundation/Assert.h"
 
-scarlett::RenderMeshGL::RenderMeshGL(aiMesh * mesh, const aiScene * world)
+scarlett::MeshGL::MeshGL(aiMesh * mesh, const aiScene * world)
 {
 	auto mgrgl = (GraphicsMgrGL*)GApp->mGraphicsManager;
 	Initialize(mesh);
@@ -23,7 +23,7 @@ scarlett::RenderMeshGL::RenderMeshGL(aiMesh * mesh, const aiScene * world)
 	mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
 }
 
-scarlett::RenderMeshGL::RenderMeshGL(void* data, int count, VertexFormat vf)
+scarlett::MeshGL::MeshGL(void* data, int count, VertexFormat vf)
 {
 	auto mgrgl = (GraphicsMgrGL*)GApp->mGraphicsManager;
 	Initialize(data, count, vf);
@@ -32,12 +32,17 @@ scarlett::RenderMeshGL::RenderMeshGL(void* data, int count, VertexFormat vf)
 	mMaterial->SetShader(shader);
 }
 
-scarlett::RenderMeshGL::~RenderMeshGL()
+scarlett::MeshGL::~MeshGL()
 {
-	Finialize();
+	mPositions = nullptr;
+	mNormals = nullptr;
+	mTexCoords = nullptr;
+	mIndexes = nullptr;
+	glDeleteVertexArrays(1, &mVAO);
 }
 
-void scarlett::RenderMeshGL::Initialize(aiMesh * mesh) noexcept
+
+void scarlett::MeshGL::Initialize(aiMesh * mesh) noexcept
 {
 	if (!mesh) {
 		return;
@@ -79,30 +84,30 @@ void scarlett::RenderMeshGL::Initialize(aiMesh * mesh) noexcept
 	}
 
 	if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_POINT) {
-		mType = PrimitiveType::PT_POINT;
+		mPrimitiveType = PrimitiveType::PT_POINT;
 	}
 	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_LINE) {
-		mType = PrimitiveType::PT_LINE;
+		mPrimitiveType = PrimitiveType::PT_LINE;
 	}
 	else if (mesh->mPrimitiveTypes == aiPrimitiveType::aiPrimitiveType_TRIANGLE){
-		mType = PrimitiveType::PT_TRIANGLE;
+		mPrimitiveType = PrimitiveType::PT_TRIANGLE;
 	}
 	else {
 		SCARLETT_ASSERT(false);
 	}
 }
 
-void scarlett::RenderMeshGL::Initialize(void* data, int count, VertexFormat vf) noexcept
+void scarlett::MeshGL::Initialize(void* data, int count, VertexFormat vf) noexcept
 {
 	auto mgrgl = (GraphicsMgrGL*)GApp->mGraphicsManager;
 	glGenVertexArrays(1, &mVAO);
 	glBindVertexArray(mVAO);
 
 	mPositions = mgrgl->CreateVertexBuffer(data, count, vf);
-	mType = PrimitiveType::PT_LINE;
+	mPrimitiveType = PrimitiveType::PT_LINE;
 }
 
-void scarlett::RenderMeshGL::Render(World * world, const Matrix4f & worldMatrix) noexcept
+void scarlett::MeshGL::Render(World * world, const Matrix4f & worldMatrix) noexcept
 {
 	ConstantBuffer cb;
 	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
@@ -113,25 +118,16 @@ void scarlett::RenderMeshGL::Render(World * world, const Matrix4f & worldMatrix)
 
 	glBindVertexArray(mVAO);
 	if (mIndexes) {
-		glDrawElements(GetMode(), mIndexes->mCount, GL_UNSIGNED_INT, 0x00);
+		glDrawElements(GetMode(), mIndexes->GetIndexCount(), GL_UNSIGNED_INT, 0x00);
 	}
 	else {
-		glDrawArrays(GetMode(), 0x00, mPositions->mCount);
+		glDrawArrays(GetMode(), 0x00, mPositions->GetVertextCount());
 	}
 }
 
-void scarlett::RenderMeshGL::Finialize() noexcept
+GLenum scarlett::MeshGL::GetMode()
 {
-	mPositions = nullptr;
-	mNormals = nullptr;
-	mTexCoords = nullptr;
-	mIndexes = nullptr;
-	glDeleteVertexArrays(1, &mVAO);
-}
-
-GLenum scarlett::RenderMeshGL::GetMode()
-{
-	switch (mType)
+	switch (mPrimitiveType)
 	{
 	case scarlett::PT_POINT:
 		return GL_POINTS;
