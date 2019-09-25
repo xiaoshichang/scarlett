@@ -12,8 +12,12 @@ namespace scarlett {
 		virtual ~SkyBox();
 		void	Render();
 
-	private:
+	public:
 		std::shared_ptr<IMesh> mBox;
+		std::shared_ptr<ITexture> mIrradianceMap;
+		std::shared_ptr<ISamplerState> mIrradianceMapSamplerState;
+		std::shared_ptr<ITexture> mEnvmap;
+		std::shared_ptr<ISamplerState> mEnvmapSamplerState;
 	};
 
 

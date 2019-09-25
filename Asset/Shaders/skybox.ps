@@ -10,6 +10,7 @@ struct v2p {
 float4 main(v2p input) : SV_TARGET
 {
 	float4 color = tSkyboyMap.Sample(tSkyboxSamplerState, input.texcood);
-    return color;
+	color = pow(color, 1/2.2);
+    return float4(color.rgb, 1.0);
 }
 

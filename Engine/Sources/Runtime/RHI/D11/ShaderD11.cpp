@@ -54,14 +54,14 @@ bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string
 	dwShaderFlags |= D3DCOMPILE_DEBUG;
 	dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 
-	result = D3DCompileFromFile(_vsPath.c_str(), NULL, NULL, "main", "vs_5_0", dwShaderFlags, 0, &vertexShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(_vsPath.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", dwShaderFlags, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(result)) {
 		OutputDebugStringA(reinterpret_cast<const char*>(errorMessage->GetBufferPointer()));
 		std::cout << reinterpret_cast<const char*>(errorMessage->GetBufferPointer()) << endl;
 		SCARLETT_ASSERT(false);
 	}
 
-	result = D3DCompileFromFile(_psPath.c_str(), NULL, NULL, "main", "ps_5_0", dwShaderFlags, 0, &pixelShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(_psPath.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", dwShaderFlags, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result)) {
 		OutputDebugStringA(reinterpret_cast<const char*>(errorMessage->GetBufferPointer()));
 		std::cout << reinterpret_cast<const char*>(errorMessage->GetBufferPointer()) << endl;
@@ -79,7 +79,6 @@ bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string
 	{
 		return false;
 	}
-
 
 	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
 	polygonLayout[0].SemanticName = "POSITION";
@@ -170,11 +169,14 @@ void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noex
 	}
 
 	dataPtr = (ConstantBuffer*)mappedResource.pData;
-	// Copy the matrices into the constant buffer.
+
 	dataPtr->world = cbuffer.world;
 	dataPtr->view = cbuffer.view;
 	dataPtr->projection = cbuffer.projection;
 	dataPtr->debugColor = cbuffer.debugColor;
+	dataPtr->pbrParameter = cbuffer.pbrParameter;
+	dataPtr->camPos = cbuffer.camPos;
+
 	// Unlock the constant buffer.
 	mgrd11->m_deviceContext->Unmap(m_matrixBuffer, 0);
 	// Set the position of the constant buffer in the vertex shader.

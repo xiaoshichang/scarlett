@@ -11,5 +11,7 @@ namespace scarlett {
 		Matrix4f view;
 		Matrix4f projection;
 		Vector4f debugColor;
+		Vector4f pbrParameter;
+		Vector4f camPos;
 	};
 }

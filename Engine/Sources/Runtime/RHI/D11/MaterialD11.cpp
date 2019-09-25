@@ -28,21 +28,37 @@ void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 		if (pair.first == "color") {
 			cb.debugColor = pair.second;
 		}
-	}
-	mShader->SetConstantBuffer(cb);
 
-	for (auto pair : mTextures) {
-		if (pair.first == "tBaseMap") {
-			auto texture = pair.second;
-			auto sampler = mSamplerState[pair.first];
-			if (texture && sampler) {
-				auto _texuter = dynamic_pointer_cast<TextureD11>(texture);
-				auto _sampler = dynamic_pointer_cast<SamplerStateD11>(sampler);
-				mgrd11->m_deviceContext->PSSetShaderResources(0, 1, &(_texuter->mView));
-				mgrd11->m_deviceContext->PSSetSamplers(0, 1, &(_sampler->m_sampleState));
-			}
+		if (pair.first == "pbrParameter") {
+			cb.pbrParameter = pair.second;
 		}
 	}
+	auto camera = GApp->mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+	cb.camPos = Vector4f(camera->GetPosition().x(), camera->GetPosition().y(), camera->GetPosition().z(), 1.0f);
+	mShader->SetConstantBuffer(cb);
+
+	auto skybox = camera->GetSkybox();
+	if (skybox) {
+		auto _texuter = dynamic_pointer_cast<TextureD11>(skybox->mIrradianceMap);
+		auto _sampler = dynamic_pointer_cast<SamplerStateD11>(skybox->mIrradianceMapSamplerState);
+		mgrd11->m_deviceContext->PSSetShaderResources(0, 1, &(_texuter->mView));
+		mgrd11->m_deviceContext->PSSetSamplers(0, 1, &(_sampler->m_sampleState));
+
+		_texuter = dynamic_pointer_cast<TextureD11>(skybox->mEnvmap);
+		_sampler = dynamic_pointer_cast<SamplerStateD11>(skybox->mEnvmapSamplerState);
+		mgrd11->m_deviceContext->PSSetShaderResources(1, 1, &(_texuter->mView));
+		mgrd11->m_deviceContext->PSSetSamplers(1, 1, &(_sampler->m_sampleState));
+	}
+
+	for (auto pair : mTextures) {
+		if (pair.first == "lut") {
+			auto _texuter = dynamic_pointer_cast<TextureD11>(mTextures["lut"]);
+			auto _sampler = dynamic_pointer_cast<SamplerStateD11>(mSamplerState["lut"]);
+			mgrd11->m_deviceContext->PSSetShaderResources(2, 1, &(_texuter->mView));
+			mgrd11->m_deviceContext->PSSetSamplers(2, 1, &(_sampler->m_sampleState));
+		}
+	}
+
 	auto _depth = dynamic_pointer_cast<DepthStencilStateD11>(mDepthStencilState);
 	mgrd11->m_deviceContext->OMSetDepthStencilState(_depth->mDepthStencilState, 0);
 }

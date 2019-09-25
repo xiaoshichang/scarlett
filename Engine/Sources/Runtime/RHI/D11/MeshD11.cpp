@@ -12,6 +12,7 @@ scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	Initialize(mesh);
 
+	// hardcode material
 	auto material = world->mMaterials[mesh->mMaterialIndex];
 	aiString name;
 	aiGetMaterialString(material, AI_MATKEY_NAME, &name);
@@ -21,8 +22,16 @@ scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 	aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
 	auto shader = mgrd11->GetShader("pbr_skin");
 	mMaterial->SetShader(shader);
+
+	float roughness = 0.5f;
+	float metallic = 0.5f;
 	mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
-	
+	mMaterial->SetShaderParamter("pbrParameter", Vector4f(roughness, metallic, 0.0f, 0.0f));
+
+	auto lut = mgrd11->CreateTexture2D("./Asset/Textures/ibl_brdf_lut.png");
+	auto lutSampler = mgrd11->CreateSamplerState();
+	mMaterial->SetTexture("lut", lut);
+	mMaterial->SetSamplerState("lut", lutSampler);
 }
 
 scarlett::MeshD11::MeshD11(void* data, int count, VertexFormat vf)
@@ -30,6 +39,7 @@ scarlett::MeshD11::MeshD11(void* data, int count, VertexFormat vf)
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	Initialize(data, count, vf);
 
+	// hardcode material
 	mMaterial = std::make_shared<MaterialD11>();
 	auto shader = mgrd11->GetShader("debug");
 	mMaterial->SetShader(shader);

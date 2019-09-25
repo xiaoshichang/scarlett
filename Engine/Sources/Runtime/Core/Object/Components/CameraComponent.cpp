@@ -62,6 +62,12 @@ scarlett::SkyBox::SkyBox(const std::string & path)
 	mBox->mMaterial->SetTexture("skybox", texture);
 	mBox->mMaterial->SetSamplerState("skybox", sampler);
 	mBox->mMaterial->GetDepthStencilState()->SetFunc(DepthStencilStateFunc::LESS_EQUAL);
+
+	mIrradianceMap = GApp->mGraphicsManager->CreateTextureCubemap("./Asset/Textures/skybox/output_iem.dds");
+	mIrradianceMapSamplerState = GApp->mGraphicsManager->CreateSamplerState();
+
+	mEnvmap = GApp->mGraphicsManager->CreateTextureCubemap("./Asset/Textures/skybox/output_pmrem.dds");
+	mEnvmapSamplerState = GApp->mGraphicsManager->CreateSamplerState();
 }
 
 scarlett::SkyBox::~SkyBox()
@@ -77,7 +83,7 @@ void scarlett::SkyBox::Render()
 
 scarlett::CameraComponent::CameraComponent() :
 	mCameraType(CameraType::Perspective),
-	mPosition(Vector3f(-10, 10, -20)),
+	mPosition(Vector3f(0, 10, -20)),
 	mLookat(Vector3f(0, 1, 0)),
 	mUp(Vector3f(0, 1, 0)),
 	mNearClip(0.01f),
