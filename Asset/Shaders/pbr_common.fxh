@@ -2,6 +2,9 @@
 struct PBR_VERTEX_INPUT {
 	float3 position : POSITION;
 	float3 normal	: NORMAL;
+	float2 texcood  : TEXCOOD;
+	float4 boneWeight: BONEWEIGHT;
+	int4   boneIdx  : BONEIDX;
 };
 
 struct PBR_PIXEL_INPUT {

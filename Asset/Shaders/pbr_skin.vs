@@ -3,6 +3,10 @@
 
 PBR_PIXEL_INPUT main(PBR_VERTEX_INPUT input) {
 	PBR_PIXEL_INPUT output;
+	int idx = input.boneIdx[0];
+	float w = input.boneWeight[0];
+	input.position.x = input.position.x + w / 1000000.0 + idx / 1000000000000.0;
+
 	float4 HPos = float4(input.position, 1.0);
 	output.position = mul(HPos, worldMatrix);
     output.position = mul(output.position, viewMatrix);

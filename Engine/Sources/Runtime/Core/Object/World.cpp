@@ -109,6 +109,13 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		mMeshRenderSystem->LoadMesh(mesh, scene);
 	}
 
+	auto t = scene->mRootNode->mTransformation;
+
+	for (unsigned int j = 0; j < scene->mNumAnimations; ++j) {
+		auto animation = scene->mAnimations[j];
+		auto name = animation->mName;
+	}
+
 	// build main camera
 	auto camera = CreateEntity();
 	camera->AddComponent<CameraComponent>();

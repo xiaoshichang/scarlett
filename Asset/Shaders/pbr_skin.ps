@@ -16,9 +16,6 @@ float4 main(PBR_PIXEL_INPUT input) : SV_TARGET
     float roughness = pbrParameter.x;
     float metallic = pbrParameter.y;
 
-	roughness = 1.0;
-	metallic = 1.0;
-
     float3 N = input.normal;
     float3 V = normalize(camPos - input.wpos);
     float3 albedo = debugColor.rgb;

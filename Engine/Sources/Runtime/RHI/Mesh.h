@@ -30,14 +30,6 @@ namespace scarlett {
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept = 0;
 		virtual void Render(World* world, const Matrix4f& worldMatrix) noexcept = 0;
 
-		int	GetVaildVertexBufferCount() {
-			int result = 0;
-			if (mPositions) result += 1;
-			if (mNormals) result += 1;
-			if (mTexCoords) result += 1;
-			return result;
-		}
-
 		IMesh() : 
 			mMeshType(MeshType::MT_Model),
 			mPrimitiveType(PrimitiveType::PT_TRIANGLE),
@@ -45,6 +37,8 @@ namespace scarlett {
 			mNormals(nullptr),
 			mTexCoords(nullptr),
 			mIndexes(nullptr),
+			mBoneIdxes(nullptr),
+			mBoneWeights(nullptr),
 			mMaterial(nullptr){}
 
 		std::shared_ptr<IMaterial>	GetMaterial() { return mMaterial; }
@@ -56,6 +50,8 @@ namespace scarlett {
 		std::shared_ptr<IVertexBuffer>	mPositions;
 		std::shared_ptr<IVertexBuffer>	mNormals;
 		std::shared_ptr<IVertexBuffer>	mTexCoords;
+		std::shared_ptr<IVertexBuffer>  mBoneIdxes;
+		std::shared_ptr<IVertexBuffer>  mBoneWeights;
 		std::shared_ptr<IIndexBuffer>	mIndexes;
 		std::shared_ptr<IMaterial>		mMaterial;
 	};

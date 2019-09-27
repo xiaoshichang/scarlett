@@ -80,7 +80,7 @@ bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string
 		return false;
 	}
 
-	D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
+	D3D11_INPUT_ELEMENT_DESC polygonLayout[5];
 	polygonLayout[0].SemanticName = "POSITION";
 	polygonLayout[0].SemanticIndex = 0;
 	polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -104,6 +104,22 @@ bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string
 	polygonLayout[2].AlignedByteOffset = 0;
 	polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 	polygonLayout[2].InstanceDataStepRate = 0;
+
+	polygonLayout[3].SemanticName = "BONEIDX";
+	polygonLayout[3].SemanticIndex = 0;
+	polygonLayout[3].Format = DXGI_FORMAT_R32G32B32A32_SINT;
+	polygonLayout[3].InputSlot = 3;
+	polygonLayout[3].AlignedByteOffset = 0;
+	polygonLayout[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[3].InstanceDataStepRate = 0;
+
+	polygonLayout[4].SemanticName = "BONEWEIGHT";
+	polygonLayout[4].SemanticIndex = 0;
+	polygonLayout[4].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	polygonLayout[4].InputSlot = 4;
+	polygonLayout[4].AlignedByteOffset = 0;
+	polygonLayout[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	polygonLayout[4].InstanceDataStepRate = 0;
 
 	unsigned int numElements;
 	// Get a count of the elements in the layout.

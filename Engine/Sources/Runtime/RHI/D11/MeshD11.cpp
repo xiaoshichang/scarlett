@@ -7,6 +7,18 @@
 #include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
+
+void AppendBoneWeight(int* idxes, float* weights, int vidx, int bidx, float weight) {
+	for (int offset = 0; offset < 4; offset++) {
+		if (idxes[vidx * 4 + offset] == -1) {
+			idxes[vidx * 4 + offset] = bidx;
+			weights[vidx * 4 + offset] = weight;
+			return;
+		}
+	}
+	SCARLETT_ASSERT(false);
+}
+
 scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
@@ -23,8 +35,8 @@ scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 	auto shader = mgrd11->GetShader("pbr_skin");
 	mMaterial->SetShader(shader);
 
-	float roughness = 0.5f;
-	float metallic = 0.5f;
+	float roughness = 0.1f;
+	float metallic = 0.8f;
 	mMaterial->SetShaderParamter("color", Vector4f(diffuse.r, diffuse.g, diffuse.b, diffuse.a));
 	mMaterial->SetShaderParamter("pbrParameter", Vector4f(roughness, metallic, 0.0f, 0.0f));
 
@@ -82,6 +94,38 @@ void scarlett::MeshD11::Initialize(aiMesh * mesh) noexcept
 		free(texCoords);
 	}
 
+	if (mesh->HasBones()) {
+		int* boneIdx = (int*)malloc(sizeof(int) * 4 * mesh->mNumVertices);
+		float* weights = (float*)malloc(sizeof(float) * 4 * mesh->mNumVertices);
+
+		memset(boneIdx, -1, sizeof(int) * 4 * mesh->mNumVertices);
+		memset(weights, 0, sizeof(float) * 4 * mesh->mNumVertices);
+		
+		for (int b = 0; b < mesh->mNumBones; b++) {
+			auto bone = mesh->mBones[b];
+
+			for (int w = 0; w < bone->mNumWeights; ++w) {
+				auto weight = bone->mWeights[w];
+				auto vidx = weight.mVertexId;
+				auto vw = weight.mWeight;
+				AppendBoneWeight(boneIdx, weights, vidx, b, vw);
+			}
+		}
+
+		for (int i = 0; i < 4 * mesh->mNumVertices; i++) {
+			if (boneIdx[i] == -1) {
+				boneIdx[i] = 0;
+			}
+		}
+
+		mBoneIdxes = mgrd11->CreateVertexBuffer(boneIdx, count, VertexFormat::VF_BONE_IDX_4I);
+		mBoneWeights = mgrd11->CreateVertexBuffer(weights, count, VertexFormat::VF_BONE_WEIGHT_4F);
+
+		free(boneIdx);
+		free(weights);
+	}
+
+
 	if (mesh->HasFaces()) {
 		unsigned int count = 3 * mesh->mNumFaces;
 		unsigned int * idata = new unsigned int[count];
@@ -109,7 +153,7 @@ void scarlett::MeshD11::Initialize(aiMesh * mesh) noexcept
 		SCARLETT_ASSERT(false);
 	}
 
-	vbcount = GetVaildVertexBufferCount();
+	vbcount = 5;
 	stride = new  unsigned int[vbcount];
 	offset = new  unsigned int[vbcount];
 	vbuffers = new ID3D11Buffer *[vbcount];
@@ -117,25 +161,66 @@ void scarlett::MeshD11::Initialize(aiMesh * mesh) noexcept
 	int idx = 0;
 	if (mPositions) {
 		stride[idx] = mPositions->GetVertexSize(mPositions->mVertexFormat);
-		offset[idx] = 0;
 		buffer = (VertexBufferD11*)mPositions.get();
 		vbuffers[idx] = buffer->mVertexBuffer;
-		idx += 1;
 	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+
 	if (mNormals) {
 		stride[idx] = mNormals->GetVertexSize(mNormals->mVertexFormat);
-		offset[idx] = 0;
 		buffer = (VertexBufferD11*)mNormals.get();
 		vbuffers[idx] = buffer->mVertexBuffer;
-		idx += 1;
 	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
 	if (mTexCoords) {
 		stride[idx] = mTexCoords->GetVertexSize(mTexCoords->mVertexFormat);
-		offset[idx] = 0;
 		buffer = (VertexBufferD11*)mTexCoords.get();
 		vbuffers[idx] = buffer->mVertexBuffer;
-		idx += 1;
 	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+
+	if (mBoneIdxes) {
+		stride[idx] = mBoneIdxes->GetVertexSize(mBoneIdxes->mVertexFormat);
+		buffer = (VertexBufferD11*)mBoneIdxes.get();
+		vbuffers[idx] = buffer->mVertexBuffer;
+	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+	if (mBoneWeights) {
+		stride[idx] = mBoneWeights->GetVertexSize(mBoneWeights->mVertexFormat);
+		buffer = (VertexBufferD11*)mBoneWeights.get();
+		vbuffers[idx] = buffer->mVertexBuffer;
+	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
 }
 
 void scarlett::MeshD11::Initialize(void * data, int count, VertexFormat vf) noexcept
@@ -143,7 +228,7 @@ void scarlett::MeshD11::Initialize(void * data, int count, VertexFormat vf) noex
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mPositions = mgrd11->CreateVertexBuffer(data, count, vf);
 	mPrimitiveType = PrimitiveType::PT_LINE;
-	vbcount = GetVaildVertexBufferCount();
+	vbcount = 1;
 	stride = new  unsigned int[vbcount];
 	offset = new  unsigned int[vbcount];
 	vbuffers = new ID3D11Buffer *[vbcount];

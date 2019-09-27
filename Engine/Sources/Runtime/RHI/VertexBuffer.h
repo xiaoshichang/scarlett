@@ -11,6 +11,8 @@ namespace scarlett {
 		VF_T2F,
 		VF_N3F,
 		VF_C4B,
+		VF_BONE_IDX_4I,
+		VF_BONE_WEIGHT_4F,
 	};
 
 	class IVertexBuffer : public IRenderResource {
@@ -28,6 +30,12 @@ namespace scarlett {
 			}
 			else if (vf == VertexFormat::VF_T2F) {
 				return sizeof(float) * 2;
+			}
+			else if (vf == VertexFormat::VF_BONE_IDX_4I) {
+				return sizeof(int) * 4;
+			}
+			else if (vf == VertexFormat::VF_BONE_WEIGHT_4F) {
+				return sizeof(float) * 4;
 			}
 			else {
 				return 0;
