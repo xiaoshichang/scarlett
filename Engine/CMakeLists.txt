@@ -40,6 +40,7 @@ ${SourcesPath}/Runtime/Core/Object/Entity.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/TransformComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/MeshRenderComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/CameraComponent.cpp
+${SourcesPath}/Runtime/Core/Object/Components/SkeletonComponent.cpp
 
 ${SourcesPath}/Runtime/Core/Object/System/MeshRenderSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/CameraSystem.cpp

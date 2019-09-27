@@ -5,6 +5,7 @@
 #include "Runtime/Core/Object/Components/TransformComponent.h"
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 #include "Runtime/Core/Object/Components/CameraComponent.h"
+#include "Runtime/Core/Object/Components/SkeletonComponent.h"
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -49,12 +50,13 @@ namespace scarlett {
 		TransformComponent*		mTransform;
 		MeshRenderComponent*	mMeshRender;
 		CameraComponent*		mCamera;
+		SkeletonComponent*		mSkeleton;
 
 	};
 
 	template<typename T>
 	T*	scarlett::Entity::AddComponent() {
-		void* comp;
+		void* comp = nullptr;
 		if (std::is_same<T, TransformComponent>::value) {
 			mTransform = new TransformComponent();
 			mTransform->SetMaster(this);
@@ -62,18 +64,25 @@ namespace scarlett {
 			comp = mTransform;
 		}
 
-		if (std::is_same<T, MeshRenderComponent>::value) {
+		else if (std::is_same<T, MeshRenderComponent>::value) {
 			mMeshRender = new MeshRenderComponent();
 			mMeshRender->SetMaster(this);
 			mMeshRender->Initialize();
 			comp = mMeshRender;
 		}
 
-		if (std::is_same<T, CameraComponent>::value) {
+		else if (std::is_same<T, CameraComponent>::value) {
 			mCamera = new CameraComponent();
 			mCamera->SetMaster(this);
 			mCamera->Initialize();
 			comp = mCamera;
+		}
+
+		else if (std::is_same<T, SkeletonComponent>::value) {
+			mSkeleton = new SkeletonComponent();
+			mSkeleton->SetMaster(this);
+			mSkeleton->Initialize();
+			comp = mSkeleton;
 		}
 		return (T*)comp;
 	}
@@ -90,22 +99,33 @@ namespace scarlett {
 		else if (std::is_same<T, CameraComponent>::value) {
 			ret = mCamera;
 		}
+		else if (std::is_same<T, SkeletonComponent>::value) {
+			ret = mSkeleton;
+		}
 		return (T*)ret;
 	}
 
 	template<typename T>
 	void	scarlett::Entity::RemoveComponent() {
 		if (std::is_same<T, TransformComponent>::value) {
+			mTransform->Finalize();
 			delete mTransform;
 			mTransform = nullptr;
 		}
-		if (std::is_same<T, MeshRenderComponent>::value) {
+		else if (std::is_same<T, MeshRenderComponent>::value) {
+			mMeshRender->Finalize();
 			delete mMeshRender;
 			mMeshRender = nullptr;
 		}
-		if (std::is_same<T, CameraComponent>::value) {
+		else if (std::is_same<T, CameraComponent>::value) {
+			mCamera->Finalize();
 			delete mCamera;
 			mCamera = nullptr;
+		}
+		else if (std::is_same<T, CameraComponent>::value) {
+			mSkeleton->Finalize();
+			delete mSkeleton;
+			mSkeleton = nullptr;
 		}
 	}
 

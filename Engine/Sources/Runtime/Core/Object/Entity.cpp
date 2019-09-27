@@ -17,12 +17,27 @@ int scarlett::Entity::Initialize(scarlett::World* world) noexcept {
 void scarlett::Entity::Finalize() noexcept {
 	mChildren.clear();
 	mParent = nullptr;
+
+	if (mTransform) {
+		RemoveComponent<TransformComponent>();
+	}
+	if (mMeshRender) {
+		RemoveComponent<MeshRenderComponent>();
+	}
+	if (mCamera) {
+		RemoveComponent<CameraComponent>();
+	}
+	if (mSkeleton) {
+		RemoveComponent<SkeletonComponent>();
+	}
 }
 
 scarlett::Entity::Entity():
+	mParent(nullptr),
+	mTransform(nullptr),
 	mMeshRender(nullptr),
 	mCamera(nullptr),
-	mTransform(nullptr)
+	mSkeleton(nullptr)
 {
 	mGuid = boost::uuids::random_generator()();
 }
@@ -30,12 +45,16 @@ scarlett::Entity::Entity():
 scarlett::Entity::Entity(const boost::uuids::uuid& guid):
 	mParent(nullptr),
 	mTransform(nullptr),
+	mMeshRender(nullptr),
+	mCamera(nullptr),
+	mSkeleton(nullptr),
 	mGuid(guid)
 {
 }
 
 scarlett::Entity::~Entity() {
 	std::cout << "destructor of entity: " << mGuid << std::endl;
+	Finalize();
 }
 
 boost::uuids::uuid scarlett::Entity::GetGuid() const noexcept
