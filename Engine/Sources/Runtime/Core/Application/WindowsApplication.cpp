@@ -103,6 +103,8 @@ int WindowsApplication::Initialize() noexcept{
 	mTimeMgr = new TimeMgr();
 	mTimeMgr->Initialize();
 
+	Director::GetInstance()->Initialize();
+
 	mWorld = new World(this);
 	mWorld->Initialize();
 
@@ -119,20 +121,24 @@ void WindowsApplication::Tick() noexcept{
 		DispatchMessage(&msg);
 	}
 	mWorld->Tick();
+	Director::GetInstance()->Tick();
 	Render();
 	mTimeMgr->Tick();
 
 	mTimeMgr->PostTick();
+	Director::GetInstance()->PostTick();
 }
 
 void WindowsApplication::Render() noexcept{
 	mWorld->Render();
+	Director::GetInstance()->OnRender();
+
+	mGraphicsManager->Present();
 
 	if (mUseOpengl) {
 		auto m_hDC = GetDC(mHWND);
 		SwapBuffers(m_hDC);
 	}
-	
 }
 
 HWND scarlett::WindowsApplication::GetWindowsHandler() noexcept
@@ -156,12 +162,13 @@ void scarlett::WindowsApplication::CreateMainWindow()
 	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// Create the window and store a handle to it.
-	mHWND = CreateWindow(
+	mHWND = CreateWindowEx(
+		NULL,
 		windowClass.lpszClassName,
 		"scarlett",
 		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
+		100,
+		100,
 		windowRect.right - windowRect.left,
 		windowRect.bottom - windowRect.top,
 		nullptr,        // We have no parent window.

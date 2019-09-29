@@ -27,6 +27,7 @@ namespace scarlett {
 
 		virtual		std::shared_ptr<IMesh>		CreateRenderMesh(aiMesh* mesh, const aiScene* world) noexcept;
 		virtual		std::shared_ptr<IMesh>		CreateRenderMeshDebug(void* data, int count, VertexFormat vf) noexcept;
+		virtual		std::shared_ptr<IMesh>		CreateRenderMeshUI() noexcept;
 
 		virtual		std::shared_ptr<ITexture>		CreateTexture2D(const std::string& path) noexcept;
 		virtual		std::shared_ptr<ITexture>		CreateTextureCubemap(const std::string& path) noexcept;

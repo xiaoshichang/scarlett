@@ -19,6 +19,10 @@ void AppendBoneWeight(int* idxes, float* weights, int vidx, int bidx, float weig
 	SCARLETT_ASSERT(false);
 }
 
+scarlett::MeshD11::MeshD11()
+{
+}
+
 scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
@@ -232,18 +236,104 @@ void scarlett::MeshD11::Initialize(void * data, int count, VertexFormat vf) noex
 	stride = new  unsigned int[vbcount];
 	offset = new  unsigned int[vbcount];
 	vbuffers = new ID3D11Buffer *[vbcount];
+
+	VertexBufferD11* buffer;
+	stride[0] = mPositions->GetVertexSize(mPositions->mVertexFormat);
+	offset[0] = 0;
+	buffer = (VertexBufferD11*)mPositions.get();
+	vbuffers[0] = buffer->mVertexBuffer;
+}
+
+void scarlett::MeshD11::InitializeUI() noexcept
+{
+	mMeshType = MeshType::MT_UI;
+
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	mPrimitiveType = PrimitiveType::PT_TRIANGLE;
+
+	vbcount = 2;
+	float position[18] = {-1, 1, 0, 1, -1, 0, -1, -1, 0, -1, 1, 0, 1, 1, 0, 1, -1, 0};
+	float texcood[12] = {0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1};
+
+	mPositions = mgrd11->CreateVertexBuffer(position, 6, VertexFormat::VF_P3F);
+	mTexCoords = mgrd11->CreateVertexBuffer(texcood, 6, VertexFormat::VF_T2F);
+
+	vbcount = 5;
+	stride = new  unsigned int[vbcount];
+	offset = new  unsigned int[vbcount];
+	vbuffers = new ID3D11Buffer *[vbcount];
 	VertexBufferD11* buffer;
 	int idx = 0;
 	if (mPositions) {
 		stride[idx] = mPositions->GetVertexSize(mPositions->mVertexFormat);
-		offset[idx] = 0;
 		buffer = (VertexBufferD11*)mPositions.get();
 		vbuffers[idx] = buffer->mVertexBuffer;
-		idx += 1;
 	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+
+	if (mNormals) {
+		stride[idx] = mNormals->GetVertexSize(mNormals->mVertexFormat);
+		buffer = (VertexBufferD11*)mNormals.get();
+		vbuffers[idx] = buffer->mVertexBuffer;
+	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+	if (mTexCoords) {
+		stride[idx] = mTexCoords->GetVertexSize(mTexCoords->mVertexFormat);
+		buffer = (VertexBufferD11*)mTexCoords.get();
+		vbuffers[idx] = buffer->mVertexBuffer;
+	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+
+	if (mBoneIdxes) {
+		stride[idx] = mBoneIdxes->GetVertexSize(mBoneIdxes->mVertexFormat);
+		buffer = (VertexBufferD11*)mBoneIdxes.get();
+		vbuffers[idx] = buffer->mVertexBuffer;
+	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+	if (mBoneWeights) {
+		stride[idx] = mBoneWeights->GetVertexSize(mBoneWeights->mVertexFormat);
+		buffer = (VertexBufferD11*)mBoneWeights.get();
+		vbuffers[idx] = buffer->mVertexBuffer;
+	}
+	else {
+		stride[idx] = 0;
+		vbuffers[idx] = nullptr;
+	}
+	offset[idx] = 0;
+	idx += 1;
+
+	mMaterial = make_shared<MaterialD11>();
+	auto shader = mgrd11->GetShader("ui");
+	mMaterial->SetShader(shader);
+	auto sampler = mgrd11->CreateSamplerState();
+	mMaterial->SetSamplerState("ui", sampler);
 }
 
-void scarlett::MeshD11::Render(World* world, const Matrix4f& worldMatrix) noexcept
+void scarlett::MeshD11::Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
@@ -266,18 +356,9 @@ void scarlett::MeshD11::Render(World* world, const Matrix4f& worldMatrix) noexce
 	}
 
 	ConstantBuffer cb;
-	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-	cb.world = worldMatrix.transpose();
-
-	if (mMeshType == MeshType::MT_Model) {
-		cb.view = camera->GetViewMatrix().transpose();
-
-	}
-	else if (mMeshType == MeshType::MT_Skybox) {
-		cb.view = camera->GetViewMatrixOrigin().transpose();
-	}
-
-	cb.projection = camera->GetPerspectiveMatrix().transpose();
+	cb.view = viewMatrix;
+	cb.world = worldMatrix;
+	cb.projection = projectMatrix;
 
 	mMaterial->Apply(cb);
 

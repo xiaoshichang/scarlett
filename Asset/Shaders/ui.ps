@@ -1,0 +1,15 @@
+#include "common.fxh"
+
+Texture2D UITex;
+SamplerState sUITexSamplerState;
+
+struct v2p {
+	float4 position : SV_POSITION;
+	float2 texcood :  TEXCOOD;
+};
+
+float4 main(v2p input) : SV_TARGET
+{
+	float4 color = UITex.Sample(sUITexSamplerState, input.texcood);
+    return color;
+}

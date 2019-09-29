@@ -107,13 +107,17 @@ void scarlett::MeshGL::Initialize(void* data, int count, VertexFormat vf) noexce
 	mPrimitiveType = PrimitiveType::PT_LINE;
 }
 
-void scarlett::MeshGL::Render(World * world, const Matrix4f & worldMatrix) noexcept
+void scarlett::MeshGL::InitializeUI() noexcept
+{
+}
+
+void scarlett::MeshGL::Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept
 {
 	ConstantBuffer cb;
-	auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-	cb.world = worldMatrix.transpose();
-	cb.view = camera->GetViewMatrix().transpose();
-	cb.projection = camera->GetPerspectiveMatrix().transpose();
+
+	cb.world = worldMatrix;
+	cb.view = viewMatrix;
+	cb.projection = projectMatrix;
 	mMaterial->Apply(cb);
 
 	glBindVertexArray(mVAO);

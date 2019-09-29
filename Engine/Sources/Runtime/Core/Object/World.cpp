@@ -50,7 +50,6 @@ void scarlett::World::Render() noexcept
 	mCameraSystem->RenderBackground();
 	mMeshRenderSystem->Render();
 	mRenderDebugSystem->Render();
-	mApp->mGraphicsManager->Present();
 }
 
 std::shared_ptr<Entity> scarlett::World::CreateEntity()
@@ -143,6 +142,8 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 			comp->mMeshIdxes.push_back(midx);
 		}
 	}
+
+	importer2.FreeScene();
 }
 
 void scarlett::World::DumpEntities()

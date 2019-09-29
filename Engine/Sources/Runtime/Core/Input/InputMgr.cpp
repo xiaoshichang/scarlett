@@ -1,6 +1,9 @@
 #include "InputMgr.h"
 #include <iostream>
 #include "Runtime/Utils/Logging.h"
+
+#include "Runtime/Core/UI/Director.h"
+#include "Runtime/Core/UI/Event.h"
 using namespace std;
 
 
@@ -17,11 +20,17 @@ void scarlett::InputMgr::Finalize() noexcept
 void scarlett::InputMgr::OnKeyDown(unsigned char keyCode)
 {
 	cout << "key down: " << int(keyCode) << endl;
+
+	UIEventKeyboard event(keyCode, true);
+	Director::GetInstance()->GetDispatcher()->dispatchEvent(&event);
 }
 
 void scarlett::InputMgr::OnKeyUp(unsigned char keyCode)
 {
 	cout << "key up: " << int(keyCode) << endl;
+
+	UIEventKeyboard event(keyCode, false);
+	Director::GetInstance()->GetDispatcher()->dispatchEvent(&event);
 }
 
 void scarlett::InputMgr::OnMouseMove(int x, int y)
