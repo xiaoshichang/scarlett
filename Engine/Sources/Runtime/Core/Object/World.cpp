@@ -122,6 +122,7 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 	mCameraSystem->SetMainCamera(camera);
 
 	// build scene graph entity
+
 	for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i) {
 		auto child = scene->mRootNode->mChildren[i];
 		if (child->mNumMeshes <= 0) {
@@ -142,6 +143,9 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 			auto midx = child->mMeshes[j];
 			comp->mMeshIdxes.push_back(midx);
 		}
+
+		auto skeleton = entity->AddComponent<SkeletonComponent>();
+		skeleton->SetDataFromScene(scene);
 	}
 }
 
