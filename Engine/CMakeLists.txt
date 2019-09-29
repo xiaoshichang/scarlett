@@ -58,6 +58,16 @@ ${SourcesPath}/Runtime/RHI/opengl/MaterialGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/TextureGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/SamplerStateGL.cpp
 
+${SourcesPath}/Runtime/Core/UI/AutoReleasePool.cpp
+${SourcesPath}/Runtime/Core/UI/Director.cpp
+${SourcesPath}/Runtime/Core/UI/Dispatcher.cpp
+${SourcesPath}/Runtime/Core/UI/Event.cpp
+${SourcesPath}/Runtime/Core/UI/Listener.cpp
+${SourcesPath}/Runtime/Core/UI/Node.cpp
+${SourcesPath}/Runtime/Core/UI/Ref.cpp
+${SourcesPath}/Runtime/Core/UI/Renderer.cpp
+${SourcesPath}/Runtime/Core/UI/Sprite.cpp
+
 ${PlatformOnlySources}
 
 )

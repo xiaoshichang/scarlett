@@ -6,6 +6,7 @@
 #include "Runtime/Core/Time/TimeMgr.h"
 #include "Runtime/Core/Input/InputMgr.h"
 #include "Runtime/Core/Object/World.h"
+#include "Runtime/Core/UI/Director.h"
 
 namespace scarlett {
 	class Application : public IApplication {
@@ -24,6 +25,7 @@ namespace scarlett {
 		GraphicsManager*	mGraphicsManager;
 		TimeMgr*			mTimeMgr;
 		InputMgr*			mInputManager;
+		Director*			mDirector;
 		World*				mWorld;
 
 	private:

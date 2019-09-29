@@ -72,6 +72,11 @@ std::shared_ptr<IMesh> scarlett::GraphicsMgrGL::CreateRenderMeshDebug(void* data
 	return ptr;
 }
 
+std::shared_ptr<IMesh> scarlett::GraphicsMgrGL::CreateRenderMeshUI() noexcept
+{
+	return std::shared_ptr<MeshGL>();
+}
+
 std::shared_ptr<ITexture> scarlett::GraphicsMgrGL::CreateTexture2D(const std::string & path) noexcept
 {
 	return std::shared_ptr<ITexture>();

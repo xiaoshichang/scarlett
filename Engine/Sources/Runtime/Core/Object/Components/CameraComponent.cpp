@@ -77,7 +77,10 @@ scarlett::SkyBox::~SkyBox()
 void scarlett::SkyBox::Render()
 {
 	auto worldMatrix = Matrix4f::Identity();
-	mBox->Render(GApp->mWorld, worldMatrix);
+	auto camera = GApp->mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+	auto view = camera->GetViewMatrixOrigin().transpose();
+	auto projection = camera->GetPerspectiveMatrix().transpose();
+	mBox->Render(worldMatrix, view, projection);
 }
 
 

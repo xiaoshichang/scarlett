@@ -19,11 +19,14 @@ void scarlett::RenderDebugSystem::Finalize() noexcept
 
 void scarlett::RenderDebugSystem::Render() noexcept {
 	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto camera = mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+	auto view = camera->GetViewMatrix().transpose();
+	auto projection = camera->GetPerspectiveMatrix().transpose();
 
 	for (auto pair : mMeshes) {
 		auto mesh = pair.second;
 		auto worldMatrix = Matrix4f::Identity();
-		mesh->Render(mWorld, worldMatrix);
+		mesh->Render(worldMatrix, view, projection);
 	}
 }
 

@@ -11,7 +11,8 @@ namespace scarlett {
 		virtual ~MeshGL();
 		virtual void		Initialize(aiMesh* mesh) noexcept;
 		virtual void		Initialize(void* data, int count, VertexFormat vf) noexcept;
-		virtual void		Render(World* world, const Matrix4f& worldMatrix) noexcept;
+		virtual void		InitializeUI() noexcept;
+		virtual void		Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept;
 
 	private:
 		GLenum GetMode();

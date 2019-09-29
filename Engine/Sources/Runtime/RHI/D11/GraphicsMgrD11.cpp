@@ -97,7 +97,7 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 
 	// Set the width and height of the back buffer.
 	swapChainDesc.BufferDesc.Width = 1024;
-	swapChainDesc.BufferDesc.Height = 748;
+	swapChainDesc.BufferDesc.Height = 768;
 
 	// Set regular 32-bit surface for the back buffer.
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -328,6 +328,13 @@ std::shared_ptr<IMesh> scarlett::GraphicsMgrD11::CreateRenderMeshDebug(void* dat
 	return ptr;
 }
 
+std::shared_ptr<IMesh> scarlett::GraphicsMgrD11::CreateRenderMeshUI() noexcept
+{
+	auto ptr = std::make_shared<MeshD11>();
+	ptr->InitializeUI();
+	return ptr;
+}
+
 std::shared_ptr<ITexture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::string& path) noexcept
 {
 	if (mTextures[path]) {
@@ -378,6 +385,11 @@ void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 	std::string skyboxps = "Asset/Shaders/skybox.ps";
 	auto skybox = std::make_shared<ShaderD11>(skyboxvs, skyboxps);
 	mShaders["skybox"] = skybox;
+
+	std::string uivs = "Asset/Shaders/ui.vs";
+	std::string uips = "Asset/Shaders/ui.ps";
+	auto ui = std::make_shared<ShaderD11>(uivs, uips);
+	mShaders["ui"] = ui;
 }
 
 void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<IShader> shader) noexcept

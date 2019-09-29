@@ -57,6 +57,13 @@ void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 			mgrd11->m_deviceContext->PSSetShaderResources(2, 1, &(_texuter->mView));
 			mgrd11->m_deviceContext->PSSetSamplers(2, 1, &(_sampler->m_sampleState));
 		}
+
+		if (pair.first == "ui") {
+			auto _texuter = dynamic_pointer_cast<TextureD11>(mTextures["ui"]);
+			auto _sampler = dynamic_pointer_cast<SamplerStateD11>(mSamplerState["ui"]);
+			mgrd11->m_deviceContext->PSSetShaderResources(0, 1, &(_texuter->mView));
+			mgrd11->m_deviceContext->PSSetSamplers(0, 1, &(_sampler->m_sampleState));
+		}
 	}
 
 	auto _depth = dynamic_pointer_cast<DepthStencilStateD11>(mDepthStencilState);

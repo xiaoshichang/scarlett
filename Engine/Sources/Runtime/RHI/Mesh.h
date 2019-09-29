@@ -15,7 +15,8 @@ namespace scarlett {
 
 	enum MeshType {
 		MT_Model = 1,
-		MT_Skybox = 2
+		MT_Skybox = 2,
+		MT_UI = 3,
 	};
 
 	enum PrimitiveType {
@@ -28,7 +29,8 @@ namespace scarlett {
 	public:
 		virtual void Initialize(aiMesh* mesh) noexcept = 0;
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept = 0;
-		virtual void Render(World* world, const Matrix4f& worldMatrix) noexcept = 0;
+		virtual void InitializeUI() noexcept = 0;
+		virtual void Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept = 0;
 
 		IMesh() : 
 			mMeshType(MeshType::MT_Model),

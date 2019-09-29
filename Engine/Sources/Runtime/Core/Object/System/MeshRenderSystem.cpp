@@ -40,15 +40,18 @@ void scarlett::MeshRenderSystem::Render()
 	if (!IsActive())
 		return;
 
+	auto camera = mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+	auto view = camera->GetViewMatrix().transpose();
+	auto projection = camera->GetPerspectiveMatrix().transpose();
+
 	for (auto comp : mComponents) {
 		if (comp->IsVisible()) {
 
 			auto transform = comp->GetMaster()->GetComponent<TransformComponent>();
-
 			for (auto mid : comp->mMeshIdxes) {
 				auto mesh = mMeshes[mid];
 				if (mesh) {
-					mesh->Render(mWorld, transform->GetWorldMatrix());
+					mesh->Render(transform->GetWorldMatrix().transpose(), view, projection);
 				}
 			}
 		}
