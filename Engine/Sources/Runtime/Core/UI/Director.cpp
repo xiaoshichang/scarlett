@@ -27,12 +27,8 @@ int Director::Initialize() noexcept {
 	mRoot->SetPosition(0, 0);
 	
 	auto sprite = Sprite::Create("./Asset/Textures/ibl_brdf_lut.png");
-	sprite->SetPosition(0, -384);
+	sprite->SetPosition(-512 + 51.2 + 10, -384 + 38.4 + 10);
 	mRoot->AddChild(sprite);
-
-	auto sprite2 = Sprite::Create("./Asset/Textures/ibl_brdf_lut.png");
-	sprite2->SetPosition(0, 384);
-	mRoot->AddChild(sprite2);
 
 	auto listener = UIEventListenerKeyboard::create();
 	listener->onKeyPressed = [=](unsigned char code, UIEvent* event) {
