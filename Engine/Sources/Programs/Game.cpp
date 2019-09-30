@@ -5,6 +5,7 @@
 #include "Foundation/Archtect.h"
 #include "Foundation/Assert.h"
 #include "Runtime/Core/Application/WindowsApplication.h"
+#include "Runtime/Core/Application/AssetFinder.h"
 #include "Runtime/Utils/Logging.h"
 
 namespace scarlett {
@@ -26,7 +27,8 @@ int main() {
 	
 #if defined(SCARLETT_WINDOWS)
 	CHECK_APPLICATION_INIT(GApp->Initialize());
-	GApp->mWorld->LoadScene("Asset/Scenes/robot-v2.fbx");
+	auto scene = GAssetFinder::GetInstance()->GetRealPath("Scenes/robot-v2.fbx");
+	GApp->mWorld->LoadScene(scene);
 	GApp->mWorld->DumpEntities();
 	GApp->mWorld->GetRenderDebugSystem()->CreateDebugMesh();
 	GApp->mWorld->GetRenderDebugSystem()->CreateDebugAxis();

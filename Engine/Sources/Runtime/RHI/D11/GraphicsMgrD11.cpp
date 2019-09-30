@@ -8,6 +8,7 @@
 #include "Runtime/RHI/D11/SamplerStateD11.h"
 #include "Foundation/Assert.h"
 #include "Runtime/Utils/Logging.h"
+#include "Runtime/Core/Application/AssetFinder.h"
 #include <iostream>
 
 using namespace scarlett;
@@ -369,30 +370,15 @@ std::shared_ptr<ISamplerState> scarlett::GraphicsMgrD11::CreateSamplerState() no
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 {
-	std::string pbrShaderVS = "Asset/Shaders/pbr.vs";
-	std::string pbrShaderPS = "Asset/Shaders/pbr.ps";
-	auto pbrShader = std::make_shared<ShaderD11>(pbrShaderVS, pbrShaderPS);
-	mShaders["pbr"] = pbrShader;
-
-	std::string debugShaderVS = "Asset/Shaders/debug.vs";
-	std::string debugShaderPS = "Asset/Shaders/debug.ps";
-	auto debugShader = std::make_shared<ShaderD11>(debugShaderVS, debugShaderPS);
-	mShaders["debug"] = debugShader;
-
-	std::string pbr_skinVS = "Asset/Shaders/pbr_skin.vs";
-	std::string pbr_skinPS = "Asset/Shaders/pbr_skin.ps";
-	auto pbr_skin = std::make_shared<ShaderD11>(pbr_skinVS, pbr_skinPS);
-	mShaders["pbr_skin"] = pbr_skin;
-
-	std::string skyboxvs = "Asset/Shaders/skybox.vs";
-	std::string skyboxps = "Asset/Shaders/skybox.ps";
-	auto skybox = std::make_shared<ShaderD11>(skyboxvs, skyboxps);
-	mShaders["skybox"] = skybox;
-
-	std::string uivs = "Asset/Shaders/ui.vs";
-	std::string uips = "Asset/Shaders/ui.ps";
-	auto ui = std::make_shared<ShaderD11>(uivs, uips);
-	mShaders["ui"] = ui;
+	std::vector<std::string> shaders = {"pbr", "debug", "pbr_skin", "skybox", "ui"};
+	for (auto shader : shaders) {
+		auto vs = "Shaders/" + shader + ".vs";
+		auto ps = "Shaders/" + shader + ".ps";
+		auto vsfull = GAssetFinder::GetInstance()->GetRealPath(vs);
+		auto psfull = GAssetFinder::GetInstance()->GetRealPath(ps);
+		auto _shader = std::make_shared<ShaderD11>(vsfull, psfull);
+		mShaders[shader] = _shader;
+	}
 }
 
 void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<IShader> shader) noexcept

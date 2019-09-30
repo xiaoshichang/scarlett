@@ -15,7 +15,7 @@ namespace scarlett {
 		int				GetScreenHeight();
 		std::string		GetApplicationName();
 
-		friend Singleton<ApplicationConfig>;
+		friend class Singleton<ApplicationConfig>;
 
 	private:
 		boost::property_tree::ptree ptree;
