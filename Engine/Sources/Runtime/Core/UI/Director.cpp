@@ -5,7 +5,7 @@
 
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Application/Application.h"
-
+#include "Runtime/Core/Application/GlobalConfig.h"
 using namespace scarlett;
 
 
@@ -16,8 +16,8 @@ Director::~Director() {
 }
 
 int Director::Initialize() noexcept {
-	auto width = 1024;
-	auto height = 768;
+	auto width = GlobalConfig::GetInstance()->GetScreenWidth();
+	auto height = GlobalConfig::GetInstance()->GetScreenHeight();
 	SetResolution(Vector2f(width, height));
 
 	mDispatcher = new UIEventDispatch();

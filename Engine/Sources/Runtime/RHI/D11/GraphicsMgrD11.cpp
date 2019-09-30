@@ -1,3 +1,4 @@
+#include "Runtime/Core/Application/GlobalConfig.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Runtime/RHI/D11/IndexBufferD11.h"
@@ -7,6 +8,7 @@
 #include "Runtime/RHI/D11/SamplerStateD11.h"
 #include "Foundation/Assert.h"
 #include "Runtime/Utils/Logging.h"
+#include "Runtime/Core/Application/AssetFinder.h"
 #include <iostream>
 
 using namespace scarlett;
@@ -63,11 +65,13 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	SCARLETT_ASSERT(result >= 0);
 
+	int width = GlobalConfig::GetInstance()->GetScreenWidth();
+	int height = GlobalConfig::GetInstance()->GetScreenHeight();
 	for (i = 0; i < numModes; i++)
 	{
-		if (displayModeList[i].Width == (unsigned int)1024)
+		if (displayModeList[i].Width == (unsigned int)width)
 		{
-			if (displayModeList[i].Height == (unsigned int)768)
+			if (displayModeList[i].Height == (unsigned int)height)
 			{
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
@@ -96,8 +100,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	swapChainDesc.BufferCount = 1;
 
 	// Set the width and height of the back buffer.
-	swapChainDesc.BufferDesc.Width = 1024;
-	swapChainDesc.BufferDesc.Height = 768;
+	swapChainDesc.BufferDesc.Width = width;
+	swapChainDesc.BufferDesc.Height = height;
 
 	// Set regular 32-bit surface for the back buffer.
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -177,8 +181,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
 	// Set up the description of the depth buffer.
-	depthBufferDesc.Width = 1024;
-	depthBufferDesc.Height = 768;
+	depthBufferDesc.Width = width;
+	depthBufferDesc.Height = height;
 	depthBufferDesc.MipLevels = 1;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -256,8 +260,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	m_deviceContext->RSSetState(m_rasterState);
 
 	// Setup the viewport for rendering.
-	viewport.Width = (float)1024;
-	viewport.Height = (float)768;
+	viewport.Width = (float)width;
+	viewport.Height = (float)height;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0.0f;
@@ -366,30 +370,15 @@ std::shared_ptr<ISamplerState> scarlett::GraphicsMgrD11::CreateSamplerState() no
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 {
-	std::string pbrShaderVS = "Asset/Shaders/pbr.vs";
-	std::string pbrShaderPS = "Asset/Shaders/pbr.ps";
-	auto pbrShader = std::make_shared<ShaderD11>(pbrShaderVS, pbrShaderPS);
-	mShaders["pbr"] = pbrShader;
-
-	std::string debugShaderVS = "Asset/Shaders/debug.vs";
-	std::string debugShaderPS = "Asset/Shaders/debug.ps";
-	auto debugShader = std::make_shared<ShaderD11>(debugShaderVS, debugShaderPS);
-	mShaders["debug"] = debugShader;
-
-	std::string pbr_skinVS = "Asset/Shaders/pbr_skin.vs";
-	std::string pbr_skinPS = "Asset/Shaders/pbr_skin.ps";
-	auto pbr_skin = std::make_shared<ShaderD11>(pbr_skinVS, pbr_skinPS);
-	mShaders["pbr_skin"] = pbr_skin;
-
-	std::string skyboxvs = "Asset/Shaders/skybox.vs";
-	std::string skyboxps = "Asset/Shaders/skybox.ps";
-	auto skybox = std::make_shared<ShaderD11>(skyboxvs, skyboxps);
-	mShaders["skybox"] = skybox;
-
-	std::string uivs = "Asset/Shaders/ui.vs";
-	std::string uips = "Asset/Shaders/ui.ps";
-	auto ui = std::make_shared<ShaderD11>(uivs, uips);
-	mShaders["ui"] = ui;
+	std::vector<std::string> shaders = {"pbr", "debug", "pbr_skin", "skybox", "ui"};
+	for (auto shader : shaders) {
+		auto vs = "Shaders/" + shader + ".vs";
+		auto ps = "Shaders/" + shader + ".ps";
+		auto vsfull = GAssetFinder::GetInstance()->GetRealPath(vs);
+		auto psfull = GAssetFinder::GetInstance()->GetRealPath(ps);
+		auto _shader = std::make_shared<ShaderD11>(vsfull, psfull);
+		mShaders[shader] = _shader;
+	}
 }
 
 void scarlett::GraphicsMgrD11::UseShader(std::shared_ptr<IShader> shader) noexcept

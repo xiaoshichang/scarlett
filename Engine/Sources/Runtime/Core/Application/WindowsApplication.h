@@ -8,6 +8,8 @@
 namespace scarlett {
 	class WindowsApplication : public Application {
 	public:
+		WindowsApplication() {}
+
 		virtual int Initialize() noexcept;
 		virtual void Finalize() noexcept;
 		virtual void Tick() noexcept;
@@ -19,7 +21,6 @@ namespace scarlett {
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 	private:
-		WindowsApplication() = default;
 		void CreateMainWindow();
 
 		void LoadWGL();
@@ -28,10 +29,8 @@ namespace scarlett {
 	private:
 		HWND mHWND;
 		HGLRC m_RenderContext;
-		friend class Singleton<WindowsApplication>;
 
 		bool mUseOpengl;
 	};
-	typedef Singleton<WindowsApplication> GWindowsApplication;
 
 }
