@@ -1,3 +1,4 @@
+#include "Runtime/Core/Application/GlobalConfig.h"
 #include "CameraComponent.h"
 #include <DirectXMath.h>
 #include "Runtime/Core/Application/Application.h"
@@ -129,8 +130,8 @@ const Matrix4f scarlett::CameraComponent::GetViewMatrixOrigin()
 
 const Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
 {	
-	float width = 1024.0f;
-	float height = 768.0f;
+	float width = GlobalConfig::GetInstance()->GetScreenWidth();
+	float height = GlobalConfig::GetInstance()->GetScreenHeight();
 
 	if (mProjectionDirty) {
 		if (mCameraType == CameraType::Orth) {

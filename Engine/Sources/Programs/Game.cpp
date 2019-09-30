@@ -9,7 +9,7 @@
 
 namespace scarlett {
 #if defined(SCARLETT_WINDOWS)
-	extern Application* GApp = GWindowsApplication::GetInstance();
+	extern Application* GApp = new WindowsApplication();
 #elif defined(SCARLETT_MACOS)
 
 #endif

@@ -33,6 +33,7 @@ add_library(Scarlett
 ${SourcesPath}/Runtime/Core/Memory/Allocator.cpp
 ${SourcesPath}/Runtime/Core/Memory/MemoryManager.cpp
 ${SourcesPath}/Runtime/Core/Application/Application.cpp
+${SourcesPath}/Runtime/Core/Application/GlobalConfig.cpp
 
 ${SourcesPath}/Runtime/Core/Object/World.cpp
 ${SourcesPath}/Runtime/Core/Object/Entity.cpp

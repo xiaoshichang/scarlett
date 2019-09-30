@@ -1,3 +1,4 @@
+#include "Runtime/Core/Application/GlobalConfig.h"
 #include "GraphicsMgrGL.h"
 #include "Foundation/Assert.h"
 #include "glad/glad_wgl.h"
@@ -20,7 +21,7 @@ int scarlett::GraphicsMgrGL::Initialize() noexcept
 		// Enable depth testing.
 		glEnable(GL_DEPTH_TEST);
 	}
-	glViewport(0, 0, 1024, 768);
+	glViewport(0, 0, GlobalConfig::GetInstance()->GetScreenWidth(), GlobalConfig::GetInstance()->GetScreenHeight());
 	SCARLETT_LOG(info) << "OpenGl Version: " << GLVersion.major << "." << GLVersion.minor << " loaded";
 	LoadShaders();
 

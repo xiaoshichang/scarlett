@@ -1,3 +1,4 @@
+#include "Runtime/Core/Application/GlobalConfig.h"
 #include "WindowsApplication.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/RHI/opengl/GraphicsMgrGL.h"
@@ -158,14 +159,16 @@ void scarlett::WindowsApplication::CreateMainWindow()
 	windowClass.lpszClassName = "scarlett";
 	RegisterClassEx(&windowClass);
 
-	RECT windowRect = { 0, 0, 1024, 768 };
+	int width = GlobalConfig::GetInstance()->GetScreenWidth();
+	int height = GlobalConfig::GetInstance()->GetScreenHeight();
+	RECT windowRect = { 0, 0, width, height };
 	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 	// Create the window and store a handle to it.
 	mHWND = CreateWindowEx(
 		NULL,
 		windowClass.lpszClassName,
-		"scarlett",
+		GlobalConfig::GetInstance()->GetApplicationName().c_str(),
 		WS_OVERLAPPEDWINDOW,
 		100,
 		100,

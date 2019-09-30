@@ -1,3 +1,4 @@
+#include "Runtime/Core/Application/GlobalConfig.h"
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/RHI/D11/VertexBufferD11.h"
 #include "Runtime/RHI/D11/IndexBufferD11.h"
@@ -63,11 +64,13 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	SCARLETT_ASSERT(result >= 0);
 
+	int width = GlobalConfig::GetInstance()->GetScreenWidth();
+	int height = GlobalConfig::GetInstance()->GetScreenHeight();
 	for (i = 0; i < numModes; i++)
 	{
-		if (displayModeList[i].Width == (unsigned int)1024)
+		if (displayModeList[i].Width == (unsigned int)width)
 		{
-			if (displayModeList[i].Height == (unsigned int)768)
+			if (displayModeList[i].Height == (unsigned int)height)
 			{
 				numerator = displayModeList[i].RefreshRate.Numerator;
 				denominator = displayModeList[i].RefreshRate.Denominator;
@@ -96,8 +99,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	swapChainDesc.BufferCount = 1;
 
 	// Set the width and height of the back buffer.
-	swapChainDesc.BufferDesc.Width = 1024;
-	swapChainDesc.BufferDesc.Height = 768;
+	swapChainDesc.BufferDesc.Width = width;
+	swapChainDesc.BufferDesc.Height = height;
 
 	// Set regular 32-bit surface for the back buffer.
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -177,8 +180,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
 	// Set up the description of the depth buffer.
-	depthBufferDesc.Width = 1024;
-	depthBufferDesc.Height = 768;
+	depthBufferDesc.Width = width;
+	depthBufferDesc.Height = height;
 	depthBufferDesc.MipLevels = 1;
 	depthBufferDesc.ArraySize = 1;
 	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -256,8 +259,8 @@ int GraphicsMgrD11::InitializeWithWindow(HWND handler) noexcept
 	m_deviceContext->RSSetState(m_rasterState);
 
 	// Setup the viewport for rendering.
-	viewport.Width = (float)1024;
-	viewport.Height = (float)768;
+	viewport.Width = (float)width;
+	viewport.Height = (float)height;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	viewport.TopLeftX = 0.0f;
