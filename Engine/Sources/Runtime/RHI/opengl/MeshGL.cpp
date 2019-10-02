@@ -129,6 +129,10 @@ void scarlett::MeshGL::Render(const Matrix4f& worldMatrix, const Matrix4f& viewM
 	}
 }
 
+void scarlett::MeshGL::RenderWithSkin(const Matrix4f & worldMatrix, const Matrix4f & viewMatrix, const Matrix4f & projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept
+{
+}
+
 GLenum scarlett::MeshGL::GetMode()
 {
 	switch (mPrimitiveType)

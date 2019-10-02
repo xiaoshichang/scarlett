@@ -31,6 +31,7 @@ namespace scarlett {
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept = 0;
 		virtual void InitializeUI() noexcept = 0;
 		virtual void Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept = 0;
+		virtual void RenderWithSkin(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept = 0;
 
 		IMesh() : 
 			mMeshType(MeshType::MT_Model),

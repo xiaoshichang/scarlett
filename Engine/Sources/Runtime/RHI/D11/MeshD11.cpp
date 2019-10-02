@@ -370,3 +370,44 @@ void scarlett::MeshD11::Render(const Matrix4f& worldMatrix, const Matrix4f& view
 	}
 
 }
+
+void scarlett::MeshD11::RenderWithSkin(const Matrix4f & worldMatrix, const Matrix4f & viewMatrix, const Matrix4f & projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept
+{
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
+
+	// Set the index buffer to active in the input assembler so it can be rendered.
+	if (mIndexes) {
+		auto indexBuffer = static_pointer_cast<IndexBufferD11>(mIndexes);
+		mgrd11->m_deviceContext->IASetIndexBuffer(indexBuffer->mIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	}
+
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	if (mPrimitiveType == PrimitiveType::PT_LINE) {
+		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_LINELIST);
+	}
+	else if (mPrimitiveType == PrimitiveType::PT_POINT) {
+		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_POINTLIST);
+	}
+	else if (mPrimitiveType == PrimitiveType::PT_TRIANGLE) {
+		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
+
+	ConstantBuffer cb;
+	cb.view = viewMatrix;
+	cb.world = worldMatrix;
+	cb.projection = projectMatrix;
+
+	for (int i = 0; i < boneCount; i++) {
+		cb.boneMatrix[i] = boneMatrix[i];
+	}
+
+	mMaterial->Apply(cb);
+
+	if (mIndexes) {
+		mgrd11->DrawIndexed(mIndexes->GetIndexCount(), 0, 0);
+	}
+	else {
+		mgrd11->Draw(mPositions->GetVertextCount(), 0);
+	}
+}

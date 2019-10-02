@@ -9,4 +9,5 @@ cbuffer MatrixBuffer
 	float4 debugColor;
 	float4 pbrParameter;
 	float4 camPos;
+	matrix boneMatrix[32];
 };

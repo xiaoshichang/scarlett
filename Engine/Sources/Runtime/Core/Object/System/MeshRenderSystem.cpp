@@ -51,7 +51,13 @@ void scarlett::MeshRenderSystem::Render()
 			for (auto mid : comp->mMeshIdxes) {
 				auto mesh = mMeshes[mid];
 				if (mesh) {
-					mesh->Render(transform->GetWorldMatrix().transpose(), view, projection);
+					auto skeleton = comp->GetMaster()->GetComponent<SkeletonComponent>();
+					if (skeleton) {
+						mesh->RenderWithSkin(transform->GetWorldMatrix().transpose(), view, projection, skeleton->mSkeleton->mBoneTransforms, 32);
+					}
+					else {
+						mesh->Render(transform->GetWorldMatrix().transpose(), view, projection);
+					}
 				}
 			}
 		}

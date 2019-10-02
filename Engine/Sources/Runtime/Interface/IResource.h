@@ -13,5 +13,7 @@ namespace scarlett {
 		Vector4f debugColor;
 		Vector4f pbrParameter;
 		Vector4f camPos;
+
+		Matrix4f boneMatrix[32];
 	};
 }

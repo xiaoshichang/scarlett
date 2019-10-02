@@ -193,6 +193,10 @@ void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noex
 	dataPtr->pbrParameter = cbuffer.pbrParameter;
 	dataPtr->camPos = cbuffer.camPos;
 
+	for (int i = 0; i < 32; i++) {
+		dataPtr->boneMatrix[i] = cbuffer.boneMatrix[i];
+	}
+
 	// Unlock the constant buffer.
 	mgrd11->m_deviceContext->Unmap(m_matrixBuffer, 0);
 	// Set the position of the constant buffer in the vertex shader.

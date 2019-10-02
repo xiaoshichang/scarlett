@@ -10,6 +10,7 @@
 #include "Runtime/Core/Object/System/MeshRenderSystem.h"
 #include "Runtime/Core/Object/System/CameraSystem.h"
 #include "Runtime/Core/Object/System/RenderDebugSystem.h"
+#include "Runtime/Core/Object/System/AnimationSystem.h"
 
 #include <boost/functional/hash.hpp>
 
@@ -42,9 +43,10 @@ namespace scarlett {
 		MeshRenderSystem*	GetMeshRenderSystem() { return mMeshRenderSystem; }
 		CameraSystem*		GetCameraSystem() { return mCameraSystem; }
 		RenderDebugSystem*	GetRenderDebugSystem() { return mRenderDebugSystem; }
+		AnimationSystem*	GetAnimationSystem() { return mAnimationSystem; }
 	public:
 		Application* mApp;
-
+		Assimp::Importer importer2;
 	private:
 
 		std::unordered_map<boost::uuids::uuid, std::shared_ptr<Entity>, boost::hash<boost::uuids::uuid>>	mEntities;
@@ -53,7 +55,7 @@ namespace scarlett {
 		MeshRenderSystem*	mMeshRenderSystem;
 		CameraSystem*		mCameraSystem;
 		RenderDebugSystem*	mRenderDebugSystem;
-
+		AnimationSystem*	mAnimationSystem;
 	};
 
 }

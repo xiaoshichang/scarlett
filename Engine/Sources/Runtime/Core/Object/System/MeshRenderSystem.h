@@ -36,7 +36,7 @@ namespace scarlett {
 	private:
 		World* mWorld;
 		GraphicsManager* mGraphicsManager;
-		std::set< MeshRenderComponent*> mComponents;
+		std::set<MeshRenderComponent*> mComponents;
 
 		
 

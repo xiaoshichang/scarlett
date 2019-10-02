@@ -20,6 +20,9 @@ scarlett::World::World(Application* master) :
 
 int scarlett::World::Initialize() noexcept
 {
+	mAnimationSystem = new AnimationSystem(this);
+	mAnimationSystem->Initialize();
+
 	mMeshRenderSystem = new MeshRenderSystem(this);
 	mMeshRenderSystem->Initialize();
 
@@ -28,7 +31,7 @@ int scarlett::World::Initialize() noexcept
 
 	mRenderDebugSystem = new RenderDebugSystem(this);
 	mRenderDebugSystem->Initialize();
-
+	
 	return 0;
 }
 
@@ -42,6 +45,7 @@ void scarlett::World::Finalize() noexcept
 
 void scarlett::World::Tick() noexcept
 {
+	mAnimationSystem->Tick();
 	mMeshRenderSystem->Tick();
 }
 
@@ -94,7 +98,6 @@ size_t scarlett::World::GetEntityCount() {
 }
 
 void scarlett::World::LoadScene(const std::string& scenePath) {
-	Assimp::Importer importer2;
 	const aiScene* scene = importer2.ReadFile(scenePath,
 		aiProcess_CalcTangentSpace |
 		aiProcess_Triangulate |
@@ -143,11 +146,14 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 			comp->mMeshIdxes.push_back(midx);
 		}
 
-		auto skeleton = entity->AddComponent<SkeletonComponent>();
-		skeleton->SetDataFromScene(scene);
-	}
+		auto armature = scene->mRootNode->FindNode("Armature");
+		if (armature) {
+			auto bone = armature->mChildren[0];
+			auto skeleton = entity->AddComponent<SkeletonComponent>();
+			skeleton->InitializeHeirarchy(bone, scene);
+		}
 
-	importer2.FreeScene();
+	}
 }
 
 void scarlett::World::DumpEntities()
