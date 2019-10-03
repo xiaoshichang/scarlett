@@ -8,9 +8,7 @@ scarlett::Skeleton::Skeleton(const aiNode* armature, const aiScene* scene)
 {
 	mRoot = armature;
 	mScene = scene;
-
-	auto node = scene->mRootNode->mChildren[1];
-
+	
 	for (int i = 0; i < scene->mNumMeshes; i++) {
 		auto mesh = scene->mMeshes[i];
 		for (int j = 0; j < mesh->mNumBones; j++) {
@@ -31,7 +29,8 @@ scarlett::Skeleton::~Skeleton()
 
 void scarlett::Skeleton::CalculateFinalMatrix()
 {
-	_CalculateFinalMatrix(mRoot, Matrix4f::Identity());
+	Matrix4f r = BuildRotationMatrix(Vector3f(1, 0, 0), -3.14/2);
+	_CalculateFinalMatrix(mRoot, r);
 }
 
 void scarlett::Skeleton::_CalculateFinalMatrix(const aiNode * node, const Matrix4f & parentTransform)
@@ -40,13 +39,25 @@ void scarlett::Skeleton::_CalculateFinalMatrix(const aiNode * node, const Matrix
 	std::string name(nodeName.C_Str());
 	auto transform = node->mTransformation;
 	Matrix4f NodeTransformation;
+
+	if (name == "Bone010") {
+		aiMatrix4x4 r;
+		aiMatrix4x4::RotationZ(1, r);
+		transform = transform * r;
+	}
+	if (name == "Bone013") {
+		aiMatrix4x4 r;
+		aiMatrix4x4::RotationZ(-1, r);
+		transform = transform * r;
+	}
+
 	AssimpMatrix2Eigen(transform, NodeTransformation);
 
-	Matrix4f globalMatrix = NodeTransformation * parentTransform;
+	Matrix4f globalMatrix =  parentTransform * NodeTransformation;
 
 	if (mBoneMap.find(name) != mBoneMap.end()) {
 		int boneIndex = mBoneMap[name];
-		mBoneTransforms[boneIndex] = mBoneOffeset[boneIndex] * globalMatrix;
+		mBoneTransforms[boneIndex] =  globalMatrix * mBoneOffeset[boneIndex];
 		mBoneTransforms[boneIndex].transposeInPlace();
 	}
 

@@ -22,8 +22,9 @@ namespace scarlett {
 		const aiNode*							mRoot;
 		const aiScene*							mScene;
 		std::unordered_map<std::string, int>	mBoneMap;
+		Matrix4f								mOrigin;
 		Matrix4f								mBoneTransforms[32];
-		Matrix4f								mBoneOffeset[32];
+		Matrix4f	mBoneOffeset[32];
 	};
 
 	class SkeletonComponent : public IComponent{
