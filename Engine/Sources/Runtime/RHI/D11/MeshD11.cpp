@@ -333,7 +333,7 @@ void scarlett::MeshD11::InitializeUI() noexcept
 	mMaterial->SetSamplerState("ui", sampler);
 }
 
-void scarlett::MeshD11::Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept
+void scarlett::MeshD11::Render(Entity* self) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
@@ -356,9 +356,27 @@ void scarlett::MeshD11::Render(const Matrix4f& worldMatrix, const Matrix4f& view
 	}
 
 	ConstantBuffer cb;
-	cb.view = viewMatrix;
-	cb.world = worldMatrix;
-	cb.projection = projectMatrix;
+	if (mMeshType == MT_Skybox) {
+		cb.world = Matrix4f::Identity();
+		auto world = self->GetWorld();
+		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+		cb.view = camera->GetViewMatrixOrigin().transpose();
+		cb.projection = camera->GetPerspectiveMatrix().transpose();
+	}
+	else if (mMeshType == MT_Model) {
+		cb.world = self->GetComponent<TransformComponent>()->GetWorldMatrix().transpose();
+		auto world = self->GetWorld();
+		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+		cb.view = camera->GetViewMatrix().transpose();
+		cb.projection = camera->GetPerspectiveMatrix().transpose();
+	}
+
+	auto skeleton = self->GetComponent<SkeletonComponent>();
+	if (skeleton) {
+		for (int i = 0; i < 32; i++) {
+			cb.boneMatrix[i] = skeleton->mSkeleton->mBoneTransforms[i];
+		}
+	}
 
 	mMaterial->Apply(cb);
 
@@ -371,7 +389,7 @@ void scarlett::MeshD11::Render(const Matrix4f& worldMatrix, const Matrix4f& view
 
 }
 
-void scarlett::MeshD11::RenderWithSkin(const Matrix4f & worldMatrix, const Matrix4f & viewMatrix, const Matrix4f & projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept
+void scarlett::MeshD11::Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
@@ -392,15 +410,11 @@ void scarlett::MeshD11::RenderWithSkin(const Matrix4f & worldMatrix, const Matri
 	else if (mPrimitiveType == PrimitiveType::PT_TRIANGLE) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-
+	
 	ConstantBuffer cb;
-	cb.view = viewMatrix;
-	cb.world = worldMatrix;
-	cb.projection = projectMatrix;
-
-	for (int i = 0; i < boneCount; i++) {
-		cb.boneMatrix[i] = boneMatrix[i];
-	}
+	cb.world = world;
+	cb.view = view;
+	cb.projection = projection;
 
 	mMaterial->Apply(cb);
 

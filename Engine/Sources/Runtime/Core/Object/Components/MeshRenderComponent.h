@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include "Runtime/Interface/IComponent.h"
+#include "Runtime/RHI/Mesh.h"
 
 namespace scarlett {
 
@@ -17,7 +18,7 @@ namespace scarlett {
 		bool IsVisible() { return mVisible; }
 
 	public:
-		std::vector<int> mMeshIdxes;
+		std::vector<std::shared_ptr<IMesh>> mMeshes;;
 		bool mVisible;
 
 	};

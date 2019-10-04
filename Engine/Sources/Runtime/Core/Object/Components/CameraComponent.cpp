@@ -5,7 +5,8 @@
 
 using namespace DirectX;
 
-scarlett::SkyBox::SkyBox(const std::string & path)
+scarlett::SkyBox::SkyBox(const std::string & path, CameraComponent* comp):
+	mComp(comp)
 {
 	float skyboxVertices[] = {
 		// positions          
@@ -77,17 +78,14 @@ scarlett::SkyBox::~SkyBox()
 
 void scarlett::SkyBox::Render()
 {
-	auto worldMatrix = Matrix4f::Identity();
-	auto camera = GApp->mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-	auto view = camera->GetViewMatrixOrigin().transpose();
-	auto projection = camera->GetPerspectiveMatrix().transpose();
-	mBox->Render(worldMatrix, view, projection);
+	auto entity = mComp->GetMaster();
+	mBox->Render(entity);
 }
 
 
 scarlett::CameraComponent::CameraComponent() :
 	mCameraType(CameraType::Perspective),
-	mPosition(Vector3f(0, 10, 20)),
+	mPosition(Vector3f(10, 10, 20)),
 	mLookat(Vector3f(0, 1, 0)),
 	mUp(Vector3f(0, 1, 0)),
 	mNearClip(0.01f),
@@ -147,7 +145,7 @@ const Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
 
 void scarlett::CameraComponent::SetSkybox(const std::string & path)
 {
-	mSkybox = std::make_shared<SkyBox>(path);
+	mSkybox = std::make_shared<SkyBox>(path, this);
 }
 
 std::shared_ptr<scarlett::SkyBox> scarlett::CameraComponent::GetSkybox()

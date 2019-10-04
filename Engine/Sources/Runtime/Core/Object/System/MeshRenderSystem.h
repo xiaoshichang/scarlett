@@ -27,12 +27,6 @@ namespace scarlett {
 		virtual void DeleteComponent(MeshRenderComponent* comp);
 		virtual void Render();
 
-	public:
-		virtual void LoadMesh(aiMesh* mesh, const aiScene* world);
-
-
-	public:
-		std::vector<shared_ptr<IMesh>>	mMeshes;
 	private:
 		World* mWorld;
 		GraphicsManager* mGraphicsManager;

@@ -5,22 +5,7 @@
 #include "Runtime/RHI/Mesh.h"
 
 namespace scarlett {
-
-	class SkyBox {
-	public:
-		SkyBox(const std::string& path);
-		virtual ~SkyBox();
-		void	Render();
-
-	public:
-		std::shared_ptr<IMesh> mBox;
-		std::shared_ptr<ITexture> mIrradianceMap;
-		std::shared_ptr<ISamplerState> mIrradianceMapSamplerState;
-		std::shared_ptr<ITexture> mEnvmap;
-		std::shared_ptr<ISamplerState> mEnvmapSamplerState;
-	};
-
-
+	class SkyBox;
 	enum CameraType
 	{
 		Orth = 1,
@@ -73,6 +58,21 @@ namespace scarlett {
 		float		mFov;
 
 		std::shared_ptr<SkyBox>		mSkybox;
+	};
+
+	class SkyBox {
+	public:
+		SkyBox(const std::string& path, CameraComponent* comp);
+		virtual ~SkyBox();
+		void	Render();
+
+	public:
+		CameraComponent* mComp;
+		std::shared_ptr<IMesh> mBox;
+		std::shared_ptr<ITexture> mIrradianceMap;
+		std::shared_ptr<ISamplerState> mIrradianceMapSamplerState;
+		std::shared_ptr<ITexture> mEnvmap;
+		std::shared_ptr<ISamplerState> mEnvmapSamplerState;
 	};
 
 }

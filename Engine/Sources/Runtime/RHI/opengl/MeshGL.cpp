@@ -111,13 +111,25 @@ void scarlett::MeshGL::InitializeUI() noexcept
 {
 }
 
-void scarlett::MeshGL::Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept
+void scarlett::MeshGL::Render(Entity* self) noexcept
 {
 	ConstantBuffer cb;
 
-	cb.world = worldMatrix;
-	cb.view = viewMatrix;
-	cb.projection = projectMatrix;
+	if (mMeshType == MT_Skybox) {
+		cb.world = Matrix4f::Identity();
+		auto world = self->GetWorld();
+		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+		cb.view = camera->GetViewMatrixOrigin().transpose();
+		cb.projection = camera->GetPerspectiveMatrix().transpose();
+	}
+	else if (mMeshType == MT_Model) {
+		cb.world = self->GetComponent<TransformComponent>()->GetWorldMatrix().transpose();
+		auto world = self->GetWorld();
+		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+		cb.view = camera->GetViewMatrix().transpose();
+		cb.projection = camera->GetPerspectiveMatrix().transpose();
+	}
+	
 	mMaterial->Apply(cb);
 
 	glBindVertexArray(mVAO);
@@ -129,9 +141,24 @@ void scarlett::MeshGL::Render(const Matrix4f& worldMatrix, const Matrix4f& viewM
 	}
 }
 
-void scarlett::MeshGL::RenderWithSkin(const Matrix4f & worldMatrix, const Matrix4f & viewMatrix, const Matrix4f & projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept
+void scarlett::MeshGL::Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept
 {
+	ConstantBuffer cb;
+	cb.world = world;
+	cb.view = view;
+	cb.projection = projection;
+
+	mMaterial->Apply(cb);
+
+	glBindVertexArray(mVAO);
+	if (mIndexes) {
+		glDrawElements(GetMode(), mIndexes->GetIndexCount(), GL_UNSIGNED_INT, 0x00);
+	}
+	else {
+		glDrawArrays(GetMode(), 0x00, mPositions->GetVertextCount());
+	}
 }
+
 
 GLenum scarlett::MeshGL::GetMode()
 {

@@ -1,4 +1,5 @@
 #include "MeshRenderSystem.h"
+#include "Runtime/Core/Object/Entity.h"
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/Application/Application.h"
 #include "Runtime/Core/Object/System/MeshRenderSystem.h"
@@ -17,7 +18,6 @@ int scarlett::MeshRenderSystem::Initialize() noexcept
 
 void scarlett::MeshRenderSystem::Finalize() noexcept
 {
-	mMeshes.clear();
 }
 
 void scarlett::MeshRenderSystem::Tick() noexcept
@@ -40,32 +40,14 @@ void scarlett::MeshRenderSystem::Render()
 	if (!IsActive())
 		return;
 
-	auto camera = mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-	auto view = camera->GetViewMatrix().transpose();
-	auto projection = camera->GetPerspectiveMatrix().transpose();
-
 	for (auto comp : mComponents) {
 		if (comp->IsVisible()) {
 
 			auto transform = comp->GetMaster()->GetComponent<TransformComponent>();
-			for (auto mid : comp->mMeshIdxes) {
-				auto mesh = mMeshes[mid];
-				if (mesh) {
-					auto skeleton = comp->GetMaster()->GetComponent<SkeletonComponent>();
-					if (skeleton) {
-						mesh->RenderWithSkin(transform->GetWorldMatrix().transpose(), view, projection, skeleton->mSkeleton->mBoneTransforms, 32);
-					}
-					else {
-						mesh->Render(transform->GetWorldMatrix().transpose(), view, projection);
-					}
-				}
+			for (auto mesh : comp->mMeshes) {
+				auto entity = comp->GetMaster();
+				mesh->Render(entity);
 			}
 		}
 	}
-}
-
-void scarlett::MeshRenderSystem::LoadMesh(aiMesh * mesh, const aiScene* world)
-{
-	auto _mesh = mGraphicsManager->CreateRenderMesh(mesh, world);
-	mMeshes.push_back(_mesh);
 }

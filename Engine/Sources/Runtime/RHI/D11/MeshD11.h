@@ -14,8 +14,8 @@ namespace scarlett {
 		virtual void Initialize(aiMesh* mesh) noexcept;
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept;
 		virtual void InitializeUI() noexcept;
-		virtual void Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept;
-		virtual void RenderWithSkin(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept;
+		virtual void Render(Entity* self) noexcept;
+		virtual void Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept;
 
 	protected:
 		unsigned int*		stride;

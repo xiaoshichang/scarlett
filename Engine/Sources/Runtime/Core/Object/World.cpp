@@ -106,11 +106,6 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 	SCARLETT_ASSERT(scene);
 
 	// load all mesh
-	for (unsigned int j = 0; j < scene->mNumMeshes; ++j) {
-		auto mesh = scene->mMeshes[j];
-		mMeshRenderSystem->LoadMesh(mesh, scene);
-	}
-
 	auto t = scene->mRootNode->mTransformation;
 
 	for (unsigned int j = 0; j < scene->mNumAnimations; ++j) {
@@ -143,7 +138,9 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		
 	for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
 		auto midx = child->mMeshes[j];
-		comp->mMeshIdxes.push_back(midx);
+		auto mesh = scene->mMeshes[midx];
+		auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
+		comp->mMeshes.push_back(iMesh);
 	}
 
 	auto armature = scene->mRootNode->FindNode("Bone001");
@@ -167,20 +164,6 @@ void scarlett::World::DumpEntities()
 		cout << "position: " <<  "(" << position.x() << "," << position.y() << "," << position.z() << ")" << endl;
 		
 		auto meshRender = entity->GetComponent<MeshRenderComponent>();
-		if (meshRender) {
-			cout << "MeshRenderComponent:" <<  endl;
-			cout << "MeshIndex:";
-			for (int i = 0; i < meshRender->mMeshIdxes.size(); ++i) {
-				cout << meshRender->mMeshIdxes[i] << " ";
-			}
-			cout << "Mesh name:";
-			for (int i = 0; i < meshRender->mMeshIdxes.size(); ++i) {
-				auto idx = meshRender->mMeshIdxes[i];
-				auto mesh = mMeshRenderSystem->mMeshes[idx];
-			}
-			cout << endl;
-		}
-
 		auto cameraComponent = entity->GetComponent<CameraComponent>();
 		if (cameraComponent)
 		{

@@ -12,6 +12,7 @@
 
 namespace scarlett {
 	class World;
+	class Entity;
 
 	enum MeshType {
 		MT_Model = 1,
@@ -30,8 +31,8 @@ namespace scarlett {
 		virtual void Initialize(aiMesh* mesh) noexcept = 0;
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept = 0;
 		virtual void InitializeUI() noexcept = 0;
-		virtual void Render(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix) noexcept = 0;
-		virtual void RenderWithSkin(const Matrix4f& worldMatrix, const Matrix4f& viewMatrix, const Matrix4f& projectMatrix, const Matrix4f boneMatrix[], const int boneCount) noexcept = 0;
+		virtual void Render(Entity* self) noexcept = 0;
+		virtual void Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept = 0;
 
 		IMesh() : 
 			mMeshType(MeshType::MT_Model),
