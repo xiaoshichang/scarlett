@@ -21,7 +21,6 @@ namespace scarlett {
 		virtual bool	IsQuit() noexcept;
 
 	public:
-		MemoryManager*		mMemoryMgr;
 		GraphicsManager*	mGraphicsManager;
 		TimeMgr*			mTimeMgr;
 		InputMgr*			mInputManager;

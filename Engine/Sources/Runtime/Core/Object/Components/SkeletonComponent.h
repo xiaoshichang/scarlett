@@ -18,6 +18,14 @@ namespace scarlett {
 		void	CalculateFinalMatrix();
 		void	_CalculateFinalMatrix(const aiNode* node, const Matrix4f& parentTransform);
 
+		void	CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		void	CalcInterpolatedScale(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		void	CalcInterpolatedTranslation(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
+		int		FindRotation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		int		FindScale(float AnimationTime, const aiNodeAnim* pNodeAnim);
+		int		FindTranslation(float AnimationTime, const aiNodeAnim* pNodeAnim);
+
+
 	public:
 		const aiNode*							mRoot;
 		const aiScene*							mScene;

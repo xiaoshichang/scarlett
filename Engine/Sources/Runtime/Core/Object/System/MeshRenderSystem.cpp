@@ -12,7 +12,6 @@ scarlett::MeshRenderSystem::MeshRenderSystem(World * world) :
 
 int scarlett::MeshRenderSystem::Initialize() noexcept
 {
-	mGraphicsManager = mWorld->mApp->mGraphicsManager;
 	return 0;
 }
 

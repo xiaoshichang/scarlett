@@ -38,8 +38,8 @@ namespace scarlett {
 			p->~T();
 			Free(p, sizeof(T));
 		}
-		MemoryManager() = default;
-		virtual ~MemoryManager() = default;
+		MemoryManager();
+		virtual ~MemoryManager();
 		virtual int Initialize() noexcept;
 		virtual void Finalize() noexcept;
 
@@ -64,8 +64,10 @@ namespace scarlett {
 		static size_t* m_pBlockSizeLookup;
 		static Allocator * m_pAllocators;
 		static Allocator* LookupAllocator(size_t size);
-		
+		friend class Singleton<MemoryManager>;
 	};
+
+	typedef Singleton<MemoryManager> GMemoryManager;
 
 }
 

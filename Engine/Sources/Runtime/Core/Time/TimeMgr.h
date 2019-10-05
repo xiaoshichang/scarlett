@@ -15,6 +15,7 @@ namespace scarlett {
 		void	PostTick() noexcept;
 
 		void	MicroSleep(unsigned long long ns) noexcept;
+		float	GetTotalMsTime() noexcept;
 
 	private:
 		bool m_bFirstUpdate;

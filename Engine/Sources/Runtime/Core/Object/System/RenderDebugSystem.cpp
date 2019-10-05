@@ -18,7 +18,7 @@ void scarlett::RenderDebugSystem::Finalize() noexcept
 }
 
 void scarlett::RenderDebugSystem::Render() noexcept {
-	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto mgr = GApp->mGraphicsManager;
 	auto camera = mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
 	auto view = camera->GetViewMatrix().transpose();
 	auto projection = camera->GetPerspectiveMatrix().transpose();
@@ -31,7 +31,7 @@ void scarlett::RenderDebugSystem::Render() noexcept {
 }
 
 void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
-	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto mgr = GApp->mGraphicsManager;
 
 	unsigned int pointCount = 80;
 	float* data = new float[3 * pointCount];
@@ -67,7 +67,7 @@ void scarlett::RenderDebugSystem::CreateDebugMesh() noexcept {
 }
 
 void scarlett::RenderDebugSystem::DeleteDebugMesh() noexcept {
-	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto mgr = GApp->mGraphicsManager;
 
 	auto mesh = mMeshes["mesh"];
 	if (mesh) {
@@ -77,7 +77,7 @@ void scarlett::RenderDebugSystem::DeleteDebugMesh() noexcept {
 
 void scarlett::RenderDebugSystem::CreateDebugAxis() noexcept
 {
-	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto mgr = GApp->mGraphicsManager;
 	float* x = new float[3 * 2];
 	x[0] = 1000.0f;
 	x[1] = 0.0f;
@@ -122,7 +122,7 @@ void scarlett::RenderDebugSystem::CreateDebugAxis() noexcept
 
 void scarlett::RenderDebugSystem::DeleteDebugAxis() noexcept
 {
-	auto mgr = mWorld->mApp->mGraphicsManager;
+	auto mgr = GApp->mGraphicsManager;
 	auto meshx = mMeshes["x"];
 	if (meshx) {
 		mMeshes.erase("x");

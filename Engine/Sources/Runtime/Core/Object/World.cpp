@@ -12,8 +12,7 @@
 using namespace scarlett;
 using namespace std;
 
-scarlett::World::World(Application* master) :
-	mApp(master),
+scarlett::World::World() :
 	mMeshRenderSystem(nullptr)
 {
 }
@@ -126,13 +125,10 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 
 
 	auto entity = CreateEntity();
-	aiVector3D scaling, rotation, position;
-	auto transform = child->mTransformation * prescale * prescale2 * prerotation;
-	transform.Decompose(scaling, rotation, position);
 	auto transformation = entity->GetComponent<TransformComponent>();
-	transformation->SetPosition(Vector3f(position.x, position.y, position.z));
-	transformation->SetRotation(Vector3f(rotation.x, rotation.y, rotation.z));
-	transformation->SetScale(Vector3f(scaling.x, scaling.y, scaling.z));
+	transformation->SetPosition(Vector3f(0, 0, 0));
+	transformation->SetRotation(Vector3f(0, 0, 0));
+	transformation->SetScale(Vector3f(1, 1, 1));
 
 	auto comp = entity->AddComponent<MeshRenderComponent>();
 		

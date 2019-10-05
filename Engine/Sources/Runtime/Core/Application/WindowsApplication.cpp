@@ -84,9 +84,6 @@ int WindowsApplication::Initialize() noexcept{
 	mInputManager = new InputMgr();
 	mInputManager->Initialize();
 
-	mMemoryMgr = new MemoryManager();
-	mMemoryMgr->Initialize();
-
 	mUseOpengl = false;
 	if (mUseOpengl) {
 		LoadWGL();
@@ -106,7 +103,7 @@ int WindowsApplication::Initialize() noexcept{
 
 	Director::GetInstance()->Initialize();
 
-	mWorld = new World(this);
+	mWorld = new World();
 	mWorld->Initialize();
 
 	return 0;
@@ -187,8 +184,6 @@ void WindowsApplication::Finalize() noexcept{
 	mWorld->Finalize();
 
 	mGraphicsManager->Finalize();
-	mMemoryMgr->Finalize();
-	
 }
 
 void WindowsApplication::LoadWGL() {

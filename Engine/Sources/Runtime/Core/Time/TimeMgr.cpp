@@ -45,7 +45,7 @@ void scarlett::TimeMgr::PostTick() noexcept
 	m_frameEndTime = std::chrono::high_resolution_clock::now();
 	auto total = m_frameEndTime - m_frameStartTime;
 	long long interval = 16666666;
-	long long sleep = interval - total.count() - 2000000;
+	long long sleep = interval - total.count();
 	if (sleep > 0) {
 		MicroSleep(sleep);
 	}
@@ -54,4 +54,10 @@ void scarlett::TimeMgr::PostTick() noexcept
 void scarlett::TimeMgr::MicroSleep(unsigned long long ns) noexcept
 {
 	std::this_thread::sleep_for(std::chrono::nanoseconds(ns));
+}
+
+float scarlett::TimeMgr::GetTotalMsTime() noexcept
+{
+	auto delta = m_frameStartTime - m_startTime;
+	return delta.count() / 1000000;
 }

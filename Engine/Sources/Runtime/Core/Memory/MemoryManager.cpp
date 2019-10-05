@@ -32,6 +32,16 @@ namespace scarlett {
 
 }
 
+scarlett::MemoryManager::MemoryManager()
+{
+	Initialize();
+}
+
+scarlett::MemoryManager::~MemoryManager()
+{
+	Finalize();
+}
+
 int MemoryManager::Initialize() noexcept {
 	static bool s_bInitialized = false;
 	if (!s_bInitialized) {

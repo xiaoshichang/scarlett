@@ -27,7 +27,7 @@ namespace scarlett {
 		virtual void	Render() noexcept;
 		
 	public:
-		World(Application* app);
+		World();
 
 		std::shared_ptr<Entity>	CreateEntity();
 		std::shared_ptr<Entity>	CreateEntity(const boost::uuids::uuid& guid);

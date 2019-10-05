@@ -2,6 +2,8 @@
 #include <vector>
 
 #include "Runtime/Interface/IModule.h"
+#include "Runtime/Core/Memory/MemoryManager.h"
+
 #include "Runtime/Core/Object/Components/TransformComponent.h"
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 #include "Runtime/Core/Object/Components/CameraComponent.h"
@@ -56,6 +58,7 @@ namespace scarlett {
 
 	template<typename T>
 	T*	scarlett::Entity::AddComponent() {
+		auto MemoryManager = GMemoryManager::GetInstance();
 		void* comp = nullptr;
 		if (std::is_same<T, TransformComponent>::value) {
 			mTransform = new TransformComponent();
@@ -65,7 +68,8 @@ namespace scarlett {
 		}
 
 		else if (std::is_same<T, MeshRenderComponent>::value) {
-			mMeshRender = new MeshRenderComponent();
+			void* addr = MemoryManager->Allocate(sizeof(TransformComponent));
+			mMeshRender = new(addr) MeshRenderComponent();
 			mMeshRender->SetMaster(this);
 			mMeshRender->Initialize();
 			comp = mMeshRender;
@@ -107,6 +111,7 @@ namespace scarlett {
 
 	template<typename T>
 	void	scarlett::Entity::RemoveComponent() {
+		auto MemoryManager = GMemoryManager::GetInstance();
 		if (std::is_same<T, TransformComponent>::value) {
 			mTransform->Finalize();
 			delete mTransform;
@@ -114,7 +119,7 @@ namespace scarlett {
 		}
 		else if (std::is_same<T, MeshRenderComponent>::value) {
 			mMeshRender->Finalize();
-			delete mMeshRender;
+			MemoryManager->Free(mMeshRender, sizeof(MeshRenderComponent));
 			mMeshRender = nullptr;
 		}
 		else if (std::is_same<T, CameraComponent>::value) {
@@ -122,7 +127,7 @@ namespace scarlett {
 			delete mCamera;
 			mCamera = nullptr;
 		}
-		else if (std::is_same<T, CameraComponent>::value) {
+		else if (std::is_same<T, SkeletonComponent>::value) {
 			mSkeleton->Finalize();
 			delete mSkeleton;
 			mSkeleton = nullptr;

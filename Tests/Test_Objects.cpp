@@ -11,7 +11,7 @@ namespace scarlett {
 
 int main() {
 
-	auto world = new scarlett::World(scarlett::GApp);
+	auto world = new scarlett::World();
 	world->Initialize();
 	auto entity = world->CreateEntity();
 	std::cout << entity->GetGuid() << std::endl;
