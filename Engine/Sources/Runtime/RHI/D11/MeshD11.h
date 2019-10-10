@@ -15,7 +15,7 @@ namespace scarlett {
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept;
 		virtual void InitializeUI() noexcept;
 		virtual void Render(Entity* self) noexcept;
-		virtual void Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept;
+		virtual void Render(const Matrix4x4f& world, const Matrix4x4f& view, const Matrix4x4f& projection) noexcept;
 
 	protected:
 		unsigned int*		stride;

@@ -28,7 +28,7 @@ int main() {
 	std::cout << "parent of entity is: " << entity->GetParent()->GetGuid() << std::endl;
 
 	auto comp = entity->GetComponent<scarlett::TransformComponent>();
-	comp->SetPosition(Vector3f(1, 1, 1));
+	comp->SetPosition(scarlett::Vector3f(1, 1, 1));
 
 	auto comp1 = entity->GetComponent<scarlett::MeshRenderComponent>();
 

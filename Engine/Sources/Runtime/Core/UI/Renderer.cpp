@@ -8,11 +8,13 @@ Renderer::Renderer(){
 	mQuad = GApp->mGraphicsManager->CreateRenderMeshUI();
 }
 
-void scarlett::Renderer::RenderSprite(const std::string & texture, const Matrix4f & world, const Matrix4f & transform, uint32_t flags)
+void scarlett::Renderer::RenderSprite(const std::string & texture, const Matrix4x4f & world, const Matrix4x4f & transform, uint32_t flags)
 {
 	auto t = GApp->mGraphicsManager->CreateTexture2D(texture);
 	mQuad->mMaterial->SetTexture("ui", t);
 	mQuad->mMaterial->SetName("ui");
-	mQuad->Render(world.transpose(), Matrix4f::Identity(), transform.transpose());
+	Matrix4x4f w, v, p;
+	BuildMatrixIdentity(v);
+	mQuad->Render(world, v, transform);
 }
 

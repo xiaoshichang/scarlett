@@ -6,6 +6,7 @@
 #include "Runtime/Core/Application/Application.h"
 #include "Runtime/Utils/Logging.h"
 
+using namespace scarlett;
 
 scarlett::Skeleton::Skeleton(const aiNode* armature, const aiScene* scene)
 {
@@ -40,18 +41,18 @@ void scarlett::Skeleton::CalculateFinalMatrix()
 	auto m3 = mRoot->mParent->mParent->mParent->mTransformation;
 	auto m4 = mRoot->mParent->mParent->mParent->mParent->mTransformation;
 	auto m = m4*m3*m2*m1;
-	Matrix4f _m;
+	Matrix4x4f _m;
 	AssimpMatrix2Eigen(m, _m);
 	_CalculateFinalMatrix(mRoot, _m);
 }
 
-void scarlett::Skeleton::_CalculateFinalMatrix(const aiNode * node, const Matrix4f & parentTransform)
+void scarlett::Skeleton::_CalculateFinalMatrix(const aiNode * node, const Matrix4x4f & parentTransform)
 {
 	
 	auto nodeName = node->mName;
 	std::string name(nodeName.C_Str());
 	auto transform = node->mTransformation;
-	Matrix4f NodeTransformation;
+	Matrix4x4f NodeTransformation;
 
 	float TicksPerSecond = mScene->mAnimations[0]->mTicksPerSecond != 0 ?
 		mScene->mAnimations[0]->mTicksPerSecond : 25.0f;
@@ -91,12 +92,11 @@ void scarlett::Skeleton::_CalculateFinalMatrix(const aiNode * node, const Matrix
 
 	AssimpMatrix2Eigen(transform, NodeTransformation);
 
-	Matrix4f globalMatrix =  parentTransform * NodeTransformation;
+	Matrix4x4f globalMatrix =  parentTransform * NodeTransformation;
 
 	if (mBoneMap.find(name) != mBoneMap.end()) {
 		int boneIndex = mBoneMap[name];
 		mBoneTransforms[boneIndex] =  globalMatrix * mBoneOffeset[boneIndex];
-		mBoneTransforms[boneIndex].transposeInPlace();
 	}
 
 	for (int i = 0; i < node->mNumChildren; i++) {

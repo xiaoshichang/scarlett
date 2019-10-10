@@ -21,11 +21,12 @@ std::string Sprite::GetTexture() {
 	return mTexture;
 }
 
-void Sprite::Render(Renderer* renderer, const Matrix4f& transform, uint32_t flags) {
+void Sprite::Render(Renderer* renderer, const Matrix4x4f& transform, uint32_t flags) {
 
 	float width = 102.4f;
 	float height = 76.8f;
-	auto world = BuildScaleMatrix(Vector3f(width / 2 / 512, height / 2 / 384, 1));
+	Matrix4x4f world;
+	BuildMatrixScale(world, width / 2 / 512, height / 2 / 384, 1);
 
 	renderer->RenderSprite(mTexture, world, transform, flags);
 }

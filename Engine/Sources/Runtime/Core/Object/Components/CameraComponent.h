@@ -18,9 +18,9 @@ namespace scarlett {
 		virtual int Initialize() noexcept;
 		virtual void Finalize() noexcept;
 
-		const Matrix4f	GetViewMatrix();
-		const Matrix4f  GetViewMatrixOrigin();
-		const Matrix4f	GetPerspectiveMatrix();
+		const Matrix4x4f	GetViewMatrix();
+		const Matrix4x4f	GetViewMatrixOrigin();
+		const Matrix4x4f	GetPerspectiveMatrix();
 
 		CameraType	GetType() { return mCameraType; }
 		void		SetType(CameraType type) { mCameraType = type; mViewDirty = true; mProjectionDirty = true; }
@@ -46,13 +46,13 @@ namespace scarlett {
 		CameraType	mCameraType;
 
 		bool		mViewDirty;
-		Matrix4f	mViewMatrix;
+		Matrix4x4f	mViewMatrix;
 		Vector3f	mPosition;
 		Vector3f	mLookat;
 		Vector3f	mUp;
 
 		bool		mProjectionDirty;
-		Matrix4f	mProjectionMatrix;
+		Matrix4x4f	mProjectionMatrix;
 		float		mNearClip;
 		float		mFarClip;
 		float		mFov;

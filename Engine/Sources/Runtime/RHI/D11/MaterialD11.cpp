@@ -34,7 +34,7 @@ void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 		}
 	}
 	auto camera = GApp->mWorld->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-	cb.camPos = Vector4f(camera->GetPosition().x(), camera->GetPosition().y(), camera->GetPosition().z(), 1.0f);
+	cb.camPos = Vector4f(camera->GetPosition().x, camera->GetPosition().y, camera->GetPosition().z, 1.0f);
 	mShader->SetConstantBuffer(cb);
 
 	auto skybox = camera->GetSkybox();

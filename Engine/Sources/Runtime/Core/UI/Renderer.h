@@ -11,7 +11,7 @@ namespace scarlett {
 		virtual ~Renderer(){}
 
 	public:
-		void RenderSprite(const std::string& texture, const Matrix4f & world, const Matrix4f& transform, uint32_t flags);
+		void RenderSprite(const std::string& texture, const Matrix4x4f& world, const Matrix4x4f& transform, uint32_t flags);
 
 	private:
 

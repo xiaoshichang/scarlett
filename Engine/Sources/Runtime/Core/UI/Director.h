@@ -28,7 +28,7 @@ namespace scarlett {
 		Vector2f GetResolution();
 		void SetResolution(const Vector2f& resolution);
 
-		const Matrix4f GetMVPMatrix();
+		const Matrix4x4f GetMVPMatrix();
 
 		UIEventDispatch* GetDispatcher() { return mDispatcher; }
 

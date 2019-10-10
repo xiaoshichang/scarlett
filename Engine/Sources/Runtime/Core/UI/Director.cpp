@@ -34,19 +34,19 @@ int Director::Initialize() noexcept {
 	listener->onKeyPressed = [=](unsigned char code, UIEvent* event) {
 		if (code == 'D') {
 			auto pos = sprite->GetPosition();
-			sprite->SetPosition(pos.x() + 10, pos.y());
+			sprite->SetPosition(pos.x + 10, pos.y);
 		}
 		else if (code == 'A') {
 			auto pos = sprite->GetPosition();
-			sprite->SetPosition(pos.x() - 10, pos.y());
+			sprite->SetPosition(pos.x - 10, pos.y);
 		}
 		else if (code == 'W') {
 			auto pos = sprite->GetPosition();
-			sprite->SetPosition(pos.x(), pos.y() + 10);
+			sprite->SetPosition(pos.x, pos.y + 10);
 		}
 		else if (code == 'S') {
 			auto pos = sprite->GetPosition();
-			sprite->SetPosition(pos.x(), pos.y() - 10);
+			sprite->SetPosition(pos.x, pos.y - 10);
 		}
 	};
 
@@ -104,7 +104,8 @@ void Director::SetResolution(const Vector2f& resolution) {
 	m_Resolution = resolution;
 }
 
-const Matrix4f Director::GetMVPMatrix() {
-	Matrix4f mvp = Matrix4f::Identity();
+const Matrix4x4f Director::GetMVPMatrix() {
+	Matrix4x4f mvp;
+	BuildMatrixIdentity(mvp);
 	return mvp;
 }

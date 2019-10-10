@@ -7,13 +7,13 @@ namespace scarlett {
 
 	struct ConstantBuffer
 	{
-		Matrix4f world;
-		Matrix4f view;
-		Matrix4f projection;
+		Matrix4x4f world;
+		Matrix4x4f view;
+		Matrix4x4f projection;
 		Vector4f debugColor;
 		Vector4f pbrParameter;
 		Vector4f camPos;
 
-		Matrix4f boneMatrix[32];
+		Matrix4x4f boneMatrix[32];
 	};
 }

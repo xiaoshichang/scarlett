@@ -116,18 +116,23 @@ void scarlett::MeshGL::Render(Entity* self) noexcept
 	ConstantBuffer cb;
 
 	if (mMeshType == MT_Skybox) {
-		cb.world = Matrix4f::Identity();
+		BuildMatrixIdentity(cb.world);
 		auto world = self->GetWorld();
 		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-		cb.view = camera->GetViewMatrixOrigin().transpose();
-		cb.projection = camera->GetPerspectiveMatrix().transpose();
+		cb.view = camera->GetViewMatrixOrigin();
+		TransposeInPlace(cb.view);
+		cb.projection = camera->GetPerspectiveMatrix();
+		TransposeInPlace(cb.projection);
 	}
 	else if (mMeshType == MT_Model) {
-		cb.world = self->GetComponent<TransformComponent>()->GetWorldMatrix().transpose();
+		cb.world = self->GetComponent<TransformComponent>()->GetWorldMatrix();
+		TransposeInPlace(cb.world);
 		auto world = self->GetWorld();
 		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-		cb.view = camera->GetViewMatrix().transpose();
-		cb.projection = camera->GetPerspectiveMatrix().transpose();
+		cb.view = camera->GetViewMatrix();
+		TransposeInPlace(cb.view);
+		cb.projection = camera->GetPerspectiveMatrix();
+		TransposeInPlace(cb.projection);
 	}
 	
 	mMaterial->Apply(cb);
@@ -141,7 +146,7 @@ void scarlett::MeshGL::Render(Entity* self) noexcept
 	}
 }
 
-void scarlett::MeshGL::Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept
+void scarlett::MeshGL::Render(const Matrix4x4f& world, const Matrix4x4f& view, const Matrix4x4f& projection) noexcept
 {
 	ConstantBuffer cb;
 	cb.world = world;

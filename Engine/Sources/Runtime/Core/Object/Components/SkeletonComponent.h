@@ -16,7 +16,7 @@ namespace scarlett {
 		Skeleton(const aiNode* armature, const aiScene* scene);
 		virtual ~Skeleton();
 		void	CalculateFinalMatrix();
-		void	_CalculateFinalMatrix(const aiNode* node, const Matrix4f& parentTransform);
+		void	_CalculateFinalMatrix(const aiNode* node, const Matrix4x4f& parentTransform);
 
 		void	CalcInterpolatedRotation(aiQuaternion& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
 		void	CalcInterpolatedScale(aiVector3D& Out, float AnimationTime, const aiNodeAnim* pNodeAnim);
@@ -30,9 +30,9 @@ namespace scarlett {
 		const aiNode*							mRoot;
 		const aiScene*							mScene;
 		std::unordered_map<std::string, int>	mBoneMap;
-		Matrix4f								mOrigin;
-		Matrix4f								mBoneTransforms[32];
-		Matrix4f	mBoneOffeset[32];
+		Matrix4x4f								mOrigin;
+		Matrix4x4f								mBoneTransforms[32];
+		Matrix4x4f								mBoneOffeset[32];
 	};
 
 	class SkeletonComponent : public IComponent{

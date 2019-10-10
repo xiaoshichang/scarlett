@@ -18,11 +18,11 @@ namespace scarlett {
 		void		SetPosition(Vector3f position) { mPosition = position; mWorldMatrixDirty = true; }
 		void		SetRotation(Vector3f rotation) { mRotation = rotation; mWorldMatrixDirty = true; }
 		void		SetScale(Vector3f scale) { mScale = scale; mWorldMatrixDirty = true;}
-		Matrix4f	GetWorldMatrix();
+		Matrix4x4f	GetWorldMatrix();
 
 	private:
 		bool		mWorldMatrixDirty;
-		Matrix4f	mWorldMatrix;
+		Matrix4x4f	mWorldMatrix;
 		Vector3f	mPosition;
 		Vector3f	mRotation;
 		Vector3f	mScale;

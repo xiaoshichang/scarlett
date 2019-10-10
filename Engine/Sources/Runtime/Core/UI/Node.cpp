@@ -156,7 +156,7 @@ void UINode::Render() {
 	Render(renderer, mvp, UINodeRenderFlag::TransformDirty);
 }
 
-void UINode::Render(Renderer* renderer, const Matrix4f& transform, uint32_t flags) {
+void UINode::Render(Renderer* renderer, const Matrix4x4f& transform, uint32_t flags) {
 }
 
 void UINode::Visit() {
@@ -165,7 +165,7 @@ void UINode::Visit() {
 	Visit(render, mvp, UINodeRenderFlag::TransformDirty);
 }
 
-void UINode::Visit(Renderer* renderer, const Matrix4f& parentTransform, uint32_t flags) {
+void UINode::Visit(Renderer* renderer, const Matrix4x4f& parentTransform, uint32_t flags) {
 	if (!m_bVisible) {
 		return;
 	}
@@ -192,18 +192,19 @@ void UINode::Visit(Renderer* renderer, const Matrix4f& parentTransform, uint32_t
 	}
 }
 
-Matrix4f UINode::GetNodeToParentTransform() {
+Matrix4x4f UINode::GetNodeToParentTransform() {
 	if (m_TransformDirty) {
-		m_ToParentMatrix = Matrix4f::Identity();
-		auto offset = Vector3f(m_Position.x() / 512, m_Position.y() / 384, 0);
-		auto translation = BuildTranslationMatrix(offset);
+		BuildMatrixIdentity(m_ToParentMatrix);
+		auto offset = Vector3f(m_Position.x / 512, m_Position.y / 384, 0);
+		Matrix4x4f translation;
+		BuildMatrixTranslation(translation, offset.x, offset.y, offset.z);
 		m_ToParentMatrix =  m_ToParentMatrix * translation;
 		m_TransformDirty = false;
 	}
 	return m_ToParentMatrix;
 }
 
-uint32_t UINode::ProcessParentFlags(const Matrix4f& parentTransform, uint32_t flags) {
+uint32_t UINode::ProcessParentFlags(const Matrix4x4f& parentTransform, uint32_t flags) {
 	uint32_t _flags = flags;
 	_flags |= (m_bTransformUpdated ? UINodeRenderFlag::TransformDirty : 0);
 

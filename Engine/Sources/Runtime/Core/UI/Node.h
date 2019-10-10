@@ -40,14 +40,14 @@ namespace scarlett {
 		virtual bool GetVisible();
 		virtual void SetVisible(bool v);
 
-		virtual uint32_t ProcessParentFlags(const Matrix4f& parentTransform, uint32_t flags);
-		virtual Matrix4f GetNodeToParentTransform();
+		virtual uint32_t ProcessParentFlags(const Matrix4x4f& parentTransform, uint32_t flags);
+		virtual Matrix4x4f GetNodeToParentTransform();
 
 		virtual void Update();
 		virtual void Render();
-		virtual void Render(Renderer* render, const Matrix4f& parentTransform, uint32_t flags);
+		virtual void Render(Renderer* render, const Matrix4x4f& parentTransform, uint32_t flags);
 		virtual void Visit();
-		virtual void Visit(Renderer* render, const Matrix4f& parentTransform, uint32_t flags);
+		virtual void Visit(Renderer* render, const Matrix4x4f& parentTransform, uint32_t flags);
 
 		virtual ~UINode();
 
@@ -63,10 +63,10 @@ namespace scarlett {
 		Vector2f m_Position;
 		int m_Localzorder;
 
-		Matrix4f m_Transform;
-		Matrix4f m_ToParentMatrix;
+		Matrix4x4f m_Transform;
+		Matrix4x4f m_ToParentMatrix;
 		bool m_TransformDirty;
-		Matrix4f m_Inverse;
+		Matrix4x4f m_Inverse;
 		bool m_InverseDirty;
 		bool m_bVisible;
 		bool m_bTransformUpdated;

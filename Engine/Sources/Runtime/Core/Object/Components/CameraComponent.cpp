@@ -4,6 +4,7 @@
 #include "Runtime/Core/Application/Application.h"
 
 using namespace DirectX;
+using namespace scarlett;
 
 scarlett::SkyBox::SkyBox(const std::string & path, CameraComponent* comp):
 	mComp(comp)
@@ -107,37 +108,37 @@ void scarlett::CameraComponent::Finalize() noexcept
 {
 }
 
-const Matrix4f scarlett::CameraComponent::GetViewMatrix()
+const Matrix4x4f scarlett::CameraComponent::GetViewMatrix()
 {
 	if (mViewDirty) {
-		mViewMatrix = BuildViewLookatLH(mPosition, mLookat, mUp);
+		BuildMatrixViewLookatLH(mViewMatrix, mPosition, mLookat, mUp);
 		mViewDirty = false;
 	}
 
 	return mViewMatrix;
 }
 
-const Matrix4f scarlett::CameraComponent::GetViewMatrixOrigin()
+const Matrix4x4f scarlett::CameraComponent::GetViewMatrixOrigin()
 {
 	auto m = GetViewMatrix();
-	m(0, 3) = 0.0f;
-	m(1, 3) = 0.0f;
-	m(2, 3) = 0.0f;
+	m[0][3] = 0.0f;
+	m[1][3] = 0.0f;
+	m[2][3] = 0.0f;
 	return m;
 }
 
-const Matrix4f scarlett::CameraComponent::GetPerspectiveMatrix()
+const Matrix4x4f scarlett::CameraComponent::GetPerspectiveMatrix()
 {	
 	float width = GlobalConfig::GetInstance()->GetScreenWidth();
 	float height = GlobalConfig::GetInstance()->GetScreenHeight();
 
 	if (mProjectionDirty) {
 		if (mCameraType == CameraType::Orth) {
-			mProjectionMatrix = BuildOrthoLH(width, height, mNearClip, mFarClip);
+			BuildMatrixOrthoLH(mProjectionMatrix, width, height, mNearClip, mFarClip);
 		}
 		else
 		{
-			mProjectionMatrix = BuildPerspectiveFovLH(mFov, width / height, mNearClip, mFarClip);
+			BuildMatrixPerspectiveFovLH(mProjectionMatrix, mFov, width / height, mNearClip, mFarClip);
 		}
 	}
 	return mProjectionMatrix;

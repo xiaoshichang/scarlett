@@ -9,18 +9,20 @@ TransformComponent::TransformComponent() :
 	mWorldMatrixDirty(true)
 {}
 
-Matrix4f scarlett::TransformComponent::GetWorldMatrix()
+Matrix4x4f scarlett::TransformComponent::GetWorldMatrix()
 {
 	if (mWorldMatrixDirty) {
+		Matrix4x4f translation, scaling, rx, ry, rz;
 		auto position = GetPosition();
 		auto scale = GetScale();
 		auto rotation = GetRotation();
-		auto translation = BuildTranslationMatrix(position);
-		auto scaling = BuildScaleMatrix(scale);
+		BuildMatrixTranslation(translation, position.x, position.y, position.z);
+		BuildMatrixScale(scaling, scale.x, scale.y, scale.z);
 
-		auto rx = BuildRotationMatrix(Vector3f(1, 0, 0), rotation.x());
-		auto ry = BuildRotationMatrix(Vector3f(0, 1, 0), rotation.y());
-		auto rz = BuildRotationMatrix(Vector3f(0, 0, 1), rotation.z());
+		BuildMatrixRotationX(rx, rotation.x);
+		BuildMatrixRotationY(ry, rotation.y);
+		BuildMatrixRotationZ(rz, rotation.z);
+
 		mWorldMatrix = translation * rz * ry * rx * scaling; // make sure translation matrix go first.
 		mWorldMatrixDirty = false;
 	}

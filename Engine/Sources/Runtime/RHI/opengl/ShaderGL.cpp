@@ -112,21 +112,21 @@ void scarlett::ShaderGL::SetConstantBuffer(const ConstantBuffer & cbuffer) noexc
 	unsigned int location;
 	location = glGetUniformLocation(mProgram, "worldMatrix");
 	if (location != -1) {
-		glUniformMatrix4fv(location, 1, true, cbuffer.world.data());
+		glUniformMatrix4fv(location, 1, true, cbuffer.world);
 	}
 
 	location = glGetUniformLocation(mProgram, "viewMatrix");
 	if (location != -1) {
-		glUniformMatrix4fv(location, 1, true, cbuffer.view.data());
+		glUniformMatrix4fv(location, 1, true, cbuffer.view);
 	}
 
 	location = glGetUniformLocation(mProgram, "projectionMatrix");
 	if (location != -1) {
-		glUniformMatrix4fv(location, 1, true, cbuffer.projection.data());
+		glUniformMatrix4fv(location, 1, true, cbuffer.projection);
 	}
 
 	location = glGetUniformLocation(mProgram, "inputColor");
 	if (location != -1) {
-		glUniform4fv(location, 1, cbuffer.debugColor.data());
+		glUniform4fv(location, 1, cbuffer.debugColor);
 	}
 }

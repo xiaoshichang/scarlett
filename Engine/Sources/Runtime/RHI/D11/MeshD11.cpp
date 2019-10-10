@@ -7,6 +7,7 @@
 #include "Runtime/Core/Application/Application.h"
 #include "Foundation/Assert.h"
 
+using namespace scarlett;
 
 void AppendBoneWeight(int* idxes, float* weights, int vidx, int bidx, float weight) {
 	for (int offset = 0; offset < 4; offset++) {
@@ -357,18 +358,18 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 
 	ConstantBuffer cb;
 	if (mMeshType == MT_Skybox) {
-		cb.world = Matrix4f::Identity();
+		BuildMatrixIdentity(cb.world);
 		auto world = self->GetWorld();
 		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-		cb.view = camera->GetViewMatrixOrigin().transpose();
-		cb.projection = camera->GetPerspectiveMatrix().transpose();
+		cb.view = camera->GetViewMatrixOrigin();
+		cb.projection = camera->GetPerspectiveMatrix();
 	}
 	else if (mMeshType == MT_Model) {
-		cb.world = self->GetComponent<TransformComponent>()->GetWorldMatrix().transpose();
+		cb.world = self->GetComponent<TransformComponent>()->GetWorldMatrix();
 		auto world = self->GetWorld();
 		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
-		cb.view = camera->GetViewMatrix().transpose();
-		cb.projection = camera->GetPerspectiveMatrix().transpose();
+		cb.view = camera->GetViewMatrix();
+		cb.projection = camera->GetPerspectiveMatrix();
 	}
 
 	auto skeleton = self->GetComponent<SkeletonComponent>();
@@ -389,7 +390,7 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 
 }
 
-void scarlett::MeshD11::Render(const Matrix4f& world, const Matrix4f& view, const Matrix4f& projection) noexcept
+void scarlett::MeshD11::Render(const Matrix4x4f& world, const Matrix4x4f& view, const Matrix4x4f& projection) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);

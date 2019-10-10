@@ -1,43 +1,93 @@
 #include <iostream>
 #include "Runtime/Core/Math/ScltMath.h"
 
+using namespace std;
 using namespace scarlett;
 
 int main() {
-	Matrix3f m;
-	m << 1, 2, 3, 4, 5, 6, 7, 8, 9;
-	std::cout << m << std::endl << std::endl;
+	cout << "PI:" << PI << endl;
+	cout << "TWO_PI:" << TWO_PI << endl;
 
-	Matrix3f t = m.transpose();
-	std::cout << t << std::endl << std::endl;
+	Vector3f v4 = { 1, 2, 3 };
+	Vector3f v5 = { 1, 2, 3 };
 
-	Matrix4f r = Matrix4f::Random();
-	std::cout << r << std::endl << std::endl;
 
-	auto translation = Affine3f(Translation3f(1.0f, 2.0f, 3.0f));
-	std::cout << translation.matrix() << std::endl << std::endl;
+	Vector3f v6 = { 1, 2, 4 };
 
-	auto scale = Affine3f(Scaling(2.0f, 2.0f, 2.0f));
-	std::cout << scale.matrix() << std::endl << std::endl;
 
-	Vector3f eye = { 1.0f, 1.0f, 1.0f };
-	Vector3f lookat = { 0.0f, 0.0f, 0.0f };
-	Vector3f up = { 0.0f, 1.0f, 0.0f };
+	Vector2f v21 = { 100, 99 };
+	Vector2f v22 = { -1, 0.12 };
+	Vector2f v23;
+	VectorAdd(v23, v21, v22);
+	cout << "VectorAdd of " << v21 << " and " << v22 << " is " << v23 << endl;
+	Vector2f v7 = { 99, 99.12 };
 
-	auto view1 = BuildViewLookatLH(eye, lookat, up);
-	std::cout << view1 << std::endl << std::endl;
-	auto view2 = BuildViewLookatRH(eye, lookat, up);
-	std::cout << view2 << std::endl << std::endl;
 
-	auto p1 = BuildOrthoRH(1024.0f, 768.0f, 1.0f, 1000.0f);
-	std::cout << p1 << std::endl << std::endl;
-	auto p2 = BuildOrthoLH(1024.0f, 768.0f, 1.0f, 1000.0f);
-	std::cout << p2 << std::endl << std::endl;
+	Vector3f v31 = { 1, 2, 3 };
+	Vector3f v32 = { 2, 2, 2 };
+	float r1;
+	r1 = DotProduct(v31, v32);
+	cout << "DotProduct of " << v31 << " and " << v32 << " is " << r1 << endl;
+	if (r1 != 12.0f) {
+		return 1;
+	}
 
-	auto p3 = BuildPerspectiveFovRH(PI * 0.5, 1024.0f / 768.0f, 1.0f, 1000.0f);
-	std::cout << p3 << std::endl << std::endl;
-	auto p4 = BuildPerspectiveFovLH(PI * 0.5, 1024.0f / 768.0f, 1.0f, 1000.0f);
-	std::cout << p4 << std::endl << std::endl;
+	Vector3f v1 = { 1, 2, 3 };
+	Vector3f v2 = { 2, 3, 4 };
+	Vector3f v3;
+	CrossProduct(v3, v1, v2);
+	cout << "CrossProduct of " << v1 << " and " << v2 << " is " << v3 << endl;
+	Vector3f v9 = { -1, 2, -1 };
+
+	Vector3f v10 = { 5, 0, 0 };
+	Vector3f v11 = { 1, 0, 0 };
+	Normalize(v10);
+
+
+	Vector3f v12 = { 0, 2, 0 };
+	Vector3f v13 = { 0, 1, 0 };
+	Normalize(v12);
+
+
+	Vector3f v14 = { 1, 1, 1 };
+	Normalize(v14);
+	cout << "Normalize " << "{ 1, 1, 1 }" << " is " << v14 << endl;
+
+	Matrix4x4f m1 = { {	{
+		{ 1, 2, 3, 4 },
+		{ 1, 2, 3, 4 },
+		{ 1, 2, 3, 4 },
+		{ 1, 2, 3, 4 },
+		} } };
+
+	Matrix4x4f m2 = { { {
+		{ 1, 2, 3, 4 },
+		{ 1, 2, 3, 4 },
+		{ 1, 2, 3, 4 },
+		{ 1, 2, 3, 4 },
+		} } };
+
+	Matrix4x4f m3, m4;
+	BuildMatrixTranslation(m3, 1, 1, 1);
+	BuildMatrixTranslation(m4, -1, -1, 0);
+
+	Matrix<float, 3, 3> m5 = { { {
+		{ 1, 3, 1},
+		{ 2, 1, 1 },
+		{ 2, 2, 1 },
+		} } };
+
+	Matrix<float, 3, 3> m7 = { { {
+		{ -1, -1, 2},
+		{ 0, -1, 1 },
+		{ 2, 4, -5 },
+		} } };
+
+	Matrix<float, 3, 3> m6;
+	MatrixInverse(m6, m5);
+	cout << m6 << endl;
+	MatrixMultiBy(m6, m5, m7);
+	cout << m6 << endl;
 
 	return 0;
 }
