@@ -8,7 +8,6 @@ int scarlett::Entity::Initialize() noexcept {
 
 int scarlett::Entity::Initialize(scarlett::World* world) noexcept {
 	mWorld = world;
-
 	AddComponent<TransformComponent>();
 
 	return 0;

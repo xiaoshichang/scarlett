@@ -19,12 +19,15 @@ scarlett::World::World() :
 
 int scarlett::World::Initialize() noexcept
 {
-	mAnimationSystem = new AnimationSystem(this);
-	mAnimationSystem->Initialize();
+	mTerrainSystem = new TerrainSystem(this);
+	mTerrainSystem->Initialize();
 
 	mMeshRenderSystem = new MeshRenderSystem(this);
 	mMeshRenderSystem->Initialize();
 
+	mAnimationSystem = new AnimationSystem(this);
+	mAnimationSystem->Initialize();
+	
 	mCameraSystem = new CameraSystem(this);
 	mCameraSystem->Initialize();
 
@@ -38,21 +41,26 @@ void scarlett::World::Finalize() noexcept
 {
 	mEntities.clear();
 
-	mMeshRenderSystem->Finalize();
+	mRenderDebugSystem->Finalize();
 	mCameraSystem->Finalize();
+	mAnimationSystem->Finalize();
+	mMeshRenderSystem->Finalize();
+	mTerrainSystem->Finalize();
 }
 
 void scarlett::World::Tick() noexcept
 {
 	mAnimationSystem->Tick();
 	mMeshRenderSystem->Tick();
+	mTerrainSystem->Tick();
 }
 
 void scarlett::World::Render() noexcept
 {
 	mCameraSystem->RenderBackground();
+	mTerrainSystem->Render();
 	mMeshRenderSystem->Render();
-	mRenderDebugSystem->Render();
+	//mRenderDebugSystem->Render();
 }
 
 std::shared_ptr<Entity> scarlett::World::CreateEntity()
@@ -145,6 +153,8 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		skeleton->InitializeHeirarchy(armature, scene);
 	}
 
+	auto terrain = CreateEntity();
+	terrain->AddComponent<TerrainComponent>();
 }
 
 void scarlett::World::DumpEntities()

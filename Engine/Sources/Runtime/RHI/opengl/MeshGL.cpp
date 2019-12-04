@@ -7,6 +7,10 @@
 
 #include "Foundation/Assert.h"
 
+scarlett::MeshGL::MeshGL()
+{
+}
+
 scarlett::MeshGL::MeshGL(aiMesh * mesh, const aiScene * world)
 {
 	auto mgrgl = (GraphicsMgrGL*)GApp->mGraphicsManager;
@@ -111,6 +115,10 @@ void scarlett::MeshGL::InitializeUI() noexcept
 {
 }
 
+void scarlett::MeshGL::InitializeTerrain() noexcept
+{
+}
+
 void scarlett::MeshGL::Render(Entity* self) noexcept
 {
 	ConstantBuffer cb;
@@ -163,7 +171,6 @@ void scarlett::MeshGL::Render(const Matrix4x4f& world, const Matrix4x4f& view, c
 		glDrawArrays(GetMode(), 0x00, mPositions->GetVertextCount());
 	}
 }
-
 
 GLenum scarlett::MeshGL::GetMode()
 {

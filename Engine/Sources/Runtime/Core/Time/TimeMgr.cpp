@@ -22,6 +22,7 @@ void scarlett::TimeMgr::Tick() noexcept
 		m_fFPS = m_frameCount;
 		m_frameCount = 0;
 		m_LastStatisticTime = m_frameStartTime;
+		SCARLETT_LOG(info) << "FPS: " << m_fFPS;
 	}
 	else {
 		m_frameCount++;
@@ -44,11 +45,11 @@ void scarlett::TimeMgr::PostTick() noexcept
 {
 	m_frameEndTime = std::chrono::high_resolution_clock::now();
 	auto total = m_frameEndTime - m_frameStartTime;
-	long long interval = 16666666;
+	long long interval = 15000000;
 	long long sleep = interval - total.count();
-	if (sleep > 0) {
+	/*if (sleep > 0) {
 		MicroSleep(sleep);
-	}
+	}*/
 }
 
 void scarlett::TimeMgr::MicroSleep(unsigned long long ns) noexcept

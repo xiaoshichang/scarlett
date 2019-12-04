@@ -19,6 +19,9 @@ namespace scarlett {
 
 	private:
 		boost::property_tree::ptree ptree;
+		int screenWidth;
+		int screenHeight;
+		std::string applicationName;
 
 	};
 	typedef Singleton<ApplicationConfig> GlobalConfig;

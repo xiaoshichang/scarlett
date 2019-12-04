@@ -39,6 +39,8 @@ void scarlett::MeshRenderSystem::Render()
 	if (!IsActive())
 		return;
 
+	// todo: visibility Culling
+
 	for (auto comp : mComponents) {
 		if (comp->IsVisible()) {
 

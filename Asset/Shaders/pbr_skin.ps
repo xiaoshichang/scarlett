@@ -24,9 +24,9 @@ float4 main(PBR_PIXEL_INPUT input) : SV_TARGET
     float3 F0 = float3(0.04, 0.04, 0.04); 
     F0 = lerp(F0, albedo, metallic);
 
-    float3 L = normalize(float3(0, 1, -1));
+    float3 L = normalize(float3(0, 1, 1));	// sum direction
     float3 H = normalize(V + L);
-    float3 radiance = float3(10.0, 10.0, 10.0);
+    float3 radiance = float3(20.0, 20.0, 20.0);
 
     float NDF = DistributionGGX(N, H, roughness);   
     float G = GeometrySmith(N, V, L, roughness);  

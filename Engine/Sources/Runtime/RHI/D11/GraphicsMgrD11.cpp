@@ -320,6 +320,12 @@ std::shared_ptr<IIndexBuffer> scarlett::GraphicsMgrD11::CreateIndexBuffer(void *
 }
 
 
+std::shared_ptr<IMesh> scarlett::GraphicsMgrD11::CreateRenderMesh() noexcept
+{
+	auto ptr = std::make_shared<MeshD11>();
+	return ptr;
+}
+
 std::shared_ptr<IMesh> scarlett::GraphicsMgrD11::CreateRenderMesh(aiMesh * mesh, const aiScene* world) noexcept
 {
 	auto ptr = std::make_shared<MeshD11>(mesh, world);
@@ -370,7 +376,7 @@ std::shared_ptr<ISamplerState> scarlett::GraphicsMgrD11::CreateSamplerState() no
 
 void scarlett::GraphicsMgrD11::LoadShaders() noexcept
 {
-	std::vector<std::string> shaders = {"pbr", "debug", "pbr_skin", "skybox", "ui"};
+	std::vector<std::string> shaders = {"pbr", "debug", "pbr_skin", "skybox", "ui", "terrain_low", "terrain_high"};
 	for (auto shader : shaders) {
 		auto vs = "Shaders/" + shader + ".vs";
 		auto ps = "Shaders/" + shader + ".ps";

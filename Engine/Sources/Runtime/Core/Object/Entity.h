@@ -8,6 +8,8 @@
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
 #include "Runtime/Core/Object/Components/CameraComponent.h"
 #include "Runtime/Core/Object/Components/SkeletonComponent.h"
+#include "Runtime/Core/Object/Components/TerrainComponent.h"
+
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -53,6 +55,7 @@ namespace scarlett {
 		MeshRenderComponent*	mMeshRender;
 		CameraComponent*		mCamera;
 		SkeletonComponent*		mSkeleton;
+		TerrainComponent*		mTerrain;
 
 	};
 
@@ -88,6 +91,14 @@ namespace scarlett {
 			mSkeleton->Initialize();
 			comp = mSkeleton;
 		}
+
+		else if (std::is_same<T, TerrainComponent>::value) {
+			mTerrain = new TerrainComponent();
+			mTerrain->SetMaster(this);
+			mTerrain->Initialize();
+			comp = mTerrain;
+		}
+
 		return (T*)comp;
 	}
 
@@ -106,6 +117,10 @@ namespace scarlett {
 		else if (std::is_same<T, SkeletonComponent>::value) {
 			ret = mSkeleton;
 		}
+		else if (std::is_same<T, TerrainComponent>::value) {
+			ret = mTerrain;
+		}
+
 		return (T*)ret;
 	}
 
@@ -131,6 +146,11 @@ namespace scarlett {
 			mSkeleton->Finalize();
 			delete mSkeleton;
 			mSkeleton = nullptr;
+		}
+		else if (std::is_same<T, TerrainComponent>::value) {
+			mTerrain->Finalize();
+			delete mTerrain;
+			mTerrain = nullptr;
 		}
 	}
 

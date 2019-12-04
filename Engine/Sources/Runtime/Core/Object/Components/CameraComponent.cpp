@@ -86,7 +86,7 @@ void scarlett::SkyBox::Render()
 
 scarlett::CameraComponent::CameraComponent() :
 	mCameraType(CameraType::Perspective),
-	mPosition(Vector3f(10, 10, 20)),
+	mPosition(Vector3f(50, 50, 50)),
 	mLookat(Vector3f(0, 1, 0)),
 	mUp(Vector3f(0, 1, 0)),
 	mNearClip(0.01f),
@@ -96,7 +96,7 @@ scarlett::CameraComponent::CameraComponent() :
 	mProjectionDirty(true),
 	mSkybox(nullptr)
 {
-	SetSkybox("./Asset/Textures/skybox/output_skybox.dds");
+	//SetSkybox("./Asset/Textures/skybox/output_skybox.dds");
 }
 
 int scarlett::CameraComponent::Initialize() noexcept
@@ -129,10 +129,9 @@ const Matrix4x4f scarlett::CameraComponent::GetViewMatrixOrigin()
 
 const Matrix4x4f scarlett::CameraComponent::GetPerspectiveMatrix()
 {	
-	float width = GlobalConfig::GetInstance()->GetScreenWidth();
-	float height = GlobalConfig::GetInstance()->GetScreenHeight();
-
 	if (mProjectionDirty) {
+		float width = GlobalConfig::GetInstance()->GetScreenWidth();
+		float height = GlobalConfig::GetInstance()->GetScreenHeight();
 		if (mCameraType == CameraType::Orth) {
 			BuildMatrixOrthoLH(mProjectionMatrix, width, height, mNearClip, mFarClip);
 		}
@@ -140,6 +139,7 @@ const Matrix4x4f scarlett::CameraComponent::GetPerspectiveMatrix()
 		{
 			BuildMatrixPerspectiveFovLH(mProjectionMatrix, mFov, width / height, mNearClip, mFarClip);
 		}
+		mProjectionDirty = false;
 	}
 	return mProjectionMatrix;
 }

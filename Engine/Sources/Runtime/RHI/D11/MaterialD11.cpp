@@ -64,6 +64,14 @@ void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 			mgrd11->m_deviceContext->PSSetShaderResources(0, 1, &(_texuter->mView));
 			mgrd11->m_deviceContext->PSSetSamplers(0, 1, &(_sampler->m_sampleState));
 		}
+
+		if (pair.first == "terrain") {
+			auto _texuter = dynamic_pointer_cast<TextureD11>(mTextures["terrain"]);
+			auto _sampler = dynamic_pointer_cast<SamplerStateD11>(mSamplerState["terrain"]);
+			mgrd11->m_deviceContext->PSSetShaderResources(0, 1, &(_texuter->mView));
+			mgrd11->m_deviceContext->PSSetSamplers(0, 1, &(_sampler->m_sampleState));
+		}
+
 	}
 
 	auto _depth = dynamic_pointer_cast<DepthStencilStateD11>(mDepthStencilState);

@@ -43,11 +43,13 @@ ${SourcesPath}/Runtime/Core/Object/Components/TransformComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/MeshRenderComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/CameraComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/SkeletonComponent.cpp
+${SourcesPath}/Runtime/Core/Object/Components/TerrainComponent.cpp
 
 ${SourcesPath}/Runtime/Core/Object/System/MeshRenderSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/CameraSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/RenderDebugSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/AnimationSystem.cpp
+${SourcesPath}/Runtime/Core/Object/System/TerrainSystem.cpp
 
 ${SourcesPath}/Runtime/Core/Time/TimeMgr.cpp
 ${SourcesPath}/Runtime/Core/Input/InputMgr.cpp

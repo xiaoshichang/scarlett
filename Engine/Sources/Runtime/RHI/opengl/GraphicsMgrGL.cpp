@@ -61,6 +61,11 @@ std::shared_ptr<IIndexBuffer> scarlett::GraphicsMgrGL::CreateIndexBuffer(void * 
 	return nullptr;
 }
 
+std::shared_ptr<IMesh> scarlett::GraphicsMgrGL::CreateRenderMesh() noexcept
+{
+	return std::shared_ptr<MeshGL>();
+}
+
 std::shared_ptr<IMesh> scarlett::GraphicsMgrGL::CreateRenderMesh(aiMesh * mesh, const aiScene * world) noexcept
 {
 	auto ptr = std::make_shared<MeshGL>(mesh, world);

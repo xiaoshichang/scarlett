@@ -16,23 +16,22 @@ scarlett::ApplicationConfig::ApplicationConfig()
 		SCARLETT_LOG(error) << e.what();
 		SCARLETT_ASSERT(false);
 	}
-	
+	screenWidth = ptree.get_child("screen_width").get_value<int>();
+	screenHeight = ptree.get_child("screen_height").get_value<int>();
+	applicationName = ptree.get_child("application_name").data();
 }
 
 int scarlett::ApplicationConfig::GetScreenWidth()
 {
-	int w = ptree.get_child("screen_width").get_value<int>();
-	return w;
+	return screenWidth;
 }
 
 int scarlett::ApplicationConfig::GetScreenHeight()
 {
-	int h = ptree.get_child("screen_height").get_value<int>();
-	return h;
+	return screenHeight;
 }
 
 std::string scarlett::ApplicationConfig::GetApplicationName()
 {
-	std::string name = ptree.get_child("application_name").data();
-	return name;
+	return applicationName;
 }

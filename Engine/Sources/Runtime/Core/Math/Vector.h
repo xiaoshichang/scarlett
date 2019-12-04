@@ -137,5 +137,14 @@ namespace scarlett {
 		}
 	}
 
+	template <template<typename> class TT, typename T>
+	inline T Distance(const TT<T>& vec1, const TT<T>& vec2) {
+		T dis = 0;
+		size_t count = ElementCount(vec1.data);
+		for (size_t i = 0; i < count; ++i) {
+			dis += (vec1[i] - vec2[i]) * (vec1[i] - vec2[i]);
+		}
+		return dis;
+	}
 
 }

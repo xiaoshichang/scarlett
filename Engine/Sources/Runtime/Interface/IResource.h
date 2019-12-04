@@ -15,5 +15,7 @@ namespace scarlett {
 		Vector4f camPos;
 
 		Matrix4x4f boneMatrix[32];
+
+		
 	};
 }

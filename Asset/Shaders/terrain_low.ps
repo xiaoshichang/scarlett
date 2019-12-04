@@ -1,0 +1,14 @@
+#include "common.fxh"
+
+struct TERRAIN_PIXEL_INPUT {
+	float4 position : SV_POSITION;
+	float2 texcood	: TEXCOOD;
+};
+
+Texture2D baseMap;
+SamplerState sBaseMapSampler;
+
+float4 main(TERRAIN_PIXEL_INPUT input) : SV_TARGET
+{
+	return baseMap.Sample(sBaseMapSampler, input.texcood).rgba;
+}

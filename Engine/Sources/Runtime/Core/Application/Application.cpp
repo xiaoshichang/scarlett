@@ -23,7 +23,6 @@ void Application::Run() noexcept{
 	while (!IsQuit())
 	{
 		Tick();
-		Render();
 	}
 }
 

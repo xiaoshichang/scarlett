@@ -11,6 +11,7 @@
 #include "Runtime/Core/Object/System/CameraSystem.h"
 #include "Runtime/Core/Object/System/RenderDebugSystem.h"
 #include "Runtime/Core/Object/System/AnimationSystem.h"
+#include "Runtime/Core/Object/System/TerrainSystem.h"
 
 #include <boost/functional/hash.hpp>
 
@@ -44,6 +45,7 @@ namespace scarlett {
 		CameraSystem*		GetCameraSystem() { return mCameraSystem; }
 		RenderDebugSystem*	GetRenderDebugSystem() { return mRenderDebugSystem; }
 		AnimationSystem*	GetAnimationSystem() { return mAnimationSystem; }
+		TerrainSystem*		GetTerrainSystem() { return mTerrainSystem; }
 	public:
 		Application* mApp;
 		Assimp::Importer importer2;
@@ -56,6 +58,7 @@ namespace scarlett {
 		CameraSystem*		mCameraSystem;
 		RenderDebugSystem*	mRenderDebugSystem;
 		AnimationSystem*	mAnimationSystem;
+		TerrainSystem*		mTerrainSystem;
 	};
 
 }

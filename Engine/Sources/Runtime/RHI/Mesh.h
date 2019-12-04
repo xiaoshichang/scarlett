@@ -14,10 +14,17 @@ namespace scarlett {
 	class World;
 	class Entity;
 
+	enum TerrainLod {
+		Low,
+		Middle,
+		High
+	};
+
 	enum MeshType {
 		MT_Model = 1,
 		MT_Skybox = 2,
 		MT_UI = 3,
+		MT_TERRAIN = 4,
 	};
 
 	enum PrimitiveType {
@@ -31,6 +38,8 @@ namespace scarlett {
 		virtual void Initialize(aiMesh* mesh) noexcept = 0;
 		virtual void Initialize(void* data, int count, VertexFormat vf) noexcept = 0;
 		virtual void InitializeUI() noexcept = 0;
+		virtual void InitializeTerrain() noexcept = 0;
+
 		virtual void Render(Entity* self) noexcept = 0;
 		virtual void Render(const Matrix4x4f& world, const Matrix4x4f& view, const Matrix4x4f& projection) noexcept = 0;
 

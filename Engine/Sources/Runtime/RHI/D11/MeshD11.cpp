@@ -5,7 +5,9 @@
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/Application/Application.h"
+#include "Runtime/Core/Math/ScltMath.h"
 #include "Foundation/Assert.h"
+
 
 using namespace scarlett;
 
@@ -22,6 +24,7 @@ void AppendBoneWeight(int* idxes, float* weights, int vidx, int bidx, float weig
 
 scarlett::MeshD11::MeshD11()
 {
+	mMaterial = std::make_shared<MaterialD11>();
 }
 
 scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
@@ -157,75 +160,7 @@ void scarlett::MeshD11::Initialize(aiMesh * mesh) noexcept
 	else {
 		SCARLETT_ASSERT(false);
 	}
-
-	vbcount = 5;
-	stride = new  unsigned int[vbcount];
-	offset = new  unsigned int[vbcount];
-	vbuffers = new ID3D11Buffer *[vbcount];
-	VertexBufferD11* buffer;
-	int idx = 0;
-	if (mPositions) {
-		stride[idx] = mPositions->GetVertexSize(mPositions->mVertexFormat);
-		buffer = (VertexBufferD11*)mPositions.get();
-		vbuffers[idx] = buffer->mVertexBuffer;
-	}
-	else {
-		stride[idx] = 0;
-		vbuffers[idx] = nullptr;
-	}
-	offset[idx] = 0;
-	idx += 1;
-
-
-	if (mNormals) {
-		stride[idx] = mNormals->GetVertexSize(mNormals->mVertexFormat);
-		buffer = (VertexBufferD11*)mNormals.get();
-		vbuffers[idx] = buffer->mVertexBuffer;
-	}
-	else {
-		stride[idx] = 0;
-		vbuffers[idx] = nullptr;
-	}
-	offset[idx] = 0;
-	idx += 1;
-
-	if (mTexCoords) {
-		stride[idx] = mTexCoords->GetVertexSize(mTexCoords->mVertexFormat);
-		buffer = (VertexBufferD11*)mTexCoords.get();
-		vbuffers[idx] = buffer->mVertexBuffer;
-	}
-	else {
-		stride[idx] = 0;
-		vbuffers[idx] = nullptr;
-	}
-	offset[idx] = 0;
-	idx += 1;
-
-
-	if (mBoneIdxes) {
-		stride[idx] = mBoneIdxes->GetVertexSize(mBoneIdxes->mVertexFormat);
-		buffer = (VertexBufferD11*)mBoneIdxes.get();
-		vbuffers[idx] = buffer->mVertexBuffer;
-	}
-	else {
-		stride[idx] = 0;
-		vbuffers[idx] = nullptr;
-	}
-	offset[idx] = 0;
-	idx += 1;
-
-	if (mBoneWeights) {
-		stride[idx] = mBoneWeights->GetVertexSize(mBoneWeights->mVertexFormat);
-		buffer = (VertexBufferD11*)mBoneWeights.get();
-		vbuffers[idx] = buffer->mVertexBuffer;
-	}
-	else {
-		stride[idx] = 0;
-		vbuffers[idx] = nullptr;
-	}
-	offset[idx] = 0;
-	idx += 1;
-
+	InitializeStrideOffset();
 }
 
 void scarlett::MeshD11::Initialize(void * data, int count, VertexFormat vf) noexcept
@@ -259,6 +194,23 @@ void scarlett::MeshD11::InitializeUI() noexcept
 	mPositions = mgrd11->CreateVertexBuffer(position, 6, VertexFormat::VF_P3F);
 	mTexCoords = mgrd11->CreateVertexBuffer(texcood, 6, VertexFormat::VF_T2F);
 
+	InitializeStrideOffset();
+
+	mMaterial = make_shared<MaterialD11>();
+	auto shader = mgrd11->GetShader("ui");
+	mMaterial->SetShader(shader);
+	auto sampler = mgrd11->CreateSamplerState();
+	mMaterial->SetSamplerState("ui", sampler);
+}
+
+void scarlett::MeshD11::InitializeTerrain() noexcept
+{
+	mPrimitiveType = PrimitiveType::PT_TRIANGLE;
+	InitializeStrideOffset();
+}
+
+void scarlett::MeshD11::InitializeStrideOffset()
+{
 	vbcount = 5;
 	stride = new  unsigned int[vbcount];
 	offset = new  unsigned int[vbcount];
@@ -326,12 +278,6 @@ void scarlett::MeshD11::InitializeUI() noexcept
 	}
 	offset[idx] = 0;
 	idx += 1;
-
-	mMaterial = make_shared<MaterialD11>();
-	auto shader = mgrd11->GetShader("ui");
-	mMaterial->SetShader(shader);
-	auto sampler = mgrd11->CreateSamplerState();
-	mMaterial->SetSamplerState("ui", sampler);
 }
 
 void scarlett::MeshD11::Render(Entity* self) noexcept
@@ -371,6 +317,14 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 		cb.view = camera->GetViewMatrix();
 		cb.projection = camera->GetPerspectiveMatrix();
 	}
+	else if (mMeshType == MT_TERRAIN) {
+		cb.world = BuildMatrixTranslation(0, 0, 0);
+		auto world = self->GetWorld();
+		auto camera = world->GetCameraSystem()->GetMainCamera()->GetComponent<CameraComponent>();
+		cb.view = camera->GetViewMatrix();
+		cb.projection = camera->GetPerspectiveMatrix();
+	}
+
 
 	auto skeleton = self->GetComponent<SkeletonComponent>();
 	if (skeleton) {
