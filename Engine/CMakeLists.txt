@@ -75,6 +75,8 @@ ${SourcesPath}/Runtime/Core/UI/Sprite.cpp
 
 ${PlatformOnlySources}
 
+${SourcesPath}/Runtime/Utils/ImageParser.cpp
+
 )
 
 IF(${WIN32})
@@ -85,6 +87,3 @@ ELSEIF(${UNIX})
 	ELSE(${APPLE})
     ENDIF(${APPLE})
 ENDIF(${WIN32})
-
-target_link_libraries(Scarlett ${XG_LIBRARY})
-__add_xg_platform_dependencies(Scarlett)

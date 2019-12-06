@@ -40,14 +40,6 @@ int Director::Initialize() noexcept {
 			auto pos = sprite->GetPosition();
 			sprite->SetPosition(pos.x - 10, pos.y);
 		}
-		else if (code == 'W') {
-			auto pos = sprite->GetPosition();
-			sprite->SetPosition(pos.x, pos.y + 10);
-		}
-		else if (code == 'S') {
-			auto pos = sprite->GetPosition();
-			sprite->SetPosition(pos.x, pos.y - 10);
-		}
 	};
 
 	listener->onKeyReleased = [=](unsigned char code, UIEvent* event) {

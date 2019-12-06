@@ -4,15 +4,17 @@
 #include "Runtime//Core/Math/ScltMath.h"
 #include "Runtime/Interface/IComponent.h"
 #include "Runtime/RHI/Mesh.h"
+#include "Runtime/Utils/ImageParser.h"
 
 
 namespace scarlett {
 
 	class CameraComponent;
+	class TerrainComponent;
 
 	class TerrainUnit {
 	public:
-		TerrainUnit();
+		TerrainUnit(TerrainComponent* master);
 		~TerrainUnit();
 
 		void UpdateVisibility(CameraComponent* camera);
@@ -24,6 +26,7 @@ namespace scarlett {
 
 		void InitializeRenderResource();
 		void FinalizeRenderResource();
+		float GetHeight(float x, float z);
 
 	public:
 		Vector3f		mOffset;
@@ -32,6 +35,7 @@ namespace scarlett {
 
 		std::shared_ptr<IMesh>		mMeshHigh;
 		std::shared_ptr<IMesh>		mMeshLow;
+		TerrainComponent*			mMaster;
 	};
 
 	class TerrainComponent : public IComponent {
@@ -44,6 +48,7 @@ namespace scarlett {
 		virtual void Tick() noexcept;
 
 		void LoadResource();
+		void LoadHeightMap();
 
 		// update visibility of all terrain unit
 		void UpdateVisibility(CameraComponent* camera);
@@ -53,8 +58,17 @@ namespace scarlett {
 
 		void Render();
 
-	private:
+	public:
+		int		mUnitCol;
+		int		mUnitRow;
+		float	mUnitSize;
+
 		std::vector<std::shared_ptr<TerrainUnit>> mUnits;
+
+		unsigned char*	mHeightMapData;
+		int				mHeightMapWidth;
+		int				mHeightMapHeight;
+		int				mHeightMapChannels;
 	};
 
 }

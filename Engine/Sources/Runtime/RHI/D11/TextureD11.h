@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Runtime/RHI/Texture.h"
+#include "Runtime/Utils/ImageParser.h"
 #include <d3d11.h>
 
 namespace scarlett {

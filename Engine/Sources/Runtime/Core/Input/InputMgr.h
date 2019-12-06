@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Runtime/Interface/IModule.h"
+#include "Runtime/Core/UI/Dispatcher.h"
 
-namespace scarlett {
+
 #define KEY_CODE_ESC	0x1B
 #define KEY_CODE_W		0x57
 #define KEY_CODE_S		0x53
@@ -11,6 +12,8 @@ namespace scarlett {
 
 #define KEY_CODE_LBUTTON 0x01
 #define KEY_CODE_RBUTTON 0x02
+
+namespace scarlett {
 
 	class InputMgr : public IModule {
 	public:
@@ -21,5 +24,8 @@ namespace scarlett {
 		void	OnKeyUp(unsigned char keyCode);
 		void	OnMouseMove(int x, int y);
 
+
+	public:
+		UIEventDispatch* mDispatcher;
 	};
 }

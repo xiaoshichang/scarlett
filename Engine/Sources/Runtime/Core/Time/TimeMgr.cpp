@@ -60,5 +60,10 @@ void scarlett::TimeMgr::MicroSleep(unsigned long long ns) noexcept
 float scarlett::TimeMgr::GetTotalMsTime() noexcept
 {
 	auto delta = m_frameStartTime - m_startTime;
-	return delta.count() / 1000000;
+	return delta.count() / 1000000.0f;
+}
+
+float scarlett::TimeMgr::GetDeltaMsTime() noexcept
+{
+	return m_deltaTime.count() / 1000000.0f;
 }

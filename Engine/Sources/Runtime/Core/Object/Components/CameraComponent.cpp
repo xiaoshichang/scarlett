@@ -2,6 +2,7 @@
 #include "CameraComponent.h"
 #include <DirectXMath.h>
 #include "Runtime/Core/Application/Application.h"
+#include "Runtime/Core/UI/Listener.h"
 
 using namespace DirectX;
 using namespace scarlett;
@@ -90,13 +91,27 @@ scarlett::CameraComponent::CameraComponent() :
 	mLookat(Vector3f(0, 1, 0)),
 	mUp(Vector3f(0, 1, 0)),
 	mNearClip(0.01f),
-	mFarClip(1000.0f),
+	mFarClip(2000.0f),
 	mFov(PI / 3),
 	mViewDirty(true),
 	mProjectionDirty(true),
-	mSkybox(nullptr)
+	mSkybox(nullptr),
+	mSpeed(1.0f)
 {
 	//SetSkybox("./Asset/Textures/skybox/output_skybox.dds");
+
+
+	auto listener = UIEventListenerKeyboard::create();
+	listener->onKeyPressed = [=](unsigned char code, UIEvent* event) {
+		if (code == 'W') {
+			this->Forward();
+		}
+		else if (code == 'S') {
+			this->Backward();
+		}
+	};
+
+	GApp->mInputManager->mDispatcher->addEventListener(listener);
 }
 
 int scarlett::CameraComponent::Initialize() noexcept
@@ -152,6 +167,36 @@ void scarlett::CameraComponent::SetSkybox(const std::string & path)
 std::shared_ptr<scarlett::SkyBox> scarlett::CameraComponent::GetSkybox()
 {
 	return mSkybox;
+}
+
+void scarlett::CameraComponent::Forward()
+{
+	float dt = GApp->mTimeMgr->GetDeltaMsTime();
+	Vector3f dir = mLookat - mPosition;
+	Normalize(dir);
+	auto delta = VectorScale(dir, dt * mSpeed);
+	SetPosition(mPosition + delta);
+}
+
+void scarlett::CameraComponent::Backward()
+{
+	float dt = GApp->mTimeMgr->GetDeltaMsTime();
+	Vector3f dir = mLookat - mPosition;
+	Normalize(dir);
+	auto delta = VectorScale(dir, dt * mSpeed);
+	SetPosition(mPosition - delta);
+}
+
+void scarlett::CameraComponent::MoveLeft()
+{
+	float dt = GApp->mTimeMgr->GetDeltaMsTime();
+	// todo
+}
+
+void scarlett::CameraComponent::MoveRight()
+{
+	float dt = GApp->mTimeMgr->GetDeltaMsTime();
+	// todo
 }
 
 

@@ -16,6 +16,7 @@ namespace scarlett {
 
 		void	MicroSleep(unsigned long long ns) noexcept;
 		float	GetTotalMsTime() noexcept;
+		float	GetDeltaMsTime() noexcept;
 
 	private:
 		bool m_bFirstUpdate;

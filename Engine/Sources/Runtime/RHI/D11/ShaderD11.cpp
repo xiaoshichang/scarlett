@@ -171,6 +171,7 @@ void scarlett::ShaderD11::Use() noexcept
 
 void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noexcept
 {
+	// todo: every render batch should have a constant buffer. rather than create one every frame.
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 
 	HRESULT result;

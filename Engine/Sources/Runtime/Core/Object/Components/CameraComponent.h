@@ -42,6 +42,11 @@ namespace scarlett {
 		void		SetSkybox(const std::string& path);
 		std::shared_ptr<SkyBox>	GetSkybox();
 
+		void		Forward();
+		void		Backward();
+		void		MoveLeft();
+		void		MoveRight();
+
 	private:
 		CameraType	mCameraType;
 
@@ -56,6 +61,8 @@ namespace scarlett {
 		float		mNearClip;
 		float		mFarClip;
 		float		mFov;
+
+		float		mSpeed;
 
 		std::shared_ptr<SkyBox>		mSkybox;
 	};

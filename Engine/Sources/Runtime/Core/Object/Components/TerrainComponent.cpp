@@ -7,9 +7,10 @@
 #include "Runtime/Utils/Logging.h"
 
 
-scarlett::TerrainUnit::TerrainUnit():
+scarlett::TerrainUnit::TerrainUnit(TerrainComponent* master):
 	mVisible(true), mLod(TerrainLod::Low)
 {
+	mMaster = master;
 }
 
 scarlett::TerrainUnit::~TerrainUnit()
@@ -19,20 +20,21 @@ scarlett::TerrainUnit::~TerrainUnit()
 
 void scarlett::TerrainUnit::UpdateVisibility(CameraComponent* camera)
 {
+	// todo: use Frustum Culling
+	mVisible = true;
+}
+
+void scarlett::TerrainUnit::UpdateLod(CameraComponent* camera)
+{
 	auto campos = camera->GetPosition();
 	campos.y = 0;
 	auto dis = Distance(campos, mOffset);
-	if (dis < 50000.0f) {
+	if (dis < 200) {
 		mLod = TerrainLod::High;
 	}
 	else {
 		mLod = TerrainLod::Low;
 	}
-}
-
-void scarlett::TerrainUnit::UpdateLod(CameraComponent* camera)
-{
-	mVisible = true;
 }
 
 void scarlett::TerrainUnit::SetOffset(const Vector3f& offset)
@@ -45,7 +47,7 @@ void scarlett::TerrainUnit::InitalizeRenderResourceHigh()
 {
 	int vertex;
 
-	int count = 11;	// vertex count
+	int count = 33;	// vertex count
 	float gridSize = 100.0f / (count-1);
 
 	int idxStart = -(count - 1) / 2;
@@ -59,9 +61,13 @@ void scarlett::TerrainUnit::InitalizeRenderResourceHigh()
 	vertex = 0;
 	for (int i = idxStart; i <= idxEnd; ++i) {
 		for (int j = idxStart; j <= idxEnd; ++j) {
-			positions[vertex * 3] = i * gridSize + mOffset.x;
-			positions[vertex * 3 + 1] = 0 + mOffset.y;
-			positions[vertex * 3 + 2] = j * gridSize + mOffset.z;
+			float x = i * gridSize + mOffset.x;
+			float z = j * gridSize + mOffset.z;
+			positions[vertex * 3] = x;
+			positions[vertex * 3 + 2] = z;
+			float height = GetHeight(x, z);
+			positions[vertex * 3 + 1] = mOffset.y + height;
+
 			vertex += 1;
 		}
 	}
@@ -126,7 +132,7 @@ void scarlett::TerrainUnit::InitalizeRenderResourceHigh()
 
 void scarlett::TerrainUnit::InitalizeRenderResourceLow()
 {
-	int count = 3;	// vertex count
+	int count = 33;	// vertex count
 	float gridSize = 100.0f / (count - 1);
 
 	int idxStart = -(count - 1) / 2;
@@ -140,9 +146,11 @@ void scarlett::TerrainUnit::InitalizeRenderResourceLow()
 	int vertex = 0;
 	for (int i = idxStart; i <= idxEnd; ++i) {
 		for (int j = idxStart; j <= idxEnd; ++j) {
-			positions[vertex * 3] = i * gridSize + mOffset.x;
-			positions[vertex * 3 + 1] = 0 + mOffset.y;
-			positions[vertex * 3 + 2] = j * gridSize + mOffset.z;
+			float x = i * gridSize + mOffset.x;
+			float z = j * gridSize + mOffset.z;
+			positions[vertex * 3] = x;
+			positions[vertex * 3 + 2] = z;
+			positions[vertex * 3 + 1] = mOffset.y + GetHeight(x, z);
 			vertex += 1;
 		}
 	}
@@ -217,12 +225,38 @@ void scarlett::TerrainUnit::FinalizeRenderResource()
 {
 }
 
+/*
+get vertex height by x and z coord and heightmap.
+*/
+float scarlett::TerrainUnit::GetHeight(float x, float z) {
+	
+	float xmin = -mMaster->mUnitCol / 2.0 * mMaster->mUnitSize;
+	float zmin = -mMaster->mUnitRow / 2.0 * mMaster->mUnitSize;
 
+	float u = (x - xmin) / (fabsf(xmin) * 2);
+	float v = (z - zmin) / (fabsf(zmin) * 2);
+
+	int uidx = int(u * (mMaster->mHeightMapWidth - 1));
+	int vidx = int(v * (mMaster->mHeightMapHeight - 1));
+
+	int idx = uidx * mMaster->mHeightMapWidth + vidx;
+	unsigned char r = mMaster->mHeightMapData[idx * 4];
+	unsigned char g = mMaster->mHeightMapData[idx * 4 + 1];
+	unsigned char b = mMaster->mHeightMapData[idx * 4 + 2];
+
+	float rf = r / 255.0f;
+	float gf = g / 255.0f;
+	float bf = b / 255.0f;
+
+	float h = rf * 0.299 + gf * 0.587 + bf * 0.144;
+	return h * 100 - 10;
+}
 
 //////////////////// TerrainComponent //////////////////
 
 scarlett::TerrainComponent::TerrainComponent()
 {
+	mHeightMapData = 0;
 }
 
 scarlett::TerrainComponent::~TerrainComponent()
@@ -251,6 +285,10 @@ void scarlett::TerrainComponent::Finalize() noexcept
 			world->GetTerrainSystem()->DeleteComponent(this);
 		}
 	}
+
+	if (mHeightMapData) {
+		scarlett::ImageParser::Free(mHeightMapData);
+	}
 }
 
 void scarlett::TerrainComponent::Tick() noexcept
@@ -268,26 +306,34 @@ void scarlett::TerrainComponent::Tick() noexcept
 
 void scarlett::TerrainComponent::LoadResource()
 {
-	int unitRow = 10;
-	int unitCol = 10;
-	float gridSize = 100.0f;
-	float hgridSize = gridSize / 2;
+	LoadHeightMap();
 
-	for (int r = 0; r < unitRow; ++r) {
-		for (int c = 0; c < unitCol; ++c) {
-			int rowIdx = r - unitRow / 2;
-			int colIdx = c - unitCol / 2;
-			float x = hgridSize + rowIdx * gridSize;
+	mUnitCol = 10;
+	mUnitRow = 10;
+	mUnitSize = 100.0f;
+	float hgridSize = mUnitSize / 2;
+
+	for (int r = 0; r < mUnitRow; ++r) {
+		for (int c = 0; c < mUnitCol; ++c) {
+			int rowIdx = r - mUnitRow / 2;
+			int colIdx = c - mUnitCol / 2;
+			float x = hgridSize + rowIdx * mUnitSize;
 			float y = 0.0f;
-			float z = hgridSize + colIdx * gridSize;
+			float z = hgridSize + colIdx * mUnitSize;
 			auto position = Vector3f(x, y, z);
 
-			auto unit = std::make_shared<TerrainUnit>();
+			auto unit = std::make_shared<TerrainUnit>(this);
 			unit->SetOffset(position);
 			unit->InitializeRenderResource();
 			mUnits.push_back(unit);
 		}
 	}
+}
+
+void scarlett::TerrainComponent::LoadHeightMap()
+{
+	std::string filepath = "./Asset/Textures/highmap.jpg";
+	mHeightMapData = scarlett::ImageParser::Parse(filepath, &mHeightMapWidth, &mHeightMapHeight, &mHeightMapChannels, 4);
 }
 
 // update terrain units visibility by camera

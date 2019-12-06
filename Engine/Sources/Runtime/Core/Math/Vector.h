@@ -46,6 +46,23 @@ namespace scarlett {
 
 		operator T*() { return data; };
 		operator const T*() const { return static_cast<const T*>(data); };
+
+		Vector3Type<T> operator+(const Vector3Type<T>& rhs){
+			Vector3Type<T> res;
+			res.x = x + rhs.x;
+			res.y = y + rhs.y;
+			res.z = z + rhs.z;
+			return res;
+		}
+
+		Vector3Type<T> operator-(const Vector3Type<T>& rhs) {
+			Vector3Type<T> res;
+			res.x = x - rhs.x;
+			res.y = y - rhs.y;
+			res.z = z - rhs.z;
+			return res;
+		}
+
 	};
 
 	typedef Vector3Type<float> Vector3f;
@@ -72,6 +89,24 @@ namespace scarlett {
 			return *this;
 		};
 
+		Vector4Type<T> operator+(const Vector4Type<T>& rhs) {
+			Vector4Type<T> res;
+			res.x = x + rhs.x;
+			res.y = y + rhs.y;
+			res.z = z + rhs.z;
+			res.w = w + rhs.w;
+			return res;
+		}
+
+		Vector4Type<T> operator-(const Vector4Type<T>& rhs) {
+			Vector4Type<T> res;
+			res.x = x - rhs.x;
+			res.y = y - rhs.y;
+			res.z = z - rhs.z;
+			res.w = w - rhs.w;
+			return res;
+		}
+
 	};
 
 	typedef Vector4Type<float> Vector4f;
@@ -89,6 +124,16 @@ namespace scarlett {
 		out << ")";
 
 		return out;
+	}
+
+	template <template <typename> class TT, typename T>
+	TT<T> VectorScale(const TT<T>& v, float scale) {
+		size_t count = ElementCount(v.data);
+		TT<T> result;
+		for (size_t i = 0; i < count; ++i) {
+			result[i] = v[i]*scale;
+		}
+		return result;
 	}
 
 	template <template<typename> class TT, typename T>
@@ -113,7 +158,6 @@ namespace scarlett {
 		result[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
 		result[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
 	}
-
 
 	template <template<typename> class TT, typename T>
 	inline T DotProduct(const TT<T>& vec1, const TT<T>& vec2) {
@@ -144,7 +188,8 @@ namespace scarlett {
 		for (size_t i = 0; i < count; ++i) {
 			dis += (vec1[i] - vec2[i]) * (vec1[i] - vec2[i]);
 		}
-		return dis;
+		
+		return sqrtf(dis);
 	}
 
 }
