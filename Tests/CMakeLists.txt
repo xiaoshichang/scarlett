@@ -31,3 +31,12 @@ add_custom_command(TARGET Test_Assimp POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy
         ${CMAKE_SOURCE_DIR}/Asset/Scenes/aili_cycle.fbx
         ${CMAKE_CURRENT_BINARY_DIR}/Asset/Scenes/aili_cycle.fbx)
+
+
+add_executable(Test_Freetype2 Test_Freetype2.cpp)
+target_link_libraries(Test_Freetype2 ${FREETYPE2_LIBRARY})
+add_test(NAME Test_Freetype2 COMMAND Test_Freetype2)
+add_custom_command(TARGET Test_Freetype2 POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_SOURCE_DIR}/Asset/Fonts/arial.ttf
+        ${CMAKE_CURRENT_BINARY_DIR}/Asset/Fonts/arial.ttf)
