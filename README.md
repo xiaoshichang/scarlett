@@ -5,6 +5,7 @@ A Simple Game Engine Project
 # depends
 +	Assimp: https://github.com/assimp/assimp
 +	Boost: https://www.boost.org/
++	FreeType: https://www.freetype.org/index.html
 
 ## updated in 2019/12/6
 +	esc framework.
