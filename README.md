@@ -32,6 +32,6 @@ A Simple Game Engine Project
 
 ![img](Document/Resources/ui_framework.png)
 
-+	basic ttf fone render.
++	basic ttf font render.
 
 ![img](Document/Resources/basic_font_render.png)
