@@ -6,6 +6,7 @@
     include_directories("${PROJECT_SOURCE_DIR}/Engine/External/Assimp/Windows/Release_x64/include")
 
 	include_directories("${PROJECT_SOURCE_DIR}/Engine/External/Boost/include")
+	link_directories("${PROJECT_SOURCE_DIR}/Engine/External/Boost/libs")
 
 	find_library(FREETYPE2_LIBRARY freetype PATHS ${PROJECT_SOURCE_DIR}/Engine/External/FreeType2/windows/lib/x64/Release)
     include_directories("${PROJECT_SOURCE_DIR}/Engine/External/FreeType2/windows")

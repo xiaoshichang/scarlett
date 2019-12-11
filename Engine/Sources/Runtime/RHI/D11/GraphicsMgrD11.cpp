@@ -357,6 +357,11 @@ std::shared_ptr<ITexture> scarlett::GraphicsMgrD11::CreateTexture2D(const std::s
 	return ptr;
 }
 
+std::shared_ptr<ITexture> scarlett::GraphicsMgrD11::CreateTexture2D(int width, int height, unsigned char* data) noexcept
+{
+	return std::make_shared<TextureD11>(width, height, data);
+}
+
 std::shared_ptr<ITexture> scarlett::GraphicsMgrD11::CreateTextureCubemap(const std::string & path) noexcept
 {
 	if (mTextures[path]) {

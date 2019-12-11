@@ -33,6 +33,7 @@ namespace scarlett{
 		virtual		std::shared_ptr<IMesh>		CreateRenderMeshUI() noexcept = 0;
 
 		virtual		std::shared_ptr<ITexture>		CreateTexture2D(const std::string& path) noexcept = 0;
+		virtual		std::shared_ptr<ITexture>		CreateTexture2D(int width, int height, unsigned char* data) noexcept = 0;
 		virtual		std::shared_ptr<ITexture>		CreateTextureCubemap(const std::string& path) noexcept = 0;
 		virtual		std::shared_ptr<ISamplerState>	CreateSamplerState() noexcept = 0;
 

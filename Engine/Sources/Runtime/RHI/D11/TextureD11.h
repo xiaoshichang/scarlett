@@ -9,6 +9,7 @@ namespace scarlett {
 	class TextureD11 : public ITexture {
 	public:
 		TextureD11(const std::string& filepath, TextureType type);
+		TextureD11(int width, int height, unsigned char* data);
 		virtual ~TextureD11();
 
 		virtual void	InitializeDefault(const std::string& filepath) noexcept;

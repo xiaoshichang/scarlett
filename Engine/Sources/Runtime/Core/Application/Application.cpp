@@ -6,6 +6,7 @@ int Application::Initialize() noexcept {
 	mGraphicsManager = nullptr;
 	mDirector = nullptr;
 	mInputManager = nullptr;
+	mFontMgr = nullptr;
 	mWorld = nullptr;
 	return 0;
 }

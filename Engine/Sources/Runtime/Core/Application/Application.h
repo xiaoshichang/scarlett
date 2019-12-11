@@ -7,6 +7,7 @@
 #include "Runtime/Core/Input/InputMgr.h"
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/UI/Director.h"
+#include "Runtime/Core/Font/FontMgr.h"
 
 namespace scarlett {
 	class Application : public IApplication {
@@ -24,6 +25,7 @@ namespace scarlett {
 		GraphicsManager*	mGraphicsManager;
 		TimeMgr*			mTimeMgr;
 		InputMgr*			mInputManager;
+		FontMgr*			mFontMgr;
 		Director*			mDirector;
 		World*				mWorld;
 

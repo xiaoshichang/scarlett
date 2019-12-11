@@ -17,6 +17,7 @@ IF(${WIN32})
 	${SourcesPath}/Runtime/RHI/D11/SamplerStateD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/DepthStencilStateD11.cpp
 	${SourcesPath}/Runtime/RHI/D11/DDSTextureLoader.cpp
+	${SourcesPath}/Runtime/RHI/D11/BlendStateD11.cpp
 
 	${ExternalPath}/Glad/src/glad.c
 	${ExternalPath}/Glad/src/glad_wgl.c
@@ -54,6 +55,8 @@ ${SourcesPath}/Runtime/Core/Object/System/TerrainSystem.cpp
 ${SourcesPath}/Runtime/Core/Time/TimeMgr.cpp
 ${SourcesPath}/Runtime/Core/Input/InputMgr.cpp
 
+${SourcesPath}/Runtime/Core/Font/FontMgr.cpp
+
 ${SourcesPath}/Runtime/RHI/opengl/GraphicsMgrGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/MeshGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/VertexBufferGL.cpp
@@ -72,6 +75,7 @@ ${SourcesPath}/Runtime/Core/UI/Node.cpp
 ${SourcesPath}/Runtime/Core/UI/Ref.cpp
 ${SourcesPath}/Runtime/Core/UI/Renderer.cpp
 ${SourcesPath}/Runtime/Core/UI/Sprite.cpp
+${SourcesPath}/Runtime/Core/UI/FontNode.cpp
 
 ${PlatformOnlySources}
 
@@ -81,7 +85,7 @@ ${SourcesPath}/Runtime/Utils/ImageParser.cpp
 
 IF(${WIN32})
 	target_link_libraries(Scarlett user32 d3d11 d3dcompiler dxgi opengl32 dxguid.lib)
-	target_link_libraries(Scarlett ${ASSIMP_LIBRARY} ${IRRXML_LIBRARY} ${ZLIB_LIBRARY})
+	target_link_libraries(Scarlett ${ASSIMP_LIBRARY} ${IRRXML_LIBRARY} ${ZLIB_LIBRARY} ${FREETYPE2_LIBRARY})
 ELSEIF(${UNIX})
 	IF(${APPLE})
 	ELSE(${APPLE})

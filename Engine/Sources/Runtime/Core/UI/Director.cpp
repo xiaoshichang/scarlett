@@ -2,6 +2,7 @@
 #include "AutoReleasePool.h"
 #include "Sprite.h"
 #include "Listener.h"
+#include "FontNode.h"
 
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Application/Application.h"
@@ -26,9 +27,13 @@ int Director::Initialize() noexcept {
 	mRoot->Retain();
 	mRoot->SetPosition(0, 0);
 	
-	auto sprite = Sprite::Create("./Asset/Textures/ibl_brdf_lut.png");
+	auto sprite = Sprite::Create("./Asset/Textures/highmap.jpg");
 	sprite->SetPosition(-512 + 51.2 + 10, -384 + 38.4 + 10);
 	mRoot->AddChild(sprite);
+
+	auto font = FontNode::Create("SCARLETT ENGINE");
+	mRoot->AddChild(font);
+	font->SetPosition(512 - 100, 384 - 15);
 
 	auto listener = UIEventListenerKeyboard::create();
 	listener->onKeyPressed = [=](unsigned char code, UIEvent* event) {

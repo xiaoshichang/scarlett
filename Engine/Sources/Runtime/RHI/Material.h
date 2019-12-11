@@ -1,10 +1,12 @@
 #pragma once
-#include <unordered_map>
+#include <Boost/unordered_map.hpp>
 #include "Runtime/Interface/IResource.h"
 #include "Runtime/RHI/Shader.h"
 #include "Runtime/RHI/SamplerState.h"
 #include "Runtime/RHI/DepthStencilState.h"
 #include "Runtime/RHI/Texture.h"
+#include "Runtime/RHI/BlendState.h"
+
 
 namespace scarlett {
 	
@@ -30,13 +32,18 @@ namespace scarlett {
 		void SetDepthStencilState(std::shared_ptr<IDepthStencilState> state) { mDepthStencilState = state; }
 		std::shared_ptr<IDepthStencilState>	GetDepthStencilState() { return mDepthStencilState; }
 
+		void SetBlendState(std::shared_ptr<IBlendState> state) { mBlendState = state; }
+		std::shared_ptr<IBlendState> GetBlendState() { return mBlendState; }
+
 	protected:
 		std::string															mName;
 		std::shared_ptr<IShader>											mShader;
 		std::shared_ptr<IDepthStencilState>									mDepthStencilState;
-		std::unordered_map<std::string, Vector4f>							mParameters;
-		std::unordered_map<std::string, std::shared_ptr<ITexture>>			mTextures;
-		std::unordered_map<std::string, std::shared_ptr<ISamplerState>>		mSamplerState;
+		std::shared_ptr<IBlendState>										mBlendState;
+		boost::unordered_map<std::string, Vector4f>							mParameters;
+
+		boost::unordered_map<std::string, std::shared_ptr<ITexture>>		mTextures;
+		boost::unordered_map<std::string, std::shared_ptr<ISamplerState>>	mSamplerState;
 	};
 
 }

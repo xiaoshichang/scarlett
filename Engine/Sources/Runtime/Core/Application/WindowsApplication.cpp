@@ -101,6 +101,9 @@ int WindowsApplication::Initialize() noexcept{
 	mTimeMgr = new TimeMgr();
 	mTimeMgr->Initialize();
 
+	mFontMgr = new FontMgr();
+	mFontMgr->Initialize();
+
 	Director::GetInstance()->Initialize();
 
 	mWorld = new World();
@@ -183,6 +186,9 @@ void scarlett::WindowsApplication::CreateMainWindow()
 void WindowsApplication::Finalize() noexcept{
 	mWorld->Finalize();
 
+	mFontMgr->Finalize();
+	mTimeMgr->Finalize();
+	mInputManager->Finalize();
 	mGraphicsManager->Finalize();
 }
 

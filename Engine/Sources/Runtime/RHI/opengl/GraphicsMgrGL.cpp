@@ -88,6 +88,11 @@ std::shared_ptr<ITexture> scarlett::GraphicsMgrGL::CreateTexture2D(const std::st
 	return std::shared_ptr<ITexture>();
 }
 
+std::shared_ptr<ITexture> scarlett::GraphicsMgrGL::CreateTexture2D(int width, int height, unsigned char* data) noexcept
+{
+	return std::shared_ptr<ITexture>();
+}
+
 std::shared_ptr<ITexture> scarlett::GraphicsMgrGL::CreateTextureCubemap(const std::string & path) noexcept
 {
 	return std::shared_ptr<ITexture>();
