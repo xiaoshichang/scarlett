@@ -1,5 +1,7 @@
 #pragma once
 #include "Node.h"
+#include "FontNode.h"
+
 #include "Renderer.h"
 #include "Dispatcher.h"
 #include "Runtime/Interface/IModule.h"
@@ -31,6 +33,9 @@ namespace scarlett {
 		const Matrix4x4f GetMVPMatrix();
 
 		UIEventDispatch* GetDispatcher() { return mDispatcher; }
+
+	public:
+		FontNode* mFps;
 
 	private:
 		static Director* sharedDirector;

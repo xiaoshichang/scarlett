@@ -1,6 +1,9 @@
 #include "TimeMgr.h"
 #include "Runtime/Utils/Logging.h"
+#include "Runtime/Core/Application/Application.h"
+#include "Runtime/Core/UI/Director.h"
 #include <iostream>
+#include <sstream>
 
 int scarlett::TimeMgr::Initialize() noexcept
 {
@@ -22,7 +25,12 @@ void scarlett::TimeMgr::Tick() noexcept
 		m_fFPS = m_frameCount;
 		m_frameCount = 0;
 		m_LastStatisticTime = m_frameStartTime;
-		SCARLETT_LOG(info) << "FPS: " << m_fFPS;
+		
+		if(Director::GetInstance()->mFps){
+			std::ostringstream   ostr;
+			ostr << "SCARLETT ENGINE FPS: " << m_fFPS;
+			Director::GetInstance()->mFps->SetText(ostr.str());
+		}
 	}
 	else {
 		m_frameCount++;

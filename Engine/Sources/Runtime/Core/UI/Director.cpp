@@ -2,7 +2,6 @@
 #include "AutoReleasePool.h"
 #include "Sprite.h"
 #include "Listener.h"
-#include "FontNode.h"
 
 #include "Runtime/RHI/D11/GraphicsMgrD11.h"
 #include "Runtime/Core/Application/Application.h"
@@ -10,7 +9,9 @@
 using namespace scarlett;
 
 
-Director::Director() {
+Director::Director():
+	mFps(nullptr)
+{
 }
 
 Director::~Director() {
@@ -28,12 +29,24 @@ int Director::Initialize() noexcept {
 	mRoot->SetPosition(0, 0);
 	
 	auto sprite = Sprite::Create("./Asset/Textures/highmap.jpg");
-	sprite->SetPosition(-512 + 51.2 + 10, -384 + 38.4 + 10);
+	sprite->SetPosition(-512 + 50 + 10, -384 + 50 + 10);
+	sprite->SetContentSize(100, 100);
 	mRoot->AddChild(sprite);
 
-	auto font = FontNode::Create("SCARLETT ENGINE");
+	auto sprite1 = Sprite::Create("./Asset/Textures/terrain_low.png");
+	sprite1->SetPosition(-512 + 150 + 10, -384 + 50 + 10);
+	sprite1->SetContentSize(60, 60);
+	mRoot->AddChild(sprite1);
+
+	auto sprite2 = Sprite::Create("./Asset/Textures/terrain_high.png");
+	sprite2->SetPosition(-512 + 220 + 10, -384 + 50 + 10);
+	sprite2->SetContentSize(60, 60);
+	mRoot->AddChild(sprite2);
+
+	auto font = FontNode::Create();
 	mRoot->AddChild(font);
-	font->SetPosition(512 - 100, 384 - 15);
+	font->SetPosition(512 - 150, 384 - 15);
+	mFps = font;
 
 	auto listener = UIEventListenerKeyboard::create();
 	listener->onKeyPressed = [=](unsigned char code, UIEvent* event) {

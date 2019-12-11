@@ -16,6 +16,7 @@ UINode::UINode() :
 	m_Name(),
 	m_Parent(nullptr),
 	m_Position(0, 0),
+	mContentSize(51, 38),
 	m_Localzorder(0),
 	m_Transform(),
 	m_TransformDirty(true),
@@ -124,10 +125,21 @@ void UINode::RemoveChild(UINode* child) {
 	}
 }
 
-Vector2f& UINode::GetPosition() { return m_Position; }
+Vector2f scarlett::UINode::GetPosition() { return m_Position; }
 
-void UINode::SetPosition(float x, float y) {
+void scarlett::UINode::SetPosition(float x, float y) {
 	m_Position = Vector2f(x, y);
+	m_bTransformUpdated = m_TransformDirty = true;
+}
+
+Vector2f scarlett::UINode::GetContentSize()
+{
+	return mContentSize;
+}
+
+void scarlett::UINode::SetContentSize(float x, float y)
+{
+	mContentSize = Vector2f(x, y);
 	m_bTransformUpdated = m_TransformDirty = true;
 }
 

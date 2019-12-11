@@ -31,8 +31,11 @@ namespace scarlett {
 		virtual void RemoveFromParent();
 		virtual void RemoveChild(UINode* child);
 
-		virtual Vector2f& GetPosition();
+		virtual Vector2f GetPosition();
 		virtual void SetPosition(float x, float y);
+
+		virtual Vector2f GetContentSize();
+		virtual void SetContentSize(float x, float y);
 
 		virtual int GetLocalZorder();
 		virtual void SetLocalZorder(int zorder);
@@ -61,6 +64,7 @@ namespace scarlett {
 		UINode* m_Parent;
 
 		Vector2f m_Position;
+		Vector2f mContentSize;
 		int m_Localzorder;
 
 		Matrix4x4f m_Transform;

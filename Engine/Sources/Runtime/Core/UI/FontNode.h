@@ -8,7 +8,7 @@ namespace scarlett {
 
 	class FontNode : public UINode {
 	public:
-		static FontNode*	Create(const std::string& text, const std::string& style="arial.ttf");
+		static FontNode*	Create(const std::string& text="", const std::string& style="arial.ttf");
 
 		virtual void		Visit(Renderer* render, const Matrix4x4f& parentTransform, uint32_t flags);
 		virtual void		Render(Renderer* render, const Matrix4x4f& parentTransform, uint32_t flags);

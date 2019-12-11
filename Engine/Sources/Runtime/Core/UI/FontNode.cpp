@@ -18,13 +18,15 @@ FontNode * scarlett::FontNode::Create(const std::string & text, const std::strin
 
 void scarlett::FontNode::Visit(Renderer * render, const Matrix4x4f & parentTransform, uint32_t flags)
 {
-	if (mText.size() == 0)return;
-	UpdateContent();
 	UINode::Visit(render, parentTransform, flags);
 }
 
 void scarlett::FontNode::Render(Renderer * render, const Matrix4x4f & transform, uint32_t flags)
 {
+	if (mText.size() == 0)return;
+
+	UpdateContent();
+
 	auto config = GlobalConfig::GetInstance();
 	float width = mTextureWidth;
 	float height = mTextureHeight;
