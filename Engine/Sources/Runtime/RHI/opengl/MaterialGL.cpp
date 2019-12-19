@@ -15,3 +15,7 @@ void scarlett::MaterialGL::Apply(ConstantBuffer cb) noexcept
 void scarlett::MaterialGL::ApplyLight(ConstantBufferLighting cb) noexcept
 {
 }
+
+void scarlett::MaterialGL::ApplyAnimation(ConstantBufferAnimation cb) noexcept
+{
+}

@@ -134,3 +134,7 @@ void scarlett::ShaderGL::SetConstantBuffer(const ConstantBuffer & cbuffer) noexc
 void scarlett::ShaderGL::SetConstantBufferLight(const ConstantBufferLighting & cbuffer) noexcept
 {
 }
+
+void scarlett::ShaderGL::SetConstantBufferAnimation(const ConstantBufferAnimation & cbuffer) noexcept
+{
+}

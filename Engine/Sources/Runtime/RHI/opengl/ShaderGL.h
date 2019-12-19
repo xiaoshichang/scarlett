@@ -14,6 +14,7 @@ namespace scarlett {
 		virtual	void	Use() noexcept;
 		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept;
 		virtual void	SetConstantBufferLight(const ConstantBufferLighting& cbuffer) noexcept;
+		virtual void	SetConstantBufferAnimation(const ConstantBufferAnimation& cbuffer) noexcept;
 
 	public:
 

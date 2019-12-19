@@ -13,9 +13,6 @@ namespace scarlett {
 		Vector4f	debugColor;
 		Vector4f	pbrParameter;
 		Vector4f	camPos;
-
-		Matrix4x4f boneMatrix[32];
-
 		
 	};
 
@@ -25,5 +22,9 @@ namespace scarlett {
 
 		Vector4f	PointLightDir[4];
 		Vector4f	PointLightColor[4];
+	};
+
+	struct ConstantBufferAnimation {
+		Matrix4x4f boneMatrix[32];
 	};
 }

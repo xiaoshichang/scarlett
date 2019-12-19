@@ -1,6 +1,5 @@
 #define PI 3.1415926
 
-
 cbuffer MatrixBuffer
 {
     matrix worldMatrix;
@@ -9,7 +8,6 @@ cbuffer MatrixBuffer
 	float4 debugColor;
 	float4 pbrParameter;
 	float4 camPos;
-	matrix boneMatrix[32];
 };
 
 cbuffer ConstantBufferLighting
@@ -19,4 +17,8 @@ cbuffer ConstantBufferLighting
 
 	float4 pointLightDir[4];
 	float4 pointLightColor[4];
+};
+
+cbuffer ConstantBufferAnimation{
+	matrix boneMatrix[32];
 };

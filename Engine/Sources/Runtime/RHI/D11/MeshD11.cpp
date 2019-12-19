@@ -325,18 +325,21 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 		cb.projection = camera->GetPerspectiveMatrix();
 	}
 
-	auto skeleton = self->GetComponent<SkeletonComponent>();
-	if (skeleton) {
-		for (int i = 0; i < 32; i++) {
-			cb.boneMatrix[i] = skeleton->mSkeleton->mBoneTransforms[i];
-		}
-	}
-	mMaterial->Apply(cb);
-
+	// apply constant buffer lighting
 	ConstantBufferLighting cbl;
 	cbl.SunLightDir = Vector4f(0, 1, 1, 0);
 	cbl.SunLightColor = Vector4f(20, 20, 20, 0);
 	mMaterial->ApplyLight(cbl);
+
+	// apply constant buffer animation
+	auto skeleton = self->GetComponent<SkeletonComponent>();
+	if (skeleton) {
+		ConstantBufferAnimation cba;
+		for (int i = 0; i < 32; i++) {
+			cba.boneMatrix[i] = skeleton->mSkeleton->mBoneTransforms[i];
+		}
+		mMaterial->ApplyAnimation(cba);
+	}
 
 	if (mIndexes) {
 		mgrd11->DrawIndexed(mIndexes->GetIndexCount(), 0, 0);

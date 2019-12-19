@@ -127,8 +127,12 @@ void scarlett::MaterialD11::ApplySkybox(ConstantBuffer cb)
 void scarlett::MaterialD11::ApplyLight(ConstantBufferLighting cb) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	mShader->Use();
 	mShader->SetConstantBufferLight(cb);
 
+}
 
+void scarlett::MaterialD11::ApplyAnimation(ConstantBufferAnimation cb) noexcept
+{
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+	mShader->SetConstantBufferAnimation(cb);
 }

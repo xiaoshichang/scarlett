@@ -7,5 +7,6 @@ namespace scarlett {
 	public:
 		virtual void		Apply(ConstantBuffer cb) noexcept;
 		virtual void		ApplyLight(ConstantBufferLighting cb) noexcept;
+		virtual void		ApplyAnimation(ConstantBufferAnimation cb) noexcept;
 	};
 }

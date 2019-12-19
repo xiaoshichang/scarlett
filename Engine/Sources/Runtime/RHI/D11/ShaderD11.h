@@ -14,6 +14,7 @@ namespace scarlett {
 		virtual	void	Use() noexcept;
 		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept;
 		virtual void	SetConstantBufferLight(const ConstantBufferLighting& cbuffer) noexcept;
+		virtual void	SetConstantBufferAnimation(const ConstantBufferAnimation& cbuffer) noexcept;
 
 	public:
 		ID3D11VertexShader*		m_vertexShader;
@@ -21,6 +22,7 @@ namespace scarlett {
 		ID3D11InputLayout*		m_layout;
 		ID3D11Buffer*			m_matrixBuffer;
 		ID3D11Buffer*			m_constantBufferLight;
+		ID3D11Buffer*			m_constantBufferAnimation;
 
 	};
 
