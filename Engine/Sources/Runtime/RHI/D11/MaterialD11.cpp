@@ -97,8 +97,8 @@ void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 	mgrd11->m_deviceContext->OMSetDepthStencilState(_depth->mDepthStencilState, 0);
 
 	auto _blend = static_pointer_cast<BlendStateD11>(mBlendState);
-	float blendFactor[] = { 0.f,0.f,0.f,0.f };
-	mgrd11->m_deviceContext->OMSetBlendState(_blend->mState, 0, 0xffffffff);
+	const float blendFactor[] = { 0.f,0.f,0.f,0.f };
+	mgrd11->m_deviceContext->OMSetBlendState(_blend->mState, blendFactor, 0xffffffff);
 }
 
 void scarlett::MaterialD11::ApplySkybox(ConstantBuffer cb)
@@ -122,9 +122,6 @@ void scarlett::MaterialD11::ApplySkybox(ConstantBuffer cb)
 	auto _depth = static_pointer_cast<DepthStencilStateD11>(mDepthStencilState);
 	mgrd11->m_deviceContext->OMSetDepthStencilState(_depth->mDepthStencilState, 0);
 
-	auto _blend = static_pointer_cast<BlendStateD11>(mBlendState);
-	float blendFactor[] = { 0.f,0.f,0.f,0.f };
-	mgrd11->m_deviceContext->OMSetBlendState(_blend->mState, blendFactor, 0xffffffff);
 }
 
 void scarlett::MaterialD11::ApplyLight(ConstantBufferLighting cb) noexcept
