@@ -284,7 +284,6 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
 	mgrd11->m_deviceContext->IASetVertexBuffers(0, vbcount, vbuffers, stride, offset);
-
 	// Set the index buffer to active in the input assembler so it can be rendered.
 	if (mIndexes) {
 		auto indexBuffer = static_pointer_cast<IndexBufferD11>(mIndexes);
@@ -301,6 +300,7 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 	else if (mPrimitiveType == PrimitiveType::PT_TRIANGLE) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
+	mMaterial->GetShader()->Use();
 
 	ConstantBuffer cb;
 	if (mMeshType == MT_Skybox) {
@@ -324,6 +324,7 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 		cb.view = camera->GetViewMatrix();
 		cb.projection = camera->GetPerspectiveMatrix();
 	}
+	mMaterial->Apply(cb);
 
 	// apply constant buffer lighting
 	ConstantBufferLighting cbl;
@@ -371,7 +372,8 @@ void scarlett::MeshD11::Render(const Matrix4x4f& world, const Matrix4x4f& view, 
 	else if (mPrimitiveType == PrimitiveType::PT_TRIANGLE) {
 		mgrd11->m_deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-	
+	mMaterial->GetShader()->Use();
+
 	ConstantBuffer cb;
 	cb.world = world;
 	cb.view = view;

@@ -25,7 +25,6 @@ void scarlett::MaterialD11::Apply(ConstantBuffer cb) noexcept
 void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	mShader->Use();
 	for (auto pair : mParameters) {
 		if (pair.first == "color") {
 			cb.debugColor = pair.second;
@@ -104,7 +103,6 @@ void scarlett::MaterialD11::ApplySurface(ConstantBuffer cb)
 void scarlett::MaterialD11::ApplySkybox(ConstantBuffer cb)
 {
 	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
-	mShader->Use();
 	mShader->SetConstantBuffer(cb);
 	for (auto pair : mTextures) {
 		if (pair.first == "skybox") {

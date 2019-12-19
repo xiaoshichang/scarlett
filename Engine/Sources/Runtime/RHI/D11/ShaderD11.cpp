@@ -175,7 +175,7 @@ bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string
 
 	D3D11_BUFFER_DESC ConstantBufferAnimationDesc;
 	ConstantBufferAnimationDesc.Usage = D3D11_USAGE_DYNAMIC;
-	ConstantBufferAnimationDesc.ByteWidth = sizeof(ConstantBufferLighting);
+	ConstantBufferAnimationDesc.ByteWidth = sizeof(ConstantBufferAnimation);
 	ConstantBufferAnimationDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	ConstantBufferAnimationDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	ConstantBufferAnimationDesc.MiscFlags = 0;
@@ -278,7 +278,6 @@ void scarlett::ShaderD11::SetConstantBufferAnimation(const ConstantBufferAnimati
 	// Unlock the constant buffer.
 	mgrd11->m_deviceContext->Unmap(m_constantBufferAnimation, 0);
 	// Set the position of the constant buffer in the vertex shader.
-	bufferNumber = 2;
+	bufferNumber = 1;
 	mgrd11->m_deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_constantBufferAnimation);
-	mgrd11->m_deviceContext->PSGetConstantBuffers(bufferNumber, 1, &m_constantBufferAnimation);
 }
