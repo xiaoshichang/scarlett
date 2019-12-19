@@ -24,12 +24,21 @@ void scarlett::CameraSystem::RenderBackground()
 {
 	SCARLETT_ASSERT(mMainCamera);
 	auto camera = mMainCamera->GetComponent<CameraComponent>();
-	GApp->mGraphicsManager->ClearRenderTarget(0.2f, 0.4f, 0.6f, 1.0f);
 
 	auto skybox = camera->GetSkybox();
 	if (skybox) {
 		skybox->Render();
 	}
+	else {
+		GApp->mGraphicsManager->ClearRenderTarget(0.2f, 0.4f, 0.6f, 1.0f);
+	}
+}
+
+void scarlett::CameraSystem::RenderShadowMap()
+{
+	SCARLETT_ASSERT(mMainCamera);
+	auto camera = mMainCamera->GetComponent<CameraComponent>();
+
 }
 
 std::shared_ptr<Entity> scarlett::CameraSystem::GetMainCamera()

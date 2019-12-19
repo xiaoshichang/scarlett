@@ -249,6 +249,7 @@ float scarlett::TerrainUnit::GetHeight(float x, float z) {
 	float bf = b / 255.0f;
 
 	float h = rf * 0.299 + gf * 0.587 + bf * 0.144;
+	return 0;
 	return h * 100 - 10;
 }
 

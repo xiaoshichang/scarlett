@@ -7,6 +7,9 @@ A Simple Game Engine Project
 +	Boost: https://www.boost.org/
 +	FreeType: https://www.freetype.org/index.html
 
+If you use vs2017, you can use my prebuilds libs. https://gitee.com/xiaoshichang_admin/scarlett_external
+
+
 ## updated in 2019/12/6
 +	esc framework.
 

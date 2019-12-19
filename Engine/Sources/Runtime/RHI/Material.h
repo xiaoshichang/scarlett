@@ -13,6 +13,7 @@ namespace scarlett {
 	class IMaterial : public IRenderResource {
 	public:
 		virtual void		Apply(ConstantBuffer cb) noexcept = 0;
+		virtual void		ApplyLight(ConstantBufferLighting cb) noexcept = 0;
 
 		void SetName(std::string name) { mName = name; }
 		std::string GetName() { return mName; }

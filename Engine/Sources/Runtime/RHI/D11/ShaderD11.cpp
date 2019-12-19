@@ -19,6 +19,11 @@ scarlett::ShaderD11::~ShaderD11()
 		m_matrixBuffer = 0;
 	}
 
+	if (m_constantBufferLight) {
+		m_constantBufferLight->Release();
+		m_constantBufferLight = 0;
+	}
+
 	// Release the layout.
 	if (m_layout) {
 		m_layout->Release();
@@ -148,6 +153,22 @@ bool scarlett::ShaderD11::InitializeFromFile(const string & vsPath, const string
 		SCARLETT_ASSERT(false);
 	}
 
+	D3D11_BUFFER_DESC ConstantBufferLightingDesc;
+	// Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+	ConstantBufferLightingDesc.Usage = D3D11_USAGE_DYNAMIC;
+	ConstantBufferLightingDesc.ByteWidth = sizeof(ConstantBufferLighting);
+	ConstantBufferLightingDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	ConstantBufferLightingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	ConstantBufferLightingDesc.MiscFlags = 0;
+	ConstantBufferLightingDesc.StructureByteStride = 0;
+
+	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
+	result = mgrd11->m_device->CreateBuffer(&ConstantBufferLightingDesc, NULL, &m_constantBufferLight);
+	if (FAILED(result)) {
+		SCARLETT_ASSERT(false);
+	}
+
+
 	// Release the vertex shader buffer and pixel shader buffer since they are no longer needed.
 	vertexShaderBuffer->Release();
 	vertexShaderBuffer = 0;
@@ -186,17 +207,7 @@ void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noex
 	}
 
 	dataPtr = (ConstantBuffer*)mappedResource.pData;
-
-	dataPtr->world = cbuffer.world;
-	dataPtr->view = cbuffer.view;
-	dataPtr->projection = cbuffer.projection;
-	dataPtr->debugColor = cbuffer.debugColor;
-	dataPtr->pbrParameter = cbuffer.pbrParameter;
-	dataPtr->camPos = cbuffer.camPos;
-
-	for (int i = 0; i < 32; i++) {
-		dataPtr->boneMatrix[i] = cbuffer.boneMatrix[i];
-	}
+	memcpy(dataPtr, &cbuffer, sizeof(ConstantBuffer));
 
 	// Unlock the constant buffer.
 	mgrd11->m_deviceContext->Unmap(m_matrixBuffer, 0);
@@ -204,4 +215,30 @@ void scarlett::ShaderD11::SetConstantBuffer(const ConstantBuffer & cbuffer) noex
 	bufferNumber = 0;
 	mgrd11->m_deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 	mgrd11->m_deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+}
+
+void scarlett::ShaderD11::SetConstantBufferLight(const ConstantBufferLighting & cbuffer) noexcept
+{
+	auto mgrd11 = (GraphicsMgrD11*)GApp->mGraphicsManager;
+
+	HRESULT result;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	ConstantBufferLighting* dataPtr;
+	unsigned int bufferNumber;
+
+	// Lock the constant buffer so it can be written to.
+	result = mgrd11->m_deviceContext->Map(m_constantBufferLight, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if (FAILED(result)) {
+		SCARLETT_ASSERT(false);
+	}
+
+	dataPtr = (ConstantBufferLighting*)mappedResource.pData;
+	memcpy(dataPtr, &cbuffer, sizeof(ConstantBufferLighting));
+
+	// Unlock the constant buffer.
+	mgrd11->m_deviceContext->Unmap(m_constantBufferLight, 0);
+	// Set the position of the constant buffer in the vertex shader.
+	bufferNumber = 1;
+	mgrd11->m_deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_constantBufferLight);
+	mgrd11->m_deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_constantBufferLight);
 }

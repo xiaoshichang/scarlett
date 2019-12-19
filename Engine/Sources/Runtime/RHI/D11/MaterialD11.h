@@ -10,5 +10,7 @@ namespace scarlett {
 		virtual void Apply(ConstantBuffer cb) noexcept;
 		void ApplySurface(ConstantBuffer cb);
 		void ApplySkybox(ConstantBuffer cb);
+
+		virtual void		ApplyLight(ConstantBufferLighting cb) noexcept;
 	};
 }

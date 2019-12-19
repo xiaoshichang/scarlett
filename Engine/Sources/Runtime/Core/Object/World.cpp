@@ -58,6 +58,8 @@ void scarlett::World::Tick() noexcept
 void scarlett::World::Render() noexcept
 {
 	mCameraSystem->RenderBackground();
+	mCameraSystem->RenderShadowMap();
+
 	mTerrainSystem->Render();
 	mMeshRenderSystem->Render();
 	//mRenderDebugSystem->Render();

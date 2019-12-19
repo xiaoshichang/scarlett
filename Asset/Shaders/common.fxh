@@ -11,3 +11,12 @@ cbuffer MatrixBuffer
 	float4 camPos;
 	matrix boneMatrix[32];
 };
+
+cbuffer ConstantBufferLighting
+{
+	float4 sunLightDir;
+	float4 sunLightColor;
+
+	float4 pointLightDir[4];
+	float4 pointLightColor[4];
+};

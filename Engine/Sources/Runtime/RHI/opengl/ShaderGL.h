@@ -13,6 +13,7 @@ namespace scarlett {
 		virtual	bool	InitializeFromFile(const std::string& vsPath, const std::string& psPath) noexcept;
 		virtual	void	Use() noexcept;
 		virtual void	SetConstantBuffer(const ConstantBuffer& cbuffer) noexcept;
+		virtual void	SetConstantBufferLight(const ConstantBufferLighting& cbuffer) noexcept;
 
 	public:
 

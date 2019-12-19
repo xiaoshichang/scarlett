@@ -130,3 +130,7 @@ void scarlett::ShaderGL::SetConstantBuffer(const ConstantBuffer & cbuffer) noexc
 		glUniform4fv(location, 1, cbuffer.debugColor);
 	}
 }
+
+void scarlett::ShaderGL::SetConstantBufferLight(const ConstantBufferLighting & cbuffer) noexcept
+{
+}

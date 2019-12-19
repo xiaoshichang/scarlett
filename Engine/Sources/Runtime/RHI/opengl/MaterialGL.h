@@ -6,5 +6,6 @@ namespace scarlett {
 	class MaterialGL : public IMaterial {
 	public:
 		virtual void		Apply(ConstantBuffer cb) noexcept;
+		virtual void		ApplyLight(ConstantBufferLighting cb) noexcept;
 	};
 }

@@ -11,3 +11,7 @@ void scarlett::MaterialGL::Apply(ConstantBuffer cb) noexcept
 	}
 	mShader->SetConstantBuffer(cb);
 }
+
+void scarlett::MaterialGL::ApplyLight(ConstantBufferLighting cb) noexcept
+{
+}
