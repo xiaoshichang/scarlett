@@ -328,8 +328,9 @@ void scarlett::MeshD11::Render(Entity* self) noexcept
 
 	// apply constant buffer lighting
 	ConstantBufferLighting cbl;
-	cbl.SunLightDir = Vector4f(0, 1, 1, 0);
-	cbl.SunLightColor = Vector4f(20, 20, 20, 0);
+	auto sun = self->GetWorld()->GetLightSystem()->GetMainDirectionalLight();
+	cbl.SunLightDir = sun->mParam.mDirectional.direction;
+	cbl.SunLightColor = sun->mParam.mDirectional.color;
 	mMaterial->ApplyLight(cbl);
 
 	// apply constant buffer animation

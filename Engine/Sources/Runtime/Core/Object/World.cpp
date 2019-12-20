@@ -31,9 +31,12 @@ int scarlett::World::Initialize() noexcept
 	mCameraSystem = new CameraSystem(this);
 	mCameraSystem->Initialize();
 
+	mLightSystem = new LightSystem(this);
+	mLightSystem->Initialize();
+
 	mRenderDebugSystem = new RenderDebugSystem(this);
 	mRenderDebugSystem->Initialize();
-	
+
 	return 0;
 }
 
@@ -42,6 +45,7 @@ void scarlett::World::Finalize() noexcept
 	mEntities.clear();
 
 	mRenderDebugSystem->Finalize();
+	mLightSystem->Finalize();
 	mCameraSystem->Finalize();
 	mAnimationSystem->Finalize();
 	mMeshRenderSystem->Finalize();
@@ -50,6 +54,7 @@ void scarlett::World::Finalize() noexcept
 
 void scarlett::World::Tick() noexcept
 {
+	mLightSystem->Tick();
 	mAnimationSystem->Tick();
 	mMeshRenderSystem->Tick();
 	mTerrainSystem->Tick();
@@ -129,11 +134,6 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 
 	// build scene graph entity
 	auto child = scene->mRootNode->FindNode("roboto");
-	auto prescale = child->mParent->mTransformation;
-	auto prescale2 = child->mParent->mParent->mTransformation;
-	auto prerotation = child->mParent->mParent->mParent->mTransformation;
-
-
 	auto entity = CreateEntity();
 	auto transformation = entity->GetComponent<TransformComponent>();
 	transformation->SetPosition(Vector3f(0, 0, 0));
@@ -155,8 +155,30 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		skeleton->InitializeHeirarchy(armature, scene);
 	}
 
+	// create second robot
+	auto entity2 = CreateEntity();
+	auto transformation2 = entity2->GetComponent<TransformComponent>();
+	transformation->SetPosition(Vector3f(-100, 0, -100));
+	transformation->SetRotation(Vector3f(0, 0, 0));
+	transformation->SetScale(Vector3f(1, 1, 1));
+	auto comp2 = entity2->AddComponent<MeshRenderComponent>();
+	for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
+		auto midx = child->mMeshes[j];
+		auto mesh = scene->mMeshes[midx];
+		auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
+		comp2->mMeshes.push_back(iMesh);
+	}
+	auto armature2 = scene->mRootNode->FindNode("Bone001");
+	if (armature2) {
+		auto skeleton = entity2->AddComponent<SkeletonComponent>();
+		skeleton->InitializeHeirarchy(armature, scene);
+	}
+
 	auto terrain = CreateEntity();
 	terrain->AddComponent<TerrainComponent>();
+
+	auto sun = CreateEntity();
+	sun->AddComponent<LightComponent>();
 }
 
 void scarlett::World::DumpEntities()

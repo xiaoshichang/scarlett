@@ -20,7 +20,6 @@ namespace scarlett {
 
 	private:
 		World* mWorld;
-
 		std::shared_ptr<Entity>		mMainCamera;
 	};
 
