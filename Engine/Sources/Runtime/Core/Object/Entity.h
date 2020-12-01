@@ -10,6 +10,7 @@
 #include "Runtime/Core/Object/Components/SkeletonComponent.h"
 #include "Runtime/Core/Object/Components/TerrainComponent.h"
 #include "Runtime/Core/Object/Components/LightComponent.h"
+#include "Runtime/Core/Object/Components/RigidBodyComponent.h"
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -58,6 +59,8 @@ namespace scarlett {
 		SkeletonComponent*		mSkeleton;
 		TerrainComponent*		mTerrain;
 		LightComponent*			mLight;
+		RigidBodyComponent*		mRigidBody;
+		
 
 	};
 
@@ -108,6 +111,14 @@ namespace scarlett {
 			comp = mLight;
 		}
 
+		else if (std::is_same<T, RigidBodyComponent>::value)
+		{
+			mRigidBody = new RigidBodyComponent();
+			mRigidBody->SetMaster(this);
+			mRigidBody->Initialize();
+			comp = mRigidBody;
+		}
+
 		return (T*)comp;
 	}
 
@@ -131,6 +142,9 @@ namespace scarlett {
 		}
 		else if (std::is_same<T, LightComponent>::value) {
 			ret = mLight;
+		}
+		else if (std::is_same<T, RigidBodyComponent>::value) {
+			ret = mRigidBody;
 		}
 
 		return (T*)ret;
@@ -168,6 +182,12 @@ namespace scarlett {
 			mLight->Finalize();
 			delete mLight;
 			mLight = nullptr;
+		}
+		else if (std::is_same<T, RigidBodyComponent>::value)
+		{
+			mRigidBody->Finalize();
+			delete mRigidBody;
+			mRigidBody = nullptr;
 		}
 
 

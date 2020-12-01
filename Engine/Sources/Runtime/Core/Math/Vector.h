@@ -192,4 +192,16 @@ namespace scarlett {
 		return sqrtf(dis);
 	}
 
+	template <template<typename> class TT, typename T>
+	inline T VectorLength(const TT<T>& vec1)
+	{
+		T dis = 0;
+		size_t count = ElementCount(vec1.data);
+		for (size_t i = 0; i < count; ++i) {
+			dis += (vec1[i]) * (vec1[i]);
+		}
+
+		return sqrtf(dis);
+	}
+
 }

@@ -46,6 +46,7 @@ ${SourcesPath}/Runtime/Core/Object/Components/CameraComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/SkeletonComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/TerrainComponent.cpp
 ${SourcesPath}/Runtime/Core/Object/Components/LightComponent.cpp
+${SourcesPath}/Runtime/Core/Object/Components/RigidBodyComponent.cpp
 
 ${SourcesPath}/Runtime/Core/Object/System/MeshRenderSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/CameraSystem.cpp
@@ -53,11 +54,19 @@ ${SourcesPath}/Runtime/Core/Object/System/RenderDebugSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/AnimationSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/TerrainSystem.cpp
 ${SourcesPath}/Runtime/Core/Object/System/LightSystem.cpp
+${SourcesPath}/Runtime/Core/Object/System/PhysicsSystem.cpp
 
 ${SourcesPath}/Runtime/Core/Time/TimeMgr.cpp
 ${SourcesPath}/Runtime/Core/Input/InputMgr.cpp
-
 ${SourcesPath}/Runtime/Core/Font/FontMgr.cpp
+
+${SourcesPath}/Runtime/Core/Physics/BoardPhase.cpp
+${SourcesPath}/Runtime/Core/Physics/NarrowPhase.cpp
+${SourcesPath}/Runtime/Core/Physics/Collider.cpp
+${SourcesPath}/Runtime/Core/Physics/Contact.cpp
+${SourcesPath}/Runtime/Core/Physics/RigidBody.cpp
+${SourcesPath}/Runtime/Core/Physics/IntegratePhase.cpp
+${SourcesPath}/Runtime/Core/Physics/ResolutionPhase.cpp
 
 ${SourcesPath}/Runtime/RHI/opengl/GraphicsMgrGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/MeshGL.cpp

@@ -155,25 +155,6 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		skeleton->InitializeHeirarchy(armature, scene);
 	}
 
-	// create second robot
-	auto entity2 = CreateEntity();
-	auto transformation2 = entity2->GetComponent<TransformComponent>();
-	transformation->SetPosition(Vector3f(-100, 0, -100));
-	transformation->SetRotation(Vector3f(0, 0, 0));
-	transformation->SetScale(Vector3f(1, 1, 1));
-	auto comp2 = entity2->AddComponent<MeshRenderComponent>();
-	for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
-		auto midx = child->mMeshes[j];
-		auto mesh = scene->mMeshes[midx];
-		auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
-		comp2->mMeshes.push_back(iMesh);
-	}
-	auto armature2 = scene->mRootNode->FindNode("Bone001");
-	if (armature2) {
-		auto skeleton = entity2->AddComponent<SkeletonComponent>();
-		skeleton->InitializeHeirarchy(armature, scene);
-	}
-
 	auto terrain = CreateEntity();
 	terrain->AddComponent<TerrainComponent>();
 

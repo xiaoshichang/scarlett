@@ -13,6 +13,7 @@
 #include "Runtime/Core/Object/System/AnimationSystem.h"
 #include "Runtime/Core/Object/System/TerrainSystem.h"
 #include "Runtime/Core/Object/System/LightSystem.h"
+#include "Runtime/Core/Object/System/PhysicsSystem.h"
 
 #include <boost/functional/hash.hpp>
 
@@ -48,6 +49,7 @@ namespace scarlett {
 		AnimationSystem*	GetAnimationSystem() { return mAnimationSystem; }
 		TerrainSystem*		GetTerrainSystem() { return mTerrainSystem; }
 		LightSystem*		GetLightSystem() { return mLightSystem; }
+		PhysicsSystem*		GetPhysicsSystem() { return mPhysicsSystem; }
 
 	public:
 		Application* mApp;
@@ -63,6 +65,7 @@ namespace scarlett {
 		AnimationSystem*	mAnimationSystem;
 		TerrainSystem*		mTerrainSystem;
 		LightSystem*		mLightSystem;
+		PhysicsSystem*		mPhysicsSystem;
 	};
 
 }
