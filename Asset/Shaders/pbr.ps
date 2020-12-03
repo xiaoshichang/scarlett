@@ -17,12 +17,14 @@ cbuffer MatrixBuffer
 
 float4 main(v2p input) : SV_TARGET
 {
-	float3 lightDir = float3(0, -1, -1);
+	float3 lightDir = float3(1, 2, 3);
+	lightDir = normalize(lightDir);
 	float lightPow = 0.8;
 	float light = max(dot(lightDir, input.normal), 0.0);
 
-	float4 color;
-	color = tBaseMap.Sample(tBaseMapSamplerState, input.texcood) * light;
-    return color;
+	float3 color = float3(1, 0, 0);
+	color = color * light;
+
+    return float4(color.x, color.y, color.z, 1);
 }
 

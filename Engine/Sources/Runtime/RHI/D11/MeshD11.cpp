@@ -40,7 +40,7 @@ scarlett::MeshD11::MeshD11(aiMesh* mesh, const aiScene* world)
 	mMaterial = std::make_shared<MaterialD11>();
 	aiColor4D diffuse;
 	aiGetMaterialColor(material, AI_MATKEY_COLOR_DIFFUSE, &diffuse);
-	auto shader = mgrd11->GetShader("pbr_skin");
+	auto shader = mgrd11->GetShader("pbr");
 	mMaterial->SetShader(shader);
 
 	float roughness = 0.1f;

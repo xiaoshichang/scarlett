@@ -133,27 +133,17 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 	mCameraSystem->SetMainCamera(camera);
 
 	// build scene graph entity
-	auto child = scene->mRootNode->FindNode("roboto");
 	auto entity = CreateEntity();
 	auto transformation = entity->GetComponent<TransformComponent>();
-	transformation->SetPosition(Vector3f(0, 0, 0));
-	transformation->SetRotation(Vector3f(0, 0, 0));
+	transformation->SetPosition(Vector3f(0, 20, 0));
+	transformation->SetRotation(Vector3f(1, 1, 0));
 	transformation->SetScale(Vector3f(1, 1, 1));
 
 	auto comp = entity->AddComponent<MeshRenderComponent>();
-		
-	for (unsigned int j = 0; j < child->mNumMeshes; ++j) {
-		auto midx = child->mMeshes[j];
-		auto mesh = scene->mMeshes[midx];
-		auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
-		comp->mMeshes.push_back(iMesh);
-	}
-
-	auto armature = scene->mRootNode->FindNode("Bone001");
-	if (armature) {
-		auto skeleton = entity->AddComponent<SkeletonComponent>();
-		skeleton->InitializeHeirarchy(armature, scene);
-	}
+	auto child = scene->mRootNode->FindNode("Cube");
+	auto mesh = scene->mMeshes[child->mMeshes[0]];
+	auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
+	comp->mMeshes.push_back(iMesh);
 
 	auto terrain = CreateEntity();
 	terrain->AddComponent<TerrainComponent>();

@@ -27,7 +27,7 @@ int main() {
 	
 #if defined(SCARLETT_WINDOWS)
 	CHECK_APPLICATION_INIT(GApp->Initialize());
-	auto scene = GAssetFinder::GetInstance()->GetRealPath("Scenes/robot-max-animation.FBX");
+	auto scene = GAssetFinder::GetInstance()->GetRealPath("Scenes/Box.fbx");
 	GApp->mWorld->LoadScene(scene);
 	GApp->mWorld->DumpEntities();
 	GApp->mWorld->GetRenderDebugSystem()->CreateDebugMesh();

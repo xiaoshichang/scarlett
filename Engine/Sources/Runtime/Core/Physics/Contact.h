@@ -47,6 +47,8 @@ namespace scarlett
 		// AB间的所有碰撞点
 		int contactPointCount = 0;
 		ContactPoint contactPoints[CONTACT_POINT_COUNT];
+
+		void UpdateContacts();
 	};
 
 }
