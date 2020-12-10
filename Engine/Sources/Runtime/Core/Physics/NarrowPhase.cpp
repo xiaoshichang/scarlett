@@ -12,6 +12,13 @@
 #define GJK_SIMPLEX3_EPS ((float)0.0)
 #define GJK_SIMPLEX4_EPS ((float)0.0)
 
+#define EPA_ACCURACY ((float)0.0001)
+#define EPA_PLANE_EPS ((float)0.00001)
+#define EPA_INSIDE_EPS ((float)0.01)
+#define EPA_MAX_VERTICES 128
+#define EPA_MAX_ITERATIONS 255
+#define EPA_FALLBACK (10 * EPA_ACCURACY)
+#define EPA_MAX_FACES (EPA_MAX_VERTICES * 2)
 
 using namespace scarlett;
 
@@ -45,6 +52,21 @@ Vector3f scarlett::MinkowskiDiff::Support(Vector3f& dir)
 {
 	return (Support1(dir) - Support2(dir * -1));
 }
+
+Vector3f scarlett::MinkowskiDiff::Support(Vector3f& dir, int idx)
+{
+	if (idx == 1)
+	{
+		return (Support1(dir));
+	}
+	else
+	{
+		return (Support2(dir));
+	}
+}
+
+
+////////////////////////////////////////////// GJK //////////////////////
 
 
 struct GJK
@@ -448,6 +470,372 @@ struct GJK
 };
 
 
+template < typename T>
+void btSwap(T &a, T &b)
+{
+   T tmp = a;
+   a = b;
+   b = tmp;
+}
+////////////////////////////////////////////// GJK //////////////////////
+
+
+
+
+////////////////////////////////////////////// EPA //////////////////////
+struct EPA
+{
+	/* Types		*/
+	typedef GJK::sSV sSV;
+	struct sFace
+	{
+		Vector3f n;
+		float d;
+		sSV* c[3];
+		sFace* f[3];
+		sFace* l[2];
+		U1 e[3];
+		U1 pass;
+	};
+	struct sList
+	{
+		sFace* root;
+		U count;
+		sList() : root(0), count(0) {}
+	};
+	struct sHorizon
+	{
+		sFace* cf;
+		sFace* ff;
+		U nf;
+		sHorizon() : cf(0), ff(0), nf(0) {}
+	};
+	struct eStatus
+	{
+		enum _
+		{
+			Valid,
+			Touching,
+			Degenerated,
+			NonConvex,
+			InvalidHull,
+			OutOfFaces,
+			OutOfVertices,
+			AccuraryReached,
+			FallBack,
+			Failed
+		};
+	};
+	/* Fields		*/
+	eStatus::_ m_status;
+	GJK::sSimplex m_result;
+	Vector3f m_normal;
+	float m_depth;
+	sSV m_sv_store[EPA_MAX_VERTICES];
+	sFace m_fc_store[EPA_MAX_FACES];
+	U m_nextsv;
+	sList m_hull;
+	sList m_stock;
+	/* Methods		*/
+	EPA()
+	{
+		Initialize();
+	}
+
+	static inline void bind(sFace* fa, U ea, sFace* fb, U eb)
+	{
+		fa->e[ea] = (U1)eb;
+		fa->f[ea] = fb;
+		fb->e[eb] = (U1)ea;
+		fb->f[eb] = fa;
+	}
+	static inline void append(sList& list, sFace* face)
+	{
+		face->l[0] = 0;
+		face->l[1] = list.root;
+		if (list.root) list.root->l[0] = face;
+		list.root = face;
+		++list.count;
+	}
+	static inline void remove(sList& list, sFace* face)
+	{
+		if (face->l[1]) face->l[1]->l[0] = face->l[0];
+		if (face->l[0]) face->l[0]->l[1] = face->l[1];
+		if (face == list.root) list.root = face->l[1];
+		--list.count;
+	}
+
+	void Initialize()
+	{
+		m_status = eStatus::Failed;
+		m_normal = Vector3f(0, 0, 0);
+		m_depth = 0;
+		m_nextsv = 0;
+		for (U i = 0; i < EPA_MAX_FACES; ++i)
+		{
+			append(m_stock, &m_fc_store[EPA_MAX_FACES - i - 1]);
+		}
+	}
+	eStatus::_ Evaluate(GJK& gjk, Vector3f& guess)
+	{
+		GJK::sSimplex& simplex = *gjk.m_simplex;
+		if ((simplex.rank > 1) && gjk.EncloseOrigin())
+		{
+			/* Clean up				*/
+			while (m_hull.root)
+			{
+				sFace* f = m_hull.root;
+				remove(m_hull, f);
+				append(m_stock, f);
+			}
+			m_status = eStatus::Valid;
+			m_nextsv = 0;
+			/* Orient simplex		*/
+			if (gjk.det(simplex.c[0]->w - simplex.c[3]->w,
+				simplex.c[1]->w - simplex.c[3]->w,
+				simplex.c[2]->w - simplex.c[3]->w) < 0)
+			{
+				btSwap(simplex.c[0], simplex.c[1]);
+				btSwap(simplex.p[0], simplex.p[1]);
+			}
+			/* Build initial hull	*/
+			sFace* tetra[] = { newface(simplex.c[0], simplex.c[1], simplex.c[2], true),
+							  newface(simplex.c[1], simplex.c[0], simplex.c[3], true),
+							  newface(simplex.c[2], simplex.c[1], simplex.c[3], true),
+							  newface(simplex.c[0], simplex.c[2], simplex.c[3], true) };
+			if (m_hull.count == 4)
+			{
+				sFace* best = findbest();
+				sFace outer = *best;
+				U pass = 0;
+				U iterations = 0;
+				bind(tetra[0], 0, tetra[1], 0);
+				bind(tetra[0], 1, tetra[2], 0);
+				bind(tetra[0], 2, tetra[3], 0);
+				bind(tetra[1], 1, tetra[3], 2);
+				bind(tetra[1], 2, tetra[2], 1);
+				bind(tetra[2], 2, tetra[3], 1);
+				m_status = eStatus::Valid;
+				for (; iterations < EPA_MAX_ITERATIONS; ++iterations)
+				{
+					if (m_nextsv < EPA_MAX_VERTICES)
+					{
+						sHorizon horizon;
+						sSV* w = &m_sv_store[m_nextsv++];
+						bool valid = true;
+						best->pass = (U1)(++pass);
+						gjk.getsupport(best->n, *w);
+						const float wdist = DotProduct(best->n, w->w) - best->d;
+						if (wdist > EPA_ACCURACY)
+						{
+							for (U j = 0; (j < 3) && valid; ++j)
+							{
+								valid &= expand(pass, w,
+									best->f[j], best->e[j],
+									horizon);
+							}
+							if (valid && (horizon.nf >= 3))
+							{
+								bind(horizon.cf, 1, horizon.ff, 2);
+								remove(m_hull, best);
+								append(m_stock, best);
+								best = findbest();
+								outer = *best;
+							}
+							else
+							{
+								m_status = eStatus::InvalidHull;
+								break;
+							}
+						}
+						else
+						{
+							m_status = eStatus::AccuraryReached;
+							break;
+						}
+					}
+					else
+					{
+						m_status = eStatus::OutOfVertices;
+						break;
+					}
+				}
+				const Vector3f projection = outer.n * outer.d;
+				m_normal = outer.n;
+				m_depth = outer.d;
+				m_result.rank = 3;
+				m_result.c[0] = outer.c[0];
+				m_result.c[1] = outer.c[1];
+				m_result.c[2] = outer.c[2];
+				m_result.p[0] = CrossProduct(outer.c[1]->w - projection,
+					outer.c[2]->w - projection)
+					.length();
+				m_result.p[1] = CrossProduct(outer.c[2]->w - projection,
+					outer.c[0]->w - projection)
+					.length();
+				m_result.p[2] = CrossProduct(outer.c[0]->w - projection,
+					outer.c[1]->w - projection)
+					.length();
+				const float sum = m_result.p[0] + m_result.p[1] + m_result.p[2];
+				m_result.p[0] /= sum;
+				m_result.p[1] /= sum;
+				m_result.p[2] /= sum;
+				return (m_status);
+			}
+		}
+		/* Fallback		*/
+		m_status = eStatus::FallBack;
+		m_normal = guess * -1;
+		const float nl = m_normal.length();
+		if (nl > 0)
+			m_normal = m_normal * (1 / nl);
+		else
+			m_normal = Vector3f(1, 0, 0);
+		m_depth = 0;
+		m_result.rank = 1;
+		m_result.c[0] = simplex.c[0];
+		m_result.p[0] = 1;
+		return (m_status);
+	}
+	bool getedgedist(sFace* face, sSV* a, sSV* b, float& dist)
+	{
+		Vector3f ba = b->w - a->w;
+		Vector3f n_ab = CrossProduct(ba, face->n);   // Outward facing edge normal direction, on triangle plane
+		float a_dot_nab = DotProduct(a->w, n_ab);  // Only care about the sign to determine inside/outside, so not normalization required
+
+		if (a_dot_nab < 0)
+		{
+			// Outside of edge a->b
+
+			const float ba_l2 = ba.length2();
+			const float a_dot_ba = DotProduct(a->w, ba);
+			const float b_dot_ba = DotProduct(b->w, ba);
+
+			if (a_dot_ba > 0)
+			{
+				// Pick distance vertex a
+				dist = a->w.length();
+			}
+			else if (b_dot_ba < 0)
+			{
+				// Pick distance vertex b
+				dist = b->w.length();
+			}
+			else
+			{
+				// Pick distance to edge a->b
+				const float a_dot_b = DotProduct(a->w, b->w);
+
+				float t = (a->w.length2() * b->w.length2() - a_dot_b * a_dot_b) / ba_l2;
+				float bigger = t >= 0 ? t : 0;
+				dist = sqrtf(bigger);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+	sFace* newface(sSV* a, sSV* b, sSV* c, bool forced)
+	{
+		if (m_stock.root)
+		{
+			sFace* face = m_stock.root;
+			remove(m_stock, face);
+			append(m_hull, face);
+			face->pass = 0;
+			face->c[0] = a;
+			face->c[1] = b;
+			face->c[2] = c;
+			face->n = CrossProduct(b->w - a->w, c->w - a->w);
+			const float l = face->n.length();
+			const bool v = l > EPA_ACCURACY;
+
+			if (v)
+			{
+				if (!(getedgedist(face, a, b, face->d) ||
+					getedgedist(face, b, c, face->d) ||
+					getedgedist(face, c, a, face->d)))
+				{
+					// Origin projects to the interior of the triangle
+					// Use distance to triangle plane
+					face->d = DotProduct(a->w, face->n) / l;
+				}
+
+				face->n = face->n * (1 / l);
+				if (forced || (face->d >= -EPA_PLANE_EPS))
+				{
+					return face;
+				}
+				else
+					m_status = eStatus::NonConvex;
+			}
+			else
+				m_status = eStatus::Degenerated;
+
+			remove(m_hull, face);
+			append(m_stock, face);
+			return 0;
+		}
+		m_status = m_stock.root ? eStatus::OutOfVertices : eStatus::OutOfFaces;
+		return 0;
+	}
+	sFace* findbest()
+	{
+		sFace* minf = m_hull.root;
+		float mind = minf->d * minf->d;
+		for (sFace* f = minf->l[1]; f; f = f->l[1])
+		{
+			const float sqd = f->d * f->d;
+			if (sqd < mind)
+			{
+				minf = f;
+				mind = sqd;
+			}
+		}
+		return (minf);
+	}
+	bool expand(U pass, sSV* w, sFace* f, U e, sHorizon& horizon)
+	{
+		static const U i1m3[] = { 1, 2, 0 };
+		static const U i2m3[] = { 2, 0, 1 };
+		if (f->pass != pass)
+		{
+			const U e1 = i1m3[e];
+			if ((DotProduct(f->n, w->w) - f->d) < -EPA_PLANE_EPS)
+			{
+				sFace* nf = newface(f->c[e1], f->c[e], w, false);
+				if (nf)
+				{
+					bind(nf, 0, f, e);
+					if (horizon.cf)
+						bind(horizon.cf, 1, nf, 2);
+					else
+						horizon.ff = nf;
+					horizon.cf = nf;
+					++horizon.nf;
+					return (true);
+				}
+			}
+			else
+			{
+				const U e2 = i2m3[e];
+				f->pass = (U1)pass;
+				if (expand(pass, w, f->f[e1], f->e[e1], horizon) &&
+					expand(pass, w, f->f[e2], f->e[e2], horizon))
+				{
+					remove(m_hull, f);
+					append(m_stock, f);
+					return (true);
+				}
+			}
+		}
+		return (false);
+	}
+};
+
+////////////////////////////////////////////// EPA //////////////////////
+
 /*
 rigidBodiesPairs 所有可能发生碰撞的刚体对
 collisions 实际的碰撞结果
@@ -489,18 +877,40 @@ bool scarlett::NarrowPhaseGJKEPA::Penetration(RigidBodyPair& pair, Vector3f & gu
 
 	// gjk 算法求解
 	GJK gjk;
-	GJK::eStatus::_ gjk_status = gjk.Evaluate(shape, guess);
+	GJK::eStatus::_ gjk_status = gjk.Evaluate(shape, guess*-1);
 
 	switch (gjk_status)
 	{
 
 	case GJK::eStatus::Inside:
 	{
-		return true;
+		EPA epa;
+		EPA::eStatus::_ epa_status = epa.Evaluate(gjk, guess*-1);
+		if (epa_status != EPA::eStatus::Failed)
+		{
+			Vector3f w0 = Vector3f(0, 0, 0);
+			for (U i = 0; i < epa.m_result.rank; ++i)
+			{
+				w0 = w0 + shape.Support(epa.m_result.c[i]->d, 1) * epa.m_result.p[i];	// Support 返回的是全局坐标系的点，所以可以判断w0是全局坐标系下的碰撞点。
+			}
+			Matrix4x4f wtrs1 = pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetWorldMatrixInverse();
+			result.status = sResults::Penetrating;
+			result.witnesses[0] = TransformPoint(wtrs1, w0);								// 物体1在物体2中的最深穿透点在物体1下的坐标
+			Vector3f secondObjectPointInFirstObject = w0 - epa.m_normal * epa.m_depth;
+			result.witnesses[1] = TransformPoint(wtrs1, secondObjectPointInFirstObject);	// 物体2在物体1中的最深穿透点在物体1下的坐标
+			result.normal = epa.m_normal;	// 由物体1指向物体2
+			result.distance = epa.m_depth;
+			return true;
+		}
+		else
+		{
+			result.status = sResults::EPA_Failed;
+		}
+
 	}
 	case GJK::eStatus::Failed:
 	{
-		break;
+		result.status = sResults::GJK_Failed;
 	}
 	default:
 	{

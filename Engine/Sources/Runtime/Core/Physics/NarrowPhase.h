@@ -41,6 +41,7 @@ namespace scarlett
 		inline Vector3f Support1(Vector3f& dir);
 		inline Vector3f Support2(Vector3f& dir);
 		Vector3f Support(Vector3f& dir);
+		Vector3f Support(Vector3f& dir, int idx);
 	};
 
 	class NarrowPhaseGJKEPA: public INarrowPhase

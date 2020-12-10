@@ -146,7 +146,7 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		auto entity = CreateEntity();
 		auto transformation = entity->GetComponent<TransformComponent>();
 		transformation->SetPosition(Vector3f(bcount * -5, 20, bcount * 5));
-		transformation->SetRotation(Vector3f(0.2 * bcount, 1, 0));
+		transformation->SetRotation(Vector3f(0.2 * bcount, 0, 0));
 		transformation->SetScale(Vector3f(1, 1, 1));
 
 		auto comp = entity->AddComponent<MeshRenderComponent>();
