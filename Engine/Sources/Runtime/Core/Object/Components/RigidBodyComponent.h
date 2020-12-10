@@ -5,6 +5,7 @@
 #include "Runtime/Interface/IComponent.h"
 #include "Runtime/Core/Physics/RigidBody.h"
 #include "Runtime/Core/Physics/Collider.h"
+#include "Runtime/Core/Physics/AABB.h"
 
 namespace scarlett
 {
@@ -16,13 +17,14 @@ namespace scarlett
 		virtual void Finalize() noexcept;
 		virtual void Tick() noexcept;
 		RigidBodyComponent();
-		RigidBodyComponent(float mass, const Matrix4x4f& inertia, float impulseCoeff, float frictionCoeff);
 
 	public:
 		RigidBody* GetRigidBody();
+		AABB*	GetAABB();
 
 	private:
 		RigidBody rigidBody;
+		AABB aabb;
 		
 	};
 }

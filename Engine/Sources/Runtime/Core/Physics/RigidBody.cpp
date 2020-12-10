@@ -4,10 +4,7 @@ using namespace scarlett;
 
 scarlett::RigidBody::RigidBody()
 {
-}
 
-scarlett::RigidBody::RigidBody(float mass, const Matrix4x4f& inertia, float impulseCoeff, float frictionCoeff)
-{
 	isSleep = true;
 	force = Vector3f(0, 0, 0);
 	velocity = Vector3f(0, 0, 0);
@@ -15,6 +12,21 @@ scarlett::RigidBody::RigidBody(float mass, const Matrix4x4f& inertia, float impu
 	angularVel = Vector3f(0, 0, 0);
 
 	SetStatic(false);
+
+}
+
+void scarlett::RigidBody::SetMaster(RigidBodyComponent * master)
+{
+	this->master = master;
+}
+
+RigidBodyComponent * scarlett::RigidBody::GetMaster()
+{
+	return this->master;
+}
+
+void scarlett::RigidBody::InitializeCoeff(float mass, const Matrix3x3f& inertia, float impulseCoeff, float frictionCoeff)
+{
 	SetMass(mass);
 	SetInertia(inertia);
 	SetImpulseCoefficient(impulseCoeff);
@@ -49,18 +61,18 @@ float scarlett::RigidBody::GetInverseMass()
 	return this->inverseMass;
 }
 
-void scarlett::RigidBody::SetInertia(const Matrix4x4f & inertia)
+void scarlett::RigidBody::SetInertia(const Matrix3x3f & inertia)
 {
 	this->inertia = inertia;
 	MatrixInverse(this->inverseInertia, inertia);
 }
 
-Matrix4x4f scarlett::RigidBody::GetInertia()
+Matrix3x3f scarlett::RigidBody::GetInertia()
 {
 	return this->inertia;
 }
 
-Matrix4x4f scarlett::RigidBody::GetInverseInertia()
+Matrix3x3f scarlett::RigidBody::GetInverseInertia()
 {
 	return this->inverseInertia;
 }

@@ -14,6 +14,7 @@ int scarlett::RigidBodyComponent::Initialize() noexcept
 			world->GetPhysicsSystem()->AddComponent(this);
 		}
 	}
+	rigidBody.SetMaster(this);
 	return 0;
 }
 
@@ -37,13 +38,13 @@ RigidBodyComponent::RigidBodyComponent()
 
 }
 
-RigidBodyComponent::RigidBodyComponent(float mass, const Matrix4x4f& inertia, float impulseCoeff, float frictionCoeff):
-	rigidBody(mass, inertia, impulseCoeff, frictionCoeff)
-{
-}
-
 RigidBody * scarlett::RigidBodyComponent::GetRigidBody()
 {
 	return &rigidBody;
+}
+
+AABB * scarlett::RigidBodyComponent::GetAABB()
+{
+	return &aabb;
 }
 

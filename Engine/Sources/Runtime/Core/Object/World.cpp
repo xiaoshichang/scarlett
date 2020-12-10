@@ -1,7 +1,11 @@
 #include "Foundation/Assert.h"
 #include "Runtime/Core/Application/Application.h"
 #include "Runtime/Core/Object/World.h"
+#include "Runtime/Core/Math/ScltMath.h"
+
 #include "Runtime/Core/Object/Components/MeshRenderComponent.h"
+#include "Runtime/Core/Object/Components/RigidBodyComponent.h"
+#include "Runtime/Core/Physics/Inertia.h"
 
 #include "assimp/scene.h"
 #include "assimp/Importer.hpp"
@@ -37,6 +41,9 @@ int scarlett::World::Initialize() noexcept
 	mRenderDebugSystem = new RenderDebugSystem(this);
 	mRenderDebugSystem->Initialize();
 
+	mPhysicsSystem = new PhysicsSystem(this);
+	mPhysicsSystem->Initialize();
+
 	return 0;
 }
 
@@ -54,6 +61,7 @@ void scarlett::World::Finalize() noexcept
 
 void scarlett::World::Tick() noexcept
 {
+	mPhysicsSystem->Tick();
 	mLightSystem->Tick();
 	mAnimationSystem->Tick();
 	mMeshRenderSystem->Tick();
@@ -132,21 +140,44 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 	camera->AddComponent<CameraComponent>();
 	mCameraSystem->SetMainCamera(camera);
 
-	// build scene graph entity
-	auto entity = CreateEntity();
-	auto transformation = entity->GetComponent<TransformComponent>();
-	transformation->SetPosition(Vector3f(0, 20, 0));
-	transformation->SetRotation(Vector3f(1, 1, 0));
-	transformation->SetScale(Vector3f(1, 1, 1));
+	// Add some box
+	for(int bcount = 0; bcount < 1; bcount++)
+	{
+		auto entity = CreateEntity();
+		auto transformation = entity->GetComponent<TransformComponent>();
+		transformation->SetPosition(Vector3f(bcount * -5, 20, bcount * 5));
+		transformation->SetRotation(Vector3f(0.2 * bcount, 1, 0));
+		transformation->SetScale(Vector3f(1, 1, 1));
 
-	auto comp = entity->AddComponent<MeshRenderComponent>();
-	auto child = scene->mRootNode->FindNode("Cube");
-	auto mesh = scene->mMeshes[child->mMeshes[0]];
-	auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
-	comp->mMeshes.push_back(iMesh);
+		auto comp = entity->AddComponent<MeshRenderComponent>();
+		auto child = scene->mRootNode->FindNode("Cube");
+		auto mesh = scene->mMeshes[child->mMeshes[0]];
+		auto iMesh = GApp->mGraphicsManager->CreateRenderMesh(mesh, scene);
+		comp->mMeshes.push_back(iMesh);
 
-	auto terrain = CreateEntity();
-	terrain->AddComponent<TerrainComponent>();
+		auto rigidBodyComp = entity->AddComponent<RigidBodyComponent>();
+		float mass = 1.0f;
+		Matrix3x3f inertia = Inertia::CalculateInertiaSolidCuboid(mass, 2.0f, 2.0f, 2.0f);
+		float impulseCoeff = 0.5f;
+		float frictionCoeff = 0.5f;
+		rigidBodyComp->GetRigidBody()->InitializeCoeff(mass, inertia, impulseCoeff, frictionCoeff);
+		rigidBodyComp->GetAABB()->Initialize(mesh);
+		rigidBodyComp->GetRigidBody()->SetStatic(false);
+	}
+	
+	{
+		auto terrain = CreateEntity();
+		auto transformation = terrain->GetComponent<TransformComponent>();
+		transformation->SetPosition(Vector3f(0, -5, 0));
+		transformation->SetRotation(Vector3f(0, 0, 0));
+		transformation->SetScale(Vector3f(1, 1, 1));
+		terrain->AddComponent<TerrainComponent>();
+		auto rigidbody = terrain->AddComponent<RigidBodyComponent>();
+		Vector3f minPoint = { -100.0f, -5.0f, -100.0f };
+		Vector3f maxPoint = { 100.0f, 5.0f, 100.0f };
+		rigidbody->GetAABB()->Initialize(minPoint, maxPoint);
+		rigidbody->GetRigidBody()->SetStatic(true);
+	}
 
 	auto sun = CreateEntity();
 	sun->AddComponent<LightComponent>();

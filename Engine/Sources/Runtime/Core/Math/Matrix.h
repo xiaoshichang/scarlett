@@ -66,6 +66,7 @@ namespace scarlett {
 	};
 
 	typedef Matrix<float, 4, 4> Matrix4x4f;
+	typedef Matrix<float, 3, 3> Matrix3x3f;
 
 	template <typename T, int ROWS, int COLS>
 	inline void Transpose(Matrix<T, COLS, ROWS>& result, const Matrix<T, ROWS, COLS>& m) {
@@ -247,20 +248,30 @@ namespace scarlett {
 		return fDet * f;
 	}
 
-	inline void Transform(Vector4f& vector, const Matrix4x4f& matrix) {
+	inline Vector3f TransformPoint(const Matrix4x4f& matrix, Vector3f& point)
+	{
+		Vector4f hSpace = Vector4f(point.x, point.y, point.z, 1);
+		Vector4f tmp = Vector4f(0, 0, 0, 0);
+
 		for (int r = 0; r < 4; ++r) {
 			for (int c = 0; c < 4; ++c) {
-				vector[r] = vector[c] * matrix[r][c];
+				tmp[r] += hSpace[c] * matrix[r][c];
 			}
 		}
+		return Vector3f(tmp.x, tmp.y, tmp.z);
 	}
 
-	inline void Transform(Vector3f& vector, const Matrix4x4f& matrix) {
-		Vector4f tmp = { vector.x, vector.y, vector.z, 1 };
-		Transform(tmp, matrix);
-		vector.x = tmp.x;
-		vector.y = tmp.y;
-		vector.z = tmp.z;
+	inline Vector3f TransformVector(const Matrix4x4f& matrix, Vector3f& vector)
+	{
+		Vector4f hSpace = Vector4f(vector.x, vector.y, vector.z, 0);
+		Vector4f tmp = Vector4f(0, 0, 0, 0);
+
+		for (int r = 0; r < 4; ++r) {
+			for (int c = 0; c < 4; ++c) {
+				tmp[r] += hSpace[c] * matrix[r][c];
+			}
+		}
+		return Vector3f(tmp.x, tmp.y, tmp.z);
 	}
 
 	inline void BuildMatrixRotationX(Matrix4x4f& matrix, const float radio) {

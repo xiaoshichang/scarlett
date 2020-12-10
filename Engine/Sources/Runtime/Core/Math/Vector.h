@@ -63,6 +63,24 @@ namespace scarlett {
 			return res;
 		}
 
+		Vector3Type<T> operator*(T scale) {
+			Vector3Type<T> res;
+			res.x = x * scale;
+			res.y = y * scale;
+			res.z = z * scale;
+			return res;
+		}
+
+		T length2()
+		{
+			return x * x + y * y + z * z;
+		}
+
+		T length()
+		{
+			return sqrt(length2());
+		}
+
 	};
 
 	typedef Vector3Type<float> Vector3f;
@@ -144,6 +162,7 @@ namespace scarlett {
 		}
 	}
 
+
 	template <template<typename>class TT, typename T>
 	void VectorSub(TT<T>& result, const TT<T>& vec1, const TT<T>& vec2) {
 		size_t count = ElementCount(result.data);
@@ -152,11 +171,21 @@ namespace scarlett {
 		}
 	}
 
+
 	template <template<typename> class TT, typename T>
 	inline void CrossProduct(TT<T>& result, const TT<T>& vec1, const TT<T>& vec2) {
 		result[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
 		result[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
 		result[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+	}
+
+	template <template<typename> class TT, typename T>
+	inline TT<T>  CrossProduct(const TT<T>& vec1, const TT<T>& vec2) {
+		TT<T> result;
+		result[0] = vec1[1] * vec2[2] - vec1[2] * vec2[1];
+		result[1] = vec1[2] * vec2[0] - vec1[0] * vec2[2];
+		result[2] = vec1[0] * vec2[1] - vec1[1] * vec2[0];
+		return result;
 	}
 
 	template <template<typename> class TT, typename T>

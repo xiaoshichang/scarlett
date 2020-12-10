@@ -4,11 +4,16 @@
 namespace scarlett
 {
 
+	class RigidBodyComponent;
 	class RigidBody
 	{
 	public:
 		RigidBody();
-		RigidBody(float mass, const Matrix4x4f& inertia, float impulseCoeff, float frictionCoeff);
+
+		void SetMaster(RigidBodyComponent* master);
+		RigidBodyComponent* GetMaster();
+
+		void InitializeCoeff(float mass, const Matrix3x3f& inertia, float impulseCoeff, float frictionCoeff);
 
 		bool IsStatic();
 		void SetStatic(bool isStatic);
@@ -17,9 +22,9 @@ namespace scarlett
 		float GetMass();
 		float GetInverseMass();
 
-		void SetInertia(const Matrix4x4f& inertia);
-		Matrix4x4f GetInertia();
-		Matrix4x4f GetInverseInertia();
+		void SetInertia(const Matrix3x3f& inertia);
+		Matrix3x3f GetInertia();
+		Matrix3x3f GetInverseInertia();
 
 		float GetImpulseCoefficient();
 		void SetImpulseCoefficient(float coeff);
@@ -54,15 +59,6 @@ namespace scarlett
 		// 当前角速度
 		Vector3f angularVel;
 
-		// 当前位置
-		Vector3f position;
-
-		// 当前朝向
-		Vector3f rotation;
-
-		// 当前缩放
-		Vector3f scale;
-
 		// 是否处于休眠状态
 		bool isSleep;
 
@@ -81,13 +77,15 @@ namespace scarlett
 		float impulseCoefficient;
 
 		// 转动惯量
-		Matrix4x4f inertia;
+		Matrix3x3f inertia;
 
 		// 转动惯量逆矩阵
-		Matrix4x4f inverseInertia;
+		Matrix3x3f inverseInertia;
 
 		// 摩擦系数
 		float frictionCoefficient;
+
+		RigidBodyComponent* master;
 
 	};
 
