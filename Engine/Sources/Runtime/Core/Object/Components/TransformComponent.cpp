@@ -45,7 +45,6 @@ Matrix4x4f scarlett::TransformComponent::GetWorldMatrixInverse()
 		BuildMatrixRotationY(ry, -rotation.y);
 		BuildMatrixRotationZ(rz, -rotation.z);
 		mWorldMatrixInverse = scaling * rx * ry * rz * translation ; // make sure translation matrix go first.
-		mWorldMatrixInverseDirty = false;
 	}
 	
 	return mWorldMatrixInverse;

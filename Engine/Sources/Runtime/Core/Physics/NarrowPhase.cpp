@@ -2,6 +2,7 @@
 #include "Runtime/Core/Object/Entity.h"
 #include "Runtime/Core/Object/Components/RigidBodyComponent.h"
 #include "Runtime/Core/Object/Components/TransformComponent.h"
+#include "Runtime/Utils/Logging.h"
 
 
 #define GJK_MAX_ITERATIONS 128
@@ -900,6 +901,15 @@ bool scarlett::NarrowPhaseGJKEPA::Penetration(RigidBodyPair& pair, Vector3f & gu
 			result.witnesses[1] = TransformPoint(wtrs1, secondObjectPointInFirstObject);	// 物体2在物体1中的最深穿透点在物体1下的坐标
 			result.normal = epa.m_normal;	// 由物体1指向物体2
 			result.distance = epa.m_depth;
+
+			SCARLETT_LOG(info) << "v of pair.first:" << pair.first->GetVelocity();
+			SCARLETT_LOG(info) << "position of pair.first:" << pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
+			SCARLETT_LOG(info) << "rotation of pair.first:" << pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetRotation();
+			SCARLETT_LOG(info) << "v of pair.second:" << pair.second->GetVelocity();
+			SCARLETT_LOG(info) << "position of pair.second:" << pair.second->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
+			SCARLETT_LOG(info) << "rotation of pair.second:" << pair.second->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetRotation();
+			SCARLETT_LOG(info) << "hit at: " << w0;
+
 			return true;
 		}
 		else
