@@ -17,10 +17,10 @@ namespace scarlett
 	{
 		Jacobian(JacobianType jt)
 		{
-			m_va = Vector3f(0, 0, 0);
-			m_wa = Vector3f(0, 0, 0);
-			m_vb = Vector3f(0, 0, 0);
-			m_wa = Vector3f(0, 0, 0);
+			m_jva = Vector3f(0, 0, 0);
+			m_jwa = Vector3f(0, 0, 0);
+			m_jvb = Vector3f(0, 0, 0);
+			m_jwa = Vector3f(0, 0, 0);
 
 		}
 
@@ -28,10 +28,10 @@ namespace scarlett
 
 
 		JacobianType jacobinType;
-		Vector3f m_va;
-		Vector3f m_wa;
-		Vector3f m_vb;
-		Vector3f m_wb;
+		Vector3f m_jva;
+		Vector3f m_jwa;
+		Vector3f m_jvb;
+		Vector3f m_jwb;
 		float m_bias;
 		float m_effectiveMass;
 		float m_totalLambda;

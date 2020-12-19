@@ -10,10 +10,10 @@
 */
 void scarlett::Jacobian::Init(std::shared_ptr<ContactManifold> manifold, int idx, Vector3f dir, float dt)
 {
-	m_va = dir;
-	m_wa = CrossProduct(manifold->contactPoints[idx].rA, dir * -1) * -1;
-	m_vb = dir * -1;
-	m_wb = CrossProduct(manifold->contactPoints[idx].rB, dir * -1);
+	m_jva = dir * -1;
+	m_jwa = CrossProduct(manifold->contactPoints[idx].rA, dir) * -1;
+	m_jvb = dir;
+	m_jwb = CrossProduct(manifold->contactPoints[idx].rB, dir);
 
 	m_bias = 0.0f;
 
@@ -39,16 +39,16 @@ void scarlett::Jacobian::Init(std::shared_ptr<ContactManifold> manifold, int idx
 		m_bias = 0;
 		if (jacobinType == JacobianType::Normal)
 		{
-			// 发现方向的约束解决的物理含义为
-			// 碰撞双方的相对速度在发现方向上的投影速度为 >= 0，也就是两者不会继续靠近了。
-			Vector3f relativeVelocity = va - vb + CrossProduct(wa, ra) - CrossProduct(wb, rb);
+			// 推导方式具体可以看
+			// http://allenchou.net/2013/12/game-physics-resolution-contact-constraints/
+			Vector3f relativeVelocity = vb + CrossProduct(wb, rb) - va - CrossProduct(wa, ra);
 			float closingVelocity = DotProduct(relativeVelocity, dir);
 			m_bias = -(beta / dt) * manifold->contactPoints[idx].penetrationDistance + restitution * closingVelocity;
 		}
 		
 		// http://allenchou.net/2013/12/game-physics-constraints-sequential-impulse/
 		// https://www.youtube.com/watch?v=pmdYzNF9x34
-		// 视频里面有 J 得算法。
+		// 视频里面有 effectiveMass 的算法。
 		// 不过这里的计算依然没理解得太透彻
 		auto rigidA = manifold->colliderA->GetRigidBody();
 		auto rigidB = manifold->colliderB->GetRigidBody();
