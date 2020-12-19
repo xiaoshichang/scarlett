@@ -841,26 +841,46 @@ struct EPA
 rigidBodiesPairs 所有可能发生碰撞的刚体对
 collisions 实际的碰撞结果
 */
-void scarlett::NarrowPhaseGJKEPA::CollideDetection(std::vector<RigidBodyPair>& rigidBodiesPairs, std::vector<ContactManifold*>& collisions)
+void scarlett::NarrowPhaseGJKEPA::CollideDetection(std::vector<RigidBodyPair>& rigidBodiesPairs, std::vector<std::shared_ptr<ContactManifold>>& collisions)
 {
-	collisions.clear();;
 	for each (RigidBodyPair pair in rigidBodiesPairs)
 	{
 		Vector3f position1 = pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
 		Vector3f position2 = pair.second->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
 		Vector3f guess = position1 - position2;
 		sResults result;
+
+		// 如果发生了穿透，则生成对应的ContactPoint信息
 		if (Penetration(pair, guess, result))
 		{
-		
+			ContactPoint point;
+			point.localPositionA = result.witnessesInFirstLocal[0];
+			point.localPositionB = result.witnessesInFirstLocal[1];
+			point.globalPositionA = result.witnessInGlobal[0];
+			point.globalPositionB = result.witnessInGlobal[1];
+			point.normal = result.normal;
+			point.penetrationDistance = result.distance;
+			GenerateTangents(point);
+
+			point.rA = point.globalPositionA - position1;
+			point.rB = point.globalPositionB - position2;
+
+			std::shared_ptr<ContactManifold> manifold = std::make_shared<ContactManifold>();
+			manifold->colliderA = pair.first->GetMaster();
+			manifold->colliderB = pair.second->GetMaster();
+
+			collisions.push_back(manifold);
 		}
 	}
+
+
+
 }
 
 void scarlett::NarrowPhaseGJKEPA::InitializeMinkowskiDiff(RigidBodyPair& pair, sResults & result, MinkowskiDiff & diff)
 {
 	// result
-	result.witnesses[0] = result.witnesses[1] = Vector3f(0, 0, 0);
+	result.witnessesInFirstLocal[0] = result.witnessesInFirstLocal[1] = result.witnessInGlobal[0] = result.witnessInGlobal[1] = Vector3f(0, 0, 0);
 	result.status = sResults::Separated;
 
 	//minkowski
@@ -892,15 +912,20 @@ bool scarlett::NarrowPhaseGJKEPA::Penetration(RigidBodyPair& pair, Vector3f & gu
 			Vector3f w0 = Vector3f(0, 0, 0);
 			for (U i = 0; i < epa.m_result.rank; ++i)
 			{
-				w0 = w0 + shape.Support(epa.m_result.c[i]->d, 1) * epa.m_result.p[i];	// Support 返回的是全局坐标系的点，所以可以判断w0是全局坐标系下的碰撞点。
+				// w0 是 物体1在物体2的最深穿透点在世界坐标下的坐标
+				// Support 返回的是全局坐标系的点，所以可以判断w0是全局坐标系下的点。
+				w0 = w0 + shape.Support(epa.m_result.c[i]->d, 1) * epa.m_result.p[i];
+				
 			}
 			Matrix4x4f wtrs1 = pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetWorldMatrixInverse();
 			result.status = sResults::Penetrating;
-			result.witnesses[0] = TransformPoint(wtrs1, w0);								// 物体1在物体2中的最深穿透点在物体1下的坐标
+			result.witnessesInFirstLocal[0] = TransformPoint(wtrs1, w0);								// 物体1在物体2中的最深穿透点在物体1下的坐标
 			Vector3f secondObjectPointInFirstObject = w0 - epa.m_normal * epa.m_depth;
-			result.witnesses[1] = TransformPoint(wtrs1, secondObjectPointInFirstObject);	// 物体2在物体1中的最深穿透点在物体1下的坐标
-			result.normal = epa.m_normal;	// 由物体1指向物体2
-			result.distance = epa.m_depth;
+			result.witnessesInFirstLocal[1] = TransformPoint(wtrs1, secondObjectPointInFirstObject);	// 物体2在物体1中的最深穿透点在物体1下的坐标
+			result.witnessInGlobal[0] = w0;
+			result.witnessInGlobal[1] = secondObjectPointInFirstObject;
+			result.normal = epa.m_normal;	// 全局坐标下，由物体1指向物体2
+			result.distance = epa.m_depth;	// 距离为正数
 
 			SCARLETT_LOG(info) << "v of pair.first:" << pair.first->GetVelocity();
 			SCARLETT_LOG(info) << "position of pair.first:" << pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
@@ -929,6 +954,27 @@ bool scarlett::NarrowPhaseGJKEPA::Penetration(RigidBodyPair& pair, Vector3f & gu
 
 	}
 	return false;
+}
+
+// 用法线生成对应切线
+// http://allenchou.net/2013/12/game-physics-contact-generation-epa/
+void scarlett::NarrowPhaseGJKEPA::GenerateTangents(ContactPoint & contactPoint)
+{
+	if (contactPoint.normal.x >= 0.57735f)
+	{
+		contactPoint.tangent1.x = contactPoint.normal.y;
+		contactPoint.tangent1.y = -contactPoint.normal.x;
+		contactPoint.tangent1.z = 0;
+	} 
+	else
+	{
+		contactPoint.tangent1.x = 0; 
+		contactPoint.tangent1.y = contactPoint.normal.z;
+		contactPoint.tangent1.z = -contactPoint.normal.y;
+	}
+	Normalize(contactPoint.tangent1);
+	contactPoint.tangent2 = CrossProduct(contactPoint.normal, contactPoint.tangent1);
+
 }
 
 

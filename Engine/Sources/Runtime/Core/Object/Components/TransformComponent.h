@@ -23,6 +23,7 @@ namespace scarlett {
 
 		Vector3f	GlobalVectorToLocalVector(Vector3f globalVector);
 		Vector3f	LocalPointToGlobalPoint(Vector3f localPoint);
+		Matrix3x3f	GetRatationMatrixGlobal2Local33();
 
 	private:
 		bool		mWorldMatrixDirty;

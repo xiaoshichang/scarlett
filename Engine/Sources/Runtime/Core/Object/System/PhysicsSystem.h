@@ -1,19 +1,21 @@
 #pragma once
 #include <set>
 #include <vector>
+#include <memory>
+#include "Runtime//Core/Math/ScltMath.h"
 #include "Runtime/Interface/ISystem.h"
-#include "Runtime/Core/Object/Components/RigidBodyComponent.h"
-
-#include "Runtime/Core/Physics/BoardPhase.h"
-#include "Runtime/Core/Physics/NarrowPhase.h"
-#include "Runtime/Core/Physics/ResolutionPhase.h"
-#include "Runtime/Core/Physics/IntegratePhase.h"
 
 
 namespace scarlett
 {
 	class World;
 	class RigidBodyComponent;
+	class IBoardPhase;
+	class INarrowPhase;
+	class IResolutionPhase;
+	class IIntegratePhase;
+	class ContactManifold;
+	class RigidBody;
 
 	class PhysicsSystem : public ITickableSystem
 	{
@@ -42,6 +44,6 @@ namespace scarlett
 		IResolutionPhase* resolutionPhase;
 		IIntegratePhase* integratePhase;
 
-
+		std::vector< std::shared_ptr<ContactManifold> > manifolds;
 	};
 }

@@ -55,9 +55,9 @@ void scarlett::TimeMgr::PostTick() noexcept
 	auto total = m_frameEndTime - m_frameStartTime;
 	long long interval = 15000000;
 	long long sleep = interval - total.count();
-	/*if (sleep > 0) {
+	if (sleep > 0) {
 		MicroSleep(sleep);
-	}*/
+	}
 }
 
 void scarlett::TimeMgr::MicroSleep(unsigned long long ns) noexcept

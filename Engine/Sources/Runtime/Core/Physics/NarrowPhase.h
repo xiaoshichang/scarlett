@@ -13,7 +13,7 @@ namespace scarlett
 	class INarrowPhase
 	{
 	public:
-		virtual void CollideDetection(std::vector<RigidBodyPair>& rigidBodies, std::vector<ContactManifold*>& collisions) = 0;
+		virtual void CollideDetection(std::vector<RigidBodyPair>& rigidBodies, std::vector<std::shared_ptr<ContactManifold>>& collisions) = 0;
 
 	};
 
@@ -28,7 +28,8 @@ namespace scarlett
 			EPA_Failed   /* EPA phase fail, bigger problem, need to save parameters, and debug	*/
 		} status;
 
-		Vector3f witnesses[2];
+		Vector3f witnessInGlobal[2];
+		Vector3f witnessesInFirstLocal[2];
 		Vector3f normal;
 		float distance;
 	};
@@ -47,10 +48,11 @@ namespace scarlett
 	class NarrowPhaseGJKEPA: public INarrowPhase
 	{
 
-		virtual void CollideDetection(std::vector<RigidBodyPair>& rigidBodies, std::vector<ContactManifold*>& collisions);
+		virtual void CollideDetection(std::vector<RigidBodyPair>& rigidBodies, std::vector<std::shared_ptr<ContactManifold>>&);
 
 		void InitializeMinkowskiDiff(RigidBodyPair& pair, sResults& result, MinkowskiDiff& diff);
 		bool Penetration(RigidBodyPair& pair, Vector3f& guess, sResults& result);
+		void GenerateTangents(ContactPoint& contactPoint);
 
 	};
 

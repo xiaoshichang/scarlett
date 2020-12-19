@@ -4,6 +4,11 @@
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/Application/Application.h"
 #include "Runtime/Core/Math/ScltMath.h"
+#include "Runtime/Core/Object/Components/RigidBodyComponent.h"
+#include "Runtime/Core/Physics/BoardPhase.h"
+#include "Runtime/Core/Physics/NarrowPhase.h"
+#include "Runtime/Core/Physics/ResolutionPhase.h"
+#include "Runtime/Core/Physics/IntegratePhase.h"
 
 using namespace scarlett;
 
@@ -33,6 +38,12 @@ void scarlett::PhysicsSystem::Tick() noexcept
 	std::vector<RigidBody*> activedRigidBodies;
 	CollectRigidBodies(activedRigidBodies);
 
+	// udpate Inertia tensor in global зјБъ
+	for each (RigidBody* rigidBody in activedRigidBodies)
+	{
+		rigidBody->UpdateInverseInertiaWs();
+	}
+
 	// gravity
 	Vector3f gravityImpulse = VectorScale(gravity, deltaTime);
 	for each (RigidBody* rigidBody in activedRigidBodies)
@@ -52,15 +63,17 @@ void scarlett::PhysicsSystem::Tick() noexcept
 	boardPhase->GeneratePossiblePair(activedRigidBodies, candicate);
 
 	// narrowPhase
-	std::vector<ContactManifold*> manifolds;
 	narrowPhase->CollideDetection(candicate, manifolds);
 
 	// resolutionPhase
-	resolutionPhase->resolve(manifolds);
+	resolutionPhase->Resolve(manifolds, deltaTime);
 
 	// integratePhase
 	integratePhase->integrate(activedRigidBodies, deltaTime);
-	 
+
+	// clearPhase
+	manifolds.clear();
+	
 }
 
 void scarlett::PhysicsSystem::AddComponent(RigidBodyComponent * comp)

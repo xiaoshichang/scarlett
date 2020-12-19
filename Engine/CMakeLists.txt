@@ -69,6 +69,7 @@ ${SourcesPath}/Runtime/Core/Physics/IntegratePhase.cpp
 ${SourcesPath}/Runtime/Core/Physics/ResolutionPhase.cpp
 ${SourcesPath}/Runtime/Core/Physics/Inertia.cpp
 ${SourcesPath}/Runtime/Core/Physics/AABB.cpp
+${SourcesPath}/Runtime/Core/Physics/Jacobian.cpp
 
 ${SourcesPath}/Runtime/RHI/opengl/GraphicsMgrGL.cpp
 ${SourcesPath}/Runtime/RHI/opengl/MeshGL.cpp

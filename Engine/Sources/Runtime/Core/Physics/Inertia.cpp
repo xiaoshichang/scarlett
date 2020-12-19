@@ -7,13 +7,13 @@ using namespace scarlett;
 
 Matrix3x3f scarlett::Inertia::CalculateInertiaSolidCuboid(float mass, float w, float h, float d)
 {
-	float v1 = 1 / 12 * mass * (h * h + d * d);
-	float v2 = 1 / 12 * mass * (w * w + d * d);
-	float v3 = 1 / 12 * mass * (h * h + w * w);
+	float v1 = 1.0 / 12 * mass * (h * h + d * d);
+	float v2 = 1.0 / 12 * mass * (w * w + d * d);
+	float v3 = 1.0 / 12 * mass * (h * h + w * w);
 	Matrix3x3f ret = {{{
 		{v1, 0, 0},
 		{0, v2, 0},
-		(0, 0, v3),
+		{0, 0, v3},
 		}}};
 	return ret;
 }

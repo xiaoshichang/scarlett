@@ -35,7 +35,8 @@ void scarlett::RigidBodyComponent::Tick() noexcept
 
 RigidBodyComponent::RigidBodyComponent()
 {
-
+	contactBeta = 0.5f;
+	restitution = 0.5f;
 }
 
 RigidBody * scarlett::RigidBodyComponent::GetRigidBody()
@@ -46,5 +47,47 @@ RigidBody * scarlett::RigidBodyComponent::GetRigidBody()
 AABB * scarlett::RigidBodyComponent::GetAABB()
 {
 	return &aabb;
+}
+
+void scarlett::RigidBodyComponent::SetContactBeta(float b)
+{
+	if (b <= 0.0f)
+	{
+		contactBeta = 0.0f;
+		return;
+	}
+	if (b >= 1.0f)
+	{
+		contactBeta = 1.0f;
+		return;
+	}
+	contactBeta = b;
+}
+
+void scarlett::RigidBodyComponent::SetRestitution(float r)
+{
+	if (r <= 0.0f)
+	{
+		restitution = 0.0f;
+		return;
+	}
+
+	if (r >= 1.0f)
+	{
+		restitution = 1.0f;
+		return;
+	}
+
+	restitution = r;
+}
+
+float scarlett::RigidBodyComponent::GetContactBeta()
+{
+	return contactBeta;
+}
+
+float scarlett::RigidBodyComponent::GetRestitution()
+{
+	return restitution;
 }
 

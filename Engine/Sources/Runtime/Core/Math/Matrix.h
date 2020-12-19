@@ -274,6 +274,17 @@ namespace scarlett {
 		return Vector3f(tmp.x, tmp.y, tmp.z);
 	}
 
+	inline Vector3f TransformVector(const Matrix3x3f& matrix, Vector3f& vector)
+	{
+		Vector3f tmp = Vector3f(0, 0, 0);
+		for (int r = 0; r < 3; ++r) {
+			for (int c = 0; c < 3; ++c) {
+				tmp[r] += vector[c] * matrix[r][c];
+			}
+		}
+		return tmp;
+	}
+
 	inline void BuildMatrixRotationX(Matrix4x4f& matrix, const float radio) {
 		float c = cosf(radio), s = sinf(radio);
 		Matrix4x4f tmp = { { {

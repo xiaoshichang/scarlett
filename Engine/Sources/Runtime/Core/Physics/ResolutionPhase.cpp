@@ -1,17 +1,35 @@
 #include "ResolutionPhase.h"
 
-void scarlett::ResolutionPhaseConstraintBase::resolve(std::vector<ContactManifold*>& manifolds)
+
+void scarlett::ResolutionPhaseConstraintBase::Resolve(std::vector<std::shared_ptr<ContactManifold>>& manifolds, float deltaTime)
 {
-	for each (ContactManifold* manifold in manifolds)
+	// 初始化一些相关计算量
+	for each (std::shared_ptr<ContactManifold> manifold in manifolds)
 	{
 		for (int i = 0; i < manifold->contactPointCount; i++)
 		{
-			SolveContactConstranst(manifold->contactPoints[i]);
+			InitContactConstranst(manifold, i);
+		}
+	}
+
+	// 实际解决约束
+	for each (std::shared_ptr<ContactManifold> manifold in manifolds)
+	{
+		for (int i = 0; i < manifold->contactPointCount; i++)
+		{
+			SolveContactConstranst(manifold, i, deltaTime);
 		}
 	}
 }
 
-void scarlett::ResolutionPhaseConstraintBase::SolveContactConstranst(ContactPoint & contact)
+void scarlett::ResolutionPhaseConstraintBase::SolveContactConstranst(std::shared_ptr<ContactManifold> manifold, int idx, float deltaTime)
+{
+	manifold->contactPoints[idx].m_jN.Init(manifold, idx, manifold->contactPoints[idx].normal, deltaTime);
+	manifold->contactPoints[idx].m_jT.Init(manifold, idx, manifold->contactPoints[idx].tangent1, deltaTime);
+	manifold->contactPoints[idx].m_jB.Init(manifold, idx, manifold->contactPoints[idx].tangent2, deltaTime);
+}
+
+void scarlett::ResolutionPhaseConstraintBase::InitContactConstranst(std::shared_ptr<ContactManifold> manifold, int idx)
 {
 
 }

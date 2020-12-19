@@ -42,6 +42,7 @@ namespace scarlett
 		void SetAngularVelocity(const Vector3f& angularVelocity);
 
 		bool CheckIfSleep();
+		void UpdateInverseInertiaWs();
 
 	protected:
 
@@ -76,11 +77,14 @@ namespace scarlett
 		// 1 - 完全弹性碰撞
 		float impulseCoefficient;
 
-		// 转动惯量
+		// 转动惯量 - 局部空间
 		Matrix3x3f inertia;
 
-		// 转动惯量逆矩阵
+		// 转动惯量逆矩阵 - 局部空间
 		Matrix3x3f inverseInertia;
+
+		// 转动惯量逆矩阵 - 全局空间
+		Matrix3x3f inverseInertiaWs;
 
 		// 摩擦系数
 		float frictionCoefficient;

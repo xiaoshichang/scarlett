@@ -87,9 +87,9 @@ void scarlett::SkyBox::Render()
 
 scarlett::CameraComponent::CameraComponent() :
 	mCameraType(CameraType::Perspective),
-	mPosition(Vector3f(0, 30, 0)),
+	mPosition(Vector3f(30, 30, 40)),
 	mLookat(Vector3f(0, 0, 0)),
-	mUp(Vector3f(1, 0, 0)),
+	mUp(Vector3f(0, 1, 0)),
 	mNearClip(0.01f),
 	mFarClip(2000.0f),
 	mFov(PI / 3),

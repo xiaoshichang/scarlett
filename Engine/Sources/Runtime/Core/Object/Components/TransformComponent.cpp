@@ -64,6 +64,20 @@ Vector3f scarlett::TransformComponent::LocalPointToGlobalPoint(Vector3f localPoi
 	return globalPoint;
 }
 
+Matrix3x3f scarlett::TransformComponent::GetRatationMatrixGlobal2Local33()
+{
+	Matrix4x4f world2local = GetWorldMatrixInverse();
+	Matrix3x3f ret;
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			ret[i][j] = world2local[i][j];
+		}
+	}
+	return ret;
+}
+
 int TransformComponent::Initialize() noexcept
 {
 	return 0;

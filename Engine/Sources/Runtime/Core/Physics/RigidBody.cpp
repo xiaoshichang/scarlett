@@ -1,4 +1,7 @@
 #include "RigidBody.h"
+#include "runtime/Core/Object/Entity.h"
+#include "runtime/Core/Object/Components/TransformComponent.h"
+
 using namespace scarlett;
 
 
@@ -143,4 +146,25 @@ void scarlett::RigidBody::SetAngularVelocity(const Vector3f & angularVelocity)
 bool scarlett::RigidBody::CheckIfSleep()
 {
 	return false;
+}
+
+/*
+计算全局坐标下的惯性张量
+惯性张量的坐标变化满足：
+$I_w = R * I_l * R^T$
+https://www.zhihu.com/question/24846969
+这里I指物体在局部坐标下的惯性张量
+这里R指物体的局部到全局的旋转矩阵
+另外，旋转矩阵满足正交归一特性，逆等于转置
+
+左右求逆矩阵可以得到下面等式
+
+*/
+void scarlett::RigidBody::UpdateInverseInertiaWs()
+{
+	TransformComponent* transform = GetMaster()->GetMaster()->GetComponent<TransformComponent>();
+	Matrix3x3f world2local = transform->GetRatationMatrixGlobal2Local33();
+	Matrix3x3f world2localTranposed;
+	Transpose(world2localTranposed, world2local);
+	inverseInertiaWs = world2localTranposed * inverseInertia * world2local;
 }
