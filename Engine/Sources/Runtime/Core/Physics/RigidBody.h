@@ -25,6 +25,7 @@ namespace scarlett
 		void SetInertia(const Matrix3x3f& inertia);
 		Matrix3x3f GetInertia();
 		Matrix3x3f GetInverseInertia();
+		Matrix3x3f GetInverseInertiaWS();
 
 		float GetImpulseCoefficient();
 		void SetImpulseCoefficient(float coeff);

@@ -868,6 +868,8 @@ void scarlett::NarrowPhaseGJKEPA::CollideDetection(std::vector<RigidBodyPair>& r
 			std::shared_ptr<ContactManifold> manifold = std::make_shared<ContactManifold>();
 			manifold->colliderA = pair.first->GetMaster();
 			manifold->colliderB = pair.second->GetMaster();
+			manifold->contactPoints[0] = point;
+			manifold->contactPointCount = 1;
 
 			collisions.push_back(manifold);
 		}
@@ -926,15 +928,6 @@ bool scarlett::NarrowPhaseGJKEPA::Penetration(RigidBodyPair& pair, Vector3f & gu
 			result.witnessInGlobal[1] = secondObjectPointInFirstObject;
 			result.normal = epa.m_normal;	// 全局坐标下，由物体1指向物体2
 			result.distance = epa.m_depth;	// 距离为正数
-
-			SCARLETT_LOG(info) << "v of pair.first:" << pair.first->GetVelocity();
-			SCARLETT_LOG(info) << "position of pair.first:" << pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
-			SCARLETT_LOG(info) << "rotation of pair.first:" << pair.first->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetRotation();
-			SCARLETT_LOG(info) << "v of pair.second:" << pair.second->GetVelocity();
-			SCARLETT_LOG(info) << "position of pair.second:" << pair.second->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetPosition();
-			SCARLETT_LOG(info) << "rotation of pair.second:" << pair.second->GetMaster()->GetMaster()->GetComponent<TransformComponent>()->GetRotation();
-			SCARLETT_LOG(info) << "hit at: " << w0;
-
 			return true;
 		}
 		else

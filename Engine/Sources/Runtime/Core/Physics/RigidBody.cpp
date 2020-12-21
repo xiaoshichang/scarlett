@@ -80,6 +80,11 @@ Matrix3x3f scarlett::RigidBody::GetInverseInertia()
 	return this->inverseInertia;
 }
 
+Matrix3x3f scarlett::RigidBody::GetInverseInertiaWS()
+{
+	return inverseInertiaWs;
+}
+
 float scarlett::RigidBody::GetImpulseCoefficient()
 {
 	return this->impulseCoefficient;

@@ -146,7 +146,8 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		auto entity = CreateEntity();
 		auto transformation = entity->GetComponent<TransformComponent>();
 		transformation->SetPosition(Vector3f(bcount * -5, 20, bcount * 5));
-		transformation->SetRotation(Vector3f(0, 3.1415 / 4, 0.95538));
+		//transformation->SetRotation(Vector3f(0, 3.1415 / 4, 0.95538));
+		transformation->SetRotation(Vector3f(0, 0, 0));
 		transformation->SetScale(Vector3f(1, 1, 1));
 
 		auto comp = entity->AddComponent<MeshRenderComponent>();
@@ -177,6 +178,12 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 		Vector3f maxPoint = { 100.0f, 5.0f, 100.0f };
 		rigidbody->GetAABB()->Initialize(minPoint, maxPoint);
 		rigidbody->GetRigidBody()->SetStatic(true);
+		float mass = 10.0f;
+		Matrix3x3f inertia = Inertia::CalculateInertiaSolidCuboid(mass, 2.0f, 2.0f, 2.0f);
+		float impulseCoeff = 0.5f;
+		float frictionCoeff = 0.5f;
+		rigidbody->GetRigidBody()->InitializeCoeff(mass, inertia, impulseCoeff, frictionCoeff);
+
 	}
 
 	auto sun = CreateEntity();

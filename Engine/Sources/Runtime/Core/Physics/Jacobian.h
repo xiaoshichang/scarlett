@@ -24,7 +24,8 @@ namespace scarlett
 
 		}
 
-		void Init(std::shared_ptr<ContactManifold> manifold, int idx, Vector3f dir, float dt);
+		void Init(std::shared_ptr<ContactManifold> manifold, int idx, JacobianType jt, Vector3f dir, float dt);
+		void Solve(std::shared_ptr<ContactManifold> manifold, int idx, Vector3f dir, float dt);
 
 
 		JacobianType jacobinType;

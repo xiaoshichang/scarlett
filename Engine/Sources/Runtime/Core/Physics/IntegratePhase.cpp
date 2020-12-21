@@ -8,6 +8,12 @@ void scarlett::IntegratePhase::integrate(std::vector<RigidBody*> activedRigidBod
 {
 	for each (RigidBody* rigidBody in activedRigidBodies)
 	{
+		if (rigidBody->IsStatic())
+		{
+			rigidBody->SetVelocity(Vector3f(0, 0, 0));
+			continue;
+		}
+
 		TransformComponent* transform = rigidBody->GetMaster()->GetMaster()->GetComponent<TransformComponent>();
 		auto position = transform->GetPosition();
 		Vector3f newPosition;

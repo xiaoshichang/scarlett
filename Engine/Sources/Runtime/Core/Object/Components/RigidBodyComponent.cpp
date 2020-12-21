@@ -35,8 +35,9 @@ void scarlett::RigidBodyComponent::Tick() noexcept
 
 RigidBodyComponent::RigidBodyComponent()
 {
-	contactBeta = 0.5f;
-	restitution = 0.5f;
+	friction = 1.0f;
+	contactBeta = 0.3f;
+	restitution = 1.0f;
 }
 
 RigidBody * scarlett::RigidBodyComponent::GetRigidBody()
@@ -47,6 +48,21 @@ RigidBody * scarlett::RigidBodyComponent::GetRigidBody()
 AABB * scarlett::RigidBodyComponent::GetAABB()
 {
 	return &aabb;
+}
+
+void scarlett::RigidBodyComponent::SetFriction(float f)
+{
+	if (f <= 0.0f)
+	{
+		friction = 0.0f;
+		return;
+	}
+	if (f >= 1.0f)
+	{
+		friction = 1.0f;
+		return;
+	}
+	friction = f;
 }
 
 void scarlett::RigidBodyComponent::SetContactBeta(float b)
@@ -79,6 +95,11 @@ void scarlett::RigidBodyComponent::SetRestitution(float r)
 	}
 
 	restitution = r;
+}
+
+float scarlett::RigidBodyComponent::GetFriction()
+{
+	return friction;
 }
 
 float scarlett::RigidBodyComponent::GetContactBeta()

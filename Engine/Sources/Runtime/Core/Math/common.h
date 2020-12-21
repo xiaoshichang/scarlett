@@ -20,4 +20,19 @@ namespace scarlett {
 		return std::max(0.0f, std::min(1.0f, a));
 	}
 
+	inline float Clamp(float v, float a, float b)
+	{
+		if (v < a)
+		{
+			return a;
+		}
+
+		if (v > b)
+		{
+			return b;
+		}
+
+		return v;
+	}
+
 }

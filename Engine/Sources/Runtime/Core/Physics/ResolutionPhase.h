@@ -16,6 +16,6 @@ namespace scarlett
 	public:
 		virtual void Resolve(std::vector<std::shared_ptr<ContactManifold>>& manifolds, float deltaTime);
 		void SolveContactConstranst(std::shared_ptr<ContactManifold> manifold, int idx, float deltaTime);
-		void InitContactConstranst(std::shared_ptr<ContactManifold> manifold, int idx);
+		void InitContactConstranst(std::shared_ptr<ContactManifold> manifold, int idx, float deltaTime);
 	};
 }
