@@ -95,6 +95,40 @@ ${PlatformOnlySources}
 
 ${SourcesPath}/Runtime/Utils/ImageParser.cpp
 
+# lua script engine
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lapi.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lcode.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lctype.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ldebug.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ldo.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ldump.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lfunc.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lgc.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/llex.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lmem.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lobject.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lopcodes.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lparser.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lstate.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lstring.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ltable.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ltm.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lundump.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lvm.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lauxlib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lbaselib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lcorolib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ldblib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/liolib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lmathlib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/loadlib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/loslib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lstrlib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/ltablib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lutf8lib.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/linit.c
+${SourcesPath}/Runtime/Core/ScriptEngine/lua-5.4.2/src/lzio.c
+
 )
 
 IF(${WIN32})

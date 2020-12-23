@@ -11,7 +11,11 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
-#include <iostream>
+extern "C"
+{
+#include "Runtime/Core//ScriptEngine/lua-5.4.2/src/lualib.h"
+#include "Runtime/Core//ScriptEngine/lua-5.4.2/src/lauxlib.h"
+}
 
 using namespace scarlett;
 using namespace std;
@@ -43,6 +47,8 @@ int scarlett::World::Initialize() noexcept
 
 	mPhysicsSystem = new PhysicsSystem(this);
 	mPhysicsSystem->Initialize();
+
+	lua_State * vm = luaL_newstate();
 
 	return 0;
 }
@@ -192,24 +198,12 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 
 void scarlett::World::DumpEntities()
 {
-	cout << "dump entities:" << endl;
 	for (auto pair : mEntities) {
 		auto guid = pair.first;
 		auto entity = pair.second;
-		
-		cout << "guid: " << guid << endl;
-		cout << "transform component:" << endl;
 		auto position = entity->GetComponent<TransformComponent>()->GetPosition();
-		cout << "position: " <<  "(" << position.x << "," << position.y << "," << position.z << ")" << endl;
-		
 		auto meshRender = entity->GetComponent<MeshRenderComponent>();
 		auto cameraComponent = entity->GetComponent<CameraComponent>();
-		if (cameraComponent)
-		{
-			cout << "camera type: " << cameraComponent->GetType() << endl;
-			cout << cameraComponent->GetViewMatrix() << endl;
-			cout << cameraComponent->GetPerspectiveMatrix() << endl;
-		}
 
 		cout << endl;
 	}
