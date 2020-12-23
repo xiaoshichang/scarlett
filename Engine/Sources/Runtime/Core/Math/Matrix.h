@@ -476,6 +476,8 @@ namespace scarlett {
 		matrix = tmp;
 	}
 
+	// https://krasjet.github.io/quaternion/quaternion.pdf
+	// page 33
 	inline void MatrixRotationQuaternion(Matrix4x4f& matrix, Quaternion q) {
 		Matrix4x4f tmp = { {{
 			{ 1.0f - 2.0f * q.y * q.y - 2.0f * q.z * q.z,	2.0f * q.x * q.y - 2.0f * q.w * q.z,		2.0f * q.x * q.z + 2.0f * q.w * q.y,						0.0f},
@@ -484,6 +486,12 @@ namespace scarlett {
 			{ 0.0f,											0.0f,										0.0f,														1.0f}
 		}} };
 		matrix = tmp;
+	}
+
+	inline Matrix4x4f MatrixRotationQuaternion(Quaternion q) {
+		Matrix4x4f tmp;
+		MatrixRotationQuaternion(tmp, q);
+		return tmp;
 	}
 
 	inline void BuildMatrixIdentity(Matrix4x4f& matrix) {

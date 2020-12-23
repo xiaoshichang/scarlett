@@ -233,4 +233,18 @@ namespace scarlett {
 		return sqrtf(dis);
 	}
 
+	inline Quaternion operator*(const Quaternion q1, const Quaternion q2)
+	{
+		
+		Vector3f v1(q1.x, q1.y, q1.z);
+		Vector3f v2(q2.x, q2.y, q2.z);
+
+		Vector3f v1v2 = CrossProduct(v1, v2) + v1 * q2.w + v2 * q1.w;
+		float real = q1.w*q2.w - DotProduct(v1, v2);
+
+		Quaternion ret(v1v2.x, v1v2.y, v1v2.z, real);
+		return ret;
+
+	}
+
 }

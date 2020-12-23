@@ -141,13 +141,13 @@ void scarlett::World::LoadScene(const std::string& scenePath) {
 	mCameraSystem->SetMainCamera(camera);
 
 	// Add some box
-	for(int bcount = 0; bcount < 1; bcount++)
 	{
 		auto entity = CreateEntity();
 		auto transformation = entity->GetComponent<TransformComponent>();
-		transformation->SetPosition(Vector3f(bcount * -5, 20, bcount * 5));
-		//transformation->SetRotation(Vector3f(0, 3.1415 / 4, 0.95538));
-		transformation->SetRotation(Vector3f(0, 0, 0));
+		transformation->SetPosition(Vector3f(0, 20, 0));
+		// transformation->SetRotation(Quaternion(0, 0.7071, 0, 0.7071)); rotate 90 degress with (0,1,0)
+		// transformation->SetRotation(Quaternion(0, 0, 0, 1));
+		transformation->SetRotation(Quaternion(0.5, 0, 0, 0.866));
 		transformation->SetScale(Vector3f(1, 1, 1));
 
 		auto comp = entity->AddComponent<MeshRenderComponent>();

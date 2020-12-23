@@ -100,7 +100,7 @@ void scarlett::Jacobian::Solve(std::shared_ptr<ContactManifold> manifold, int id
 	manifold->colliderA->GetRigidBody()->SetVelocity(va + vadelta);
 
 	Vector3f wa = manifold->colliderA->GetRigidBody()->GetAngularVelocity();
-	Vector3f wadelta = TransformVector(manifold->colliderA->GetRigidBody()->GetInverseInertiaWS(), wa) * lambda;
+	Vector3f wadelta = TransformVector(manifold->colliderA->GetRigidBody()->GetInverseInertiaWS(), m_jwa) * lambda;
 	manifold->colliderA->GetRigidBody()->SetAngularVelocity(wa + wadelta);
 
 	Vector3f vb = manifold->colliderB->GetRigidBody()->GetVelocity();
@@ -108,7 +108,7 @@ void scarlett::Jacobian::Solve(std::shared_ptr<ContactManifold> manifold, int id
 	manifold->colliderB->GetRigidBody()->SetVelocity(vb + vbdelta);
 
 	Vector3f wb = manifold->colliderB->GetRigidBody()->GetAngularVelocity();
-	Vector3f wbdelta = TransformVector(manifold->colliderB->GetRigidBody()->GetInverseInertiaWS(), wb) * lambda;
+	Vector3f wbdelta = TransformVector(manifold->colliderB->GetRigidBody()->GetInverseInertiaWS(), m_jwb) * lambda;
 	manifold->colliderB->GetRigidBody()->SetAngularVelocity(wb + wbdelta);
 
 }

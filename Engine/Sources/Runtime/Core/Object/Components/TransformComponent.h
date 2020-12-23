@@ -13,10 +13,10 @@ namespace scarlett {
 	public:
 		TransformComponent();
 		Vector3f	GetPosition() noexcept { return mPosition; }
-		Vector3f	GetRotation() noexcept { return mRotation; }
+		Quaternion	GetRotation() noexcept { return mRotation; }
 		Vector3f	GetScale() noexcept { return mScale; }
 		void		SetPosition(Vector3f position) { mPosition = position; mWorldMatrixDirty = true; mWorldMatrixInverseDirty = true; }
-		void		SetRotation(Vector3f rotation) { mRotation = rotation; mWorldMatrixDirty = true; mWorldMatrixInverseDirty = true; }
+		void		SetRotation(Quaternion rotation);
 		void		SetScale(Vector3f scale) { mScale = scale; mWorldMatrixDirty = true; mWorldMatrixInverseDirty = true; }
 		Matrix4x4f	GetWorldMatrix();
 		Matrix4x4f  GetWorldMatrixInverse();
@@ -31,7 +31,7 @@ namespace scarlett {
 		Matrix4x4f	mWorldMatrix;
 		Matrix4x4f  mWorldMatrixInverse;
 		Vector3f	mPosition;
-		Vector3f	mRotation;
+		Quaternion	mRotation;
 		Vector3f	mScale;
 
 	};

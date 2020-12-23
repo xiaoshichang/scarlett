@@ -36,8 +36,8 @@ void scarlett::RigidBodyComponent::Tick() noexcept
 RigidBodyComponent::RigidBodyComponent()
 {
 	friction = 1.0f;
-	contactBeta = 0.3f;
-	restitution = 1.0f;
+	contactBeta = 0.4f;
+	restitution = 0.0f;
 }
 
 RigidBody * scarlett::RigidBodyComponent::GetRigidBody()
