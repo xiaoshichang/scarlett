@@ -91,6 +91,8 @@ ${SourcesPath}/Runtime/Core/UI/Renderer.cpp
 ${SourcesPath}/Runtime/Core/UI/Sprite.cpp
 ${SourcesPath}/Runtime/Core/UI/FontNode.cpp
 
+${SourcesPath}/Runtime/Core/Debug/DebugWindow.cpp
+
 ${PlatformOnlySources}
 
 ${SourcesPath}/Runtime/Utils/ImageParser.cpp

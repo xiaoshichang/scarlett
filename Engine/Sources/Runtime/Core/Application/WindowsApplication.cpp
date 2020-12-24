@@ -79,6 +79,10 @@ LRESULT scarlett::WindowsApplication::WindowProc(HWND hWnd, UINT message, WPARAM
 
 int WindowsApplication::Initialize() noexcept{
 	CHECK_APPLICATION_INIT(Application::Initialize());
+
+	debugWindow = new DebugWindow();
+	debugWindow->Initialize();
+
 	CreateMainWindow();
 
 	mInputManager = new InputMgr();

@@ -4,6 +4,8 @@
 #include "Runtime/Utils/Singleton.h"
 #include <Windows.h>
 #include "glad/glad_wgl.h"
+#include "Runtime/Core/Debug/DebugWindow.h"
+
 
 namespace scarlett {
 	class WindowsApplication : public Application {
@@ -29,6 +31,7 @@ namespace scarlett {
 	private:
 		HWND mHWND;
 		HGLRC m_RenderContext;
+		DebugWindow* debugWindow;
 
 		bool mUseOpengl;
 	};
