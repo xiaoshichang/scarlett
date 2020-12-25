@@ -1,5 +1,6 @@
 #include "DebugWindow.h"
 #include <iostream>
+#include "Runtime/Core/Application/Application.h"
 
 
 int scarlett::DebugWindow::Initialize() noexcept
@@ -22,7 +23,9 @@ void scarlett::DebugWindow::InitConsoleWindow()
 {
 	AllocConsole();
 	consoleHandle = GetConsoleWindow();
+
 	SetConsoleTitle("scarlett debug window");
+
 
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stderr);
@@ -38,7 +41,7 @@ void scarlett::DebugWindow::Run()
 		// 暂时先这样吧，勉强能用
 		std::cout << ">>>";
 		std::getline(std::cin, cmdBuffer);
-		std::cout << cmdBuffer << std::endl;
+		GApp->mVM->Eval(cmdBuffer);
 	}
 }
 

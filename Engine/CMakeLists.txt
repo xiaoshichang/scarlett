@@ -93,6 +93,8 @@ ${SourcesPath}/Runtime/Core/UI/FontNode.cpp
 
 ${SourcesPath}/Runtime/Core/Debug/DebugWindow.cpp
 
+${SourcesPath}/Runtime/Core/ScriptEngine/ScriptEngine.cpp
+
 ${PlatformOnlySources}
 
 ${SourcesPath}/Runtime/Utils/ImageParser.cpp

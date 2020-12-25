@@ -17,7 +17,17 @@
 namespace scarlett {
 
 	inline float sat(float a) {
-		return std::max(0.0f, std::min(1.0f, a));
+		if (a < 0.0f)
+		{
+			return 0.0f;
+		}
+
+		if (a > 1.0f)
+		{
+			return 1.0f;
+		}
+		return a;
+
 	}
 
 	inline float Clamp(float v, float a, float b)

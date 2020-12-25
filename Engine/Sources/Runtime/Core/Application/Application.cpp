@@ -8,6 +8,7 @@ int Application::Initialize() noexcept {
 	mInputManager = nullptr;
 	mFontMgr = nullptr;
 	mWorld = nullptr;
+	mVM = nullptr;
 	return 0;
 }
 

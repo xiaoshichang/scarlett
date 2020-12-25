@@ -8,6 +8,8 @@
 #include "Runtime/Core/Object/World.h"
 #include "Runtime/Core/UI/Director.h"
 #include "Runtime/Core/Font/FontMgr.h"
+#include "Runtime/Core/ScriptEngine/ScriptEngine.h"
+
 
 namespace scarlett {
 	class Application : public IApplication {
@@ -28,6 +30,7 @@ namespace scarlett {
 		FontMgr*			mFontMgr;
 		Director*			mDirector;
 		World*				mWorld;
+		IScriptEngine*		mVM;
 
 	private:
 		bool mQuit;

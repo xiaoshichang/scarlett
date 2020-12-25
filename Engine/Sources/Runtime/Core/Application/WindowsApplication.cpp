@@ -83,6 +83,9 @@ int WindowsApplication::Initialize() noexcept{
 	debugWindow = new DebugWindow();
 	debugWindow->Initialize();
 
+	mVM = new ScriptEngineLua();
+	mVM->Initialize();
+
 	CreateMainWindow();
 
 	mInputManager = new InputMgr();
@@ -194,6 +197,8 @@ void WindowsApplication::Finalize() noexcept{
 	mTimeMgr->Finalize();
 	mInputManager->Finalize();
 	mGraphicsManager->Finalize();
+	mVM->Finalize();
+	debugWindow->Finalize();
 }
 
 void WindowsApplication::LoadWGL() {

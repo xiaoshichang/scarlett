@@ -11,11 +11,6 @@
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 
-extern "C"
-{
-#include "Runtime/Core//ScriptEngine/lua-5.4.2/src/lualib.h"
-#include "Runtime/Core//ScriptEngine/lua-5.4.2/src/lauxlib.h"
-}
 
 using namespace scarlett;
 using namespace std;
@@ -47,8 +42,6 @@ int scarlett::World::Initialize() noexcept
 
 	mPhysicsSystem = new PhysicsSystem(this);
 	mPhysicsSystem->Initialize();
-
-	lua_State * vm = luaL_newstate();
 
 	return 0;
 }
