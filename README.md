@@ -41,4 +41,4 @@ If you use vs2017, you can use my prebuilds libs. https://gitee.com/xiaoshichang
 
 ## updated in 2021/1/12
 +   basic physics system.
-![img](Document/Resource/RigidBody.gif)
+![img](Document/Resources/RigidBody.gif)
