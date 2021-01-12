@@ -38,3 +38,7 @@ If you use vs2017, you can use my prebuilds libs. https://gitee.com/xiaoshichang
 +	basic ttf font render.
 
 ![img](Document/Resources/basic_font_render.png)
+
+## updated in 2021/1/12
++   basic physics system.
+![img](Document/Resource/RigidBody.gif)
