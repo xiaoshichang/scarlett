@@ -7,7 +7,21 @@ A Simple Game Engine Project
 +	Boost: https://www.boost.org/
 +	FreeType: https://www.freetype.org/index.html
 
-If you use vs2017, you can use my prebuilds libs. https://gitee.com/xiaoshichang_admin/scarlett_external
+# How to run?
++ if you use VS2017
+
+you can run this project by following command:
+```
+git clone https://github.com/xiaoshichang/scarlett.git
+cd scarlett
+git submodule init
+git submodule update
+```
+then open this project with VS2017, build it and run it.
+
++ if you use other version of VS
+
+you need to complie all used libraries by youself and modify the paths in `CMakelist.txt` files.
 
 
 ## updated in 2019/12/6
